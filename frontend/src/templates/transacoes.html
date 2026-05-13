@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Transações</h2>
+        <button class="btn btn-primary" id="btn-nova-transacao"><i class="pi pi-plus"></i> Nova Transação</button>
+    </div>
+    <div id="transacoes-body"></div>
+    <div class="pagination" id="transacoes-pagination"></div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-transacao">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Nova Transação</h3>
+            <button class="btn btn-outline" id="modal-transacao-close"><i class="pi pi-times"></i></button>
+        </div>
+        <form id="form-transacao">
+            <div class="form-group">
+                <label>Descrição</label>
+                <input type="text" id="transacao-descricao" required />
+            </div>
+            <div class="form-group">
+                <label>Valor</label>
+                <input type="number" step="0.01" id="transacao-valor" required />
+            </div>
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="transacao-tipo">
+                    <option value="DESPESA">Despesa</option>
+                    <option value="RECEITA">Receita</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Data</label>
+                <input type="date" id="transacao-data" required />
+            </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                <select id="transacao-categoria"><option value="">Selecione...</option></select>
+            </div>
+            <div class="form-group">
+                <label>Conta</label>
+                <select id="transacao-conta"><option value="">Selecione...</option></select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="modal-transacao-cancel">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>

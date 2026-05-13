@@ -1,6 +1,6 @@
 <img 
     width=100% 
-    src="https://capsule-render.vercel.app/api?type=waving&color=00C853&height=120&section=header"
+    src="https://capsule-render.vercel.app/api?type=waving&color=A020F0&height=120&section=header"
 />
 
 <p align="center">
@@ -268,5 +268,5 @@ Este projeto está sob a licença **MIT**. Consulte o arquivo [LICENSE](./LICENS
 
 <img 
     width=100% 
-    src="https://capsule-render.vercel.app/api?type=waving&color=00C853&height=120&section=footer"
+    src="https://capsule-render.vercel.app/api?type=waving&color=A020F0&height=120&section=footer"
 />

@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Backend: Spring Boot",
+            "request": "launch",
+            "mainClass": "com.moneytracker.MoneyTrackerControlApplication",
+            "projectName": "money-tracker-control"
+        },
+        {
+            "type": "java",
+            "name": "Full Stack (Backend + Frontend)",
+            "request": "launch",
+            "mainClass": "com.moneytracker.MoneyTrackerControlApplication",
+            "projectName": "money-tracker-control",
+            "preLaunchTask": "Frontend: dev"
+        }
+    ]
+}

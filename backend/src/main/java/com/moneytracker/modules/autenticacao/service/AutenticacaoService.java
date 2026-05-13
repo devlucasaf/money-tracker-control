@@ -28,7 +28,7 @@ public class AutenticacaoService {
         }
 
         var token = tokenService.generateToken(usuario.getEmail());
-        return new LoginResponseDTO(token, usuario.getId(), usuario.getNome());
+        return new LoginResponseDTO(usuario.getId(), usuario.getNome(), token);
     }
 
     public LoginResponseDTO register(RegisterRequestDTO dto) {
@@ -46,6 +46,6 @@ public class AutenticacaoService {
         usuarioRepository.save(usuario);
 
         var token = tokenService.generateToken(usuario.getEmail());
-        return new LoginResponseDTO(token, usuario.getId(), usuario.getNome());
+        return new LoginResponseDTO(usuario.getId(), usuario.getNome(), token);
     }
 }
