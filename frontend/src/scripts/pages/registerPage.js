@@ -5,7 +5,7 @@ const initRegister = () => {
     const form = document.getElementById('register-form');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const nome = document.getElementById('register-nome').value;
+        const nome  = document.getElementById('register-nome').value;
         const email = document.getElementById('register-email').value;
         const senha = document.getElementById('register-senha').value;
 

@@ -107,15 +107,20 @@ const fecharModal = () => {
 const salvar = (e) => {
     e.preventDefault();
     const payload = {
-        descricao: document.getElementById('transacao-descricao').value,
-        valor: parseFloat(document.getElementById('transacao-valor').value),
-        tipo: document.getElementById('transacao-tipo').value,
-        data: document.getElementById('transacao-data').value,
-        categoriaId: document.getElementById('transacao-categoria').value || null,
-        contaId: document.getElementById('transacao-conta').value || null,
+        descricao:      document.getElementById('transacao-descricao').value,
+        valor:          parseFloat(document.getElementById('transacao-valor').value),
+        tipo:           document.getElementById('transacao-tipo').value,
+        data:           document.getElementById('transacao-data').value,
+        categoriaId:    document.getElementById('transacao-categoria').value || null,
+        contaId:        document.getElementById('transacao-conta').value || null,
     };
-    if (payload.categoriaId !== null) payload.categoriaId = parseInt(payload.categoriaId);
-    if (payload.contaId !== null) payload.contaId = parseInt(payload.contaId);
+    if (payload.categoriaId !== null) {
+        payload.categoriaId = parseInt(payload.categoriaId);
+    }
+
+    if (payload.contaId !== null) {
+        payload.contaId = parseInt(payload.contaId);
+    }
 
     criarTransacao(payload)
         .then(() => {
@@ -127,7 +132,9 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta transação?')) return;
+    if (!confirm('Deseja excluir esta transação?')) {
+        return;
+    }
     excluirTransacao(id)
         .then(() => {
             showSuccess('Transação excluída');

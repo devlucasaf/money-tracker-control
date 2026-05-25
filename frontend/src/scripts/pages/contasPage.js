@@ -46,7 +46,12 @@ const renderTabela = (contas) => {
 
     container.querySelectorAll('.btn-editar-conta').forEach(btn => {
         btn.addEventListener('click', () => {
-            abrirModal({ id: btn.dataset.id, nome: btn.dataset.nome, tipo: btn.dataset.tipo, saldo: btn.dataset.saldo });
+            abrirModal({ 
+                id: btn.dataset.id, 
+                nome: btn.dataset.nome, 
+                tipo: btn.dataset.tipo, 
+                saldo: btn.dataset.saldo 
+            });
         });
     });
 
@@ -79,8 +84,8 @@ const salvar = (e) => {
     e.preventDefault();
     const id = document.getElementById('conta-id').value;
     const payload = {
-        nome: document.getElementById('conta-nome').value,
-        tipo: document.getElementById('conta-tipo').value,
+        nome:  document.getElementById('conta-nome').value,
+        tipo:  document.getElementById('conta-tipo').value,
         saldo: parseFloat(document.getElementById('conta-saldo').value),
     };
 
@@ -96,7 +101,9 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta conta?')) return;
+    if (!confirm('Deseja excluir esta conta?')) {
+        return;
+    }
     excluirConta(id)
         .then(() => { showSuccess('Conta excluída'); carregar(); })
         .catch(showError);

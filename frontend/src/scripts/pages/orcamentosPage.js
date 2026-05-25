@@ -86,7 +86,7 @@ const salvar = (e) => {
     const payload = {
         categoriaId: parseInt(document.getElementById('orcamento-categoria').value),
         valorLimite: parseFloat(document.getElementById('orcamento-valorLimite').value),
-        mesAno: document.getElementById('orcamento-mesAno').value,
+        mesAno:      document.getElementById('orcamento-mesAno').value,
     };
 
     criarOrcamento(payload)
@@ -99,7 +99,9 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir este orçamento?')) return;
+    if (!confirm('Deseja excluir este orçamento?')) {
+        return;
+    }
     excluirOrcamento(id)
         .then(() => { showSuccess('Orçamento excluído'); carregar(); })
         .catch(showError);

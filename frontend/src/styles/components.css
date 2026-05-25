@@ -146,7 +146,9 @@
     font-size: 0.85rem;
 }
 
-.link:hover { text-decoration: underline; }
+.link:hover { 
+    text-decoration: underline; 
+}
 
 /* Page title */
 .page-title {

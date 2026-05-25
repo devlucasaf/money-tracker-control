@@ -13,6 +13,7 @@ const loadTemplate = (name) => {
     if (templates[name] !== undefined) {
         return Promise.resolve(templates[name]);
     }
+
     return fetch(`/src/templates/${name}.html`)
         .then(r => r.text())
         .then(html => {
@@ -27,14 +28,14 @@ const isAuthenticated = () => {
 };
 
 const routes = {
-    '/login': { template: 'login', init: initLogin, auth: false },
-    '/register': { template: 'register', init: initRegister, auth: false },
-    '/dashboard': { template: 'dashboard', init: initDashboard, auth: true },
-    '/transacoes': { template: 'transacoes', init: initTransacoes, auth: true },
-    '/contas': { template: 'contas', init: initContas, auth: true },
-    '/categorias': { template: 'categorias', init: initCategorias, auth: true },
-    '/metas': { template: 'metas', init: initMetas, auth: true },
-    '/orcamentos': { template: 'orcamentos', init: initOrcamentos, auth: true },
+    '/login':       { template: 'login',        init: initLogin,        auth: false },
+    '/register':    { template: 'register',     init: initRegister,     auth: false },
+    '/dashboard':   { template: 'dashboard',    init: initDashboard,    auth: true  },
+    '/transacoes':  { template: 'transacoes',   init: initTransacoes,   auth: true  },
+    '/contas':      { template: 'contas',       init: initContas,       auth: true  },
+    '/categorias':  { template: 'categorias',   init: initCategorias,   auth: true  },
+    '/metas':       { template: 'metas',        init: initMetas,        auth: true  },
+    '/orcamentos':  { template: 'orcamentos',   init: initOrcamentos,   auth: true  },
 };
 
 const navigate = () => {
@@ -71,7 +72,6 @@ const navigate = () => {
                 window.location.hash = '#/login';
             });
 
-            // Highlight active nav
             document.querySelectorAll('.nav-item').forEach(item => {
                 const navHash = item.getAttribute('data-navigate');
                 if (navHash === `#${hash}`) {
@@ -94,7 +94,6 @@ const navigate = () => {
     }
 };
 
-// Navigation via data-navigate attributes
 document.addEventListener('click', (e) => {
     const nav = e.target.closest('[data-navigate]');
     if (nav !== null) {

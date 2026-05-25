@@ -46,7 +46,12 @@ const renderTabela = (categorias) => {
 
     container.querySelectorAll('.btn-editar-categoria').forEach(btn => {
         btn.addEventListener('click', () => {
-            abrirModal({ id: btn.dataset.id, nome: btn.dataset.nome, tipo: btn.dataset.tipo, cor: btn.dataset.cor });
+            abrirModal({ 
+                id: btn.dataset.id, 
+                nome: btn.dataset.nome, 
+                tipo: btn.dataset.tipo, 
+                cor: btn.dataset.cor 
+            });
         });
     });
 
@@ -81,7 +86,7 @@ const salvar = (e) => {
     const payload = {
         nome: document.getElementById('categoria-nome').value,
         tipo: document.getElementById('categoria-tipo').value,
-        cor: document.getElementById('categoria-cor').value,
+        cor:  document.getElementById('categoria-cor').value,
     };
 
     const promise = id !== '' ? atualizarCategoria(id, payload) : criarCategoria(payload);
@@ -96,7 +101,9 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta categoria?')) return;
+    if (!confirm('Deseja excluir esta categoria?')) {
+        return;
+    }
     excluirCategoria(id)
         .then(() => { showSuccess('Categoria excluída'); carregar(); })
         .catch(showError);

@@ -56,9 +56,9 @@ const renderTabela = (metas) => {
     container.querySelectorAll('.btn-editar-meta').forEach(btn => {
         btn.addEventListener('click', () => {
             abrirModal({
-                id: btn.dataset.id,
-                descricao: btn.dataset.descricao,
-                valorAlvo: btn.dataset.valoralvo,
+                id:         btn.dataset.id,
+                descricao:  btn.dataset.descricao,
+                valorAlvo:  btn.dataset.valoralvo,
                 valorAtual: btn.dataset.valoratual,
                 dataLimite: btn.dataset.datalimite,
             });
@@ -113,7 +113,9 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta meta?')) return;
+    if (!confirm('Deseja excluir esta meta?')) {
+        return;
+    }
     excluirMeta(id)
         .then(() => { showSuccess('Meta excluída'); carregar(); })
         .catch(showError);
