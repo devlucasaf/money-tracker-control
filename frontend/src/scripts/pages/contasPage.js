@@ -47,9 +47,9 @@ const renderTabela = (contas) => {
     container.querySelectorAll('.btn-editar-conta').forEach(btn => {
         btn.addEventListener('click', () => {
             abrirModal({ 
-                id: btn.dataset.id, 
-                nome: btn.dataset.nome, 
-                tipo: btn.dataset.tipo, 
+                id:    btn.dataset.id, 
+                nome:  btn.dataset.nome, 
+                tipo:  btn.dataset.tipo, 
                 saldo: btn.dataset.saldo 
             });
         });

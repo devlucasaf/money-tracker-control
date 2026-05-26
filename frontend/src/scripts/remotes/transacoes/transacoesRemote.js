@@ -30,7 +30,10 @@ const criarTransacao = (params = {}) => {
 
 const excluirTransacao = (id) => {
     const url = `${API_BASE_URL}/transacoes/${id}`;
-    const options = { method: "DELETE", headers: getAuthHeaders() };
+    const options = { 
+        method: "DELETE", 
+        headers: getAuthHeaders()
+    };
     return fetch(url, options)
         .then(validateResponse)
         .then(() => {});

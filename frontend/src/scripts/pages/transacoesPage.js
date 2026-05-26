@@ -114,6 +114,7 @@ const salvar = (e) => {
         categoriaId:    document.getElementById('transacao-categoria').value || null,
         contaId:        document.getElementById('transacao-conta').value || null,
     };
+    
     if (payload.categoriaId !== null) {
         payload.categoriaId = parseInt(payload.categoriaId);
     }

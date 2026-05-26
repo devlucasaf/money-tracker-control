@@ -33,7 +33,10 @@ const atualizarCategoria = (id, params = {}) => {
 
 const excluirCategoria = (id) => {
     const url = `${API_BASE_URL}/categorias/${id}`;
-    const options = { method: 'DELETE', headers: getAuthHeaders() };
+    const options = { 
+        method: 'DELETE', 
+        headers: getAuthHeaders() 
+    };
     return fetch(url, options)
         .then(validateResponse)
         .then(() => {});

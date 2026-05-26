@@ -47,10 +47,10 @@ const renderTabela = (categorias) => {
     container.querySelectorAll('.btn-editar-categoria').forEach(btn => {
         btn.addEventListener('click', () => {
             abrirModal({ 
-                id: btn.dataset.id, 
+                id:   btn.dataset.id, 
                 nome: btn.dataset.nome, 
                 tipo: btn.dataset.tipo, 
-                cor: btn.dataset.cor 
+                cor:  btn.dataset.cor 
             });
         });
     });

@@ -33,7 +33,10 @@ const atualizarMeta = (id, params = {}) => {
 
 const excluirMeta = (id) => {
     const url = `${API_BASE_URL}/metas/${id}`;
-    const options = { method: 'DELETE', headers: getAuthHeaders() };
+    const options = { 
+        method: 'DELETE', 
+        headers: getAuthHeaders() 
+    };
     return fetch(url, options)
         .then(validateResponse)
         .then(() => {});
