@@ -72,7 +72,6 @@ a {
     min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
     width: 260px;
     background: var(--bg-sidebar);
@@ -198,7 +197,6 @@ a {
     padding: 2rem;
 }
 
-/* Auth pages */
 .auth-container {
     display: flex;
     align-items: center;
@@ -211,9 +209,17 @@ a {
 }
 
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% { 
+        background-position: 0% 50%; 
+    }
+
+    50% { 
+        background-position: 100% 50%; 
+    }
+
+    100% { 
+        background-position: 0% 50%; 
+    }
 }
 
 .auth-card {
@@ -244,7 +250,6 @@ a {
     font-size: 0.9rem;
 }
 
-/* Cards */
 .card {
     background: var(--bg-card);
     border-radius: var(--radius);
@@ -270,7 +275,6 @@ a {
     font-weight: 700;
 }
 
-/* Summary */
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -314,7 +318,6 @@ a {
     color: var(--danger); 
 }
 
-/* Tables */
 .table-container { 
     overflow-x: auto; 
 }
@@ -337,9 +340,10 @@ table th {
     background: var(--bg-primary);
 }
 
-table tr:hover { background: rgba(124, 58, 237, 0.03); }
+table tr:hover { 
+    background: rgba(124, 58, 237, 0.03); 
+}
 
-/* Badge */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -369,7 +373,6 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
     color: var(--info); 
 }
 
-/* Pagination */
 .pagination {
     display: flex;
     justify-content: center;
@@ -408,7 +411,6 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
     cursor: not-allowed; 
 }
 
-/* Toast */
 .toast-container {
     position: fixed;
     top: 1rem;
@@ -446,13 +448,13 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
         transform: translateX(100%); 
         opacity: 0; 
     }
+
     to {
         transform: translateX(0); 
         opacity: 1; 
     }
 }
 
-/* Empty state */
 .empty-state {
     text-align: center;
     padding: 3rem 1rem;
@@ -465,7 +467,6 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
     opacity: 0.5;
 }
 
-/* Progress bar */
 .progress-bar {
     height: 8px;
     background: var(--border);
@@ -480,7 +481,6 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
     background: var(--gradient-primary);
 }
 
-/* Pie chart section */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -516,7 +516,6 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
     border-radius: 50%;
 }
 
-/* Currency converter */
 .currency-converter {
     margin-top: 0.5rem;
     padding: 0.6rem 0.8rem;
@@ -546,7 +545,6 @@ table tr:hover { background: rgba(124, 58, 237, 0.03); }
     color: var(--primary);
 }
 
-/* Custom date picker */
 .custom-datepicker {
     position: relative;
 }

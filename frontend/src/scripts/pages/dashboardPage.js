@@ -2,8 +2,16 @@ import { formatarMoeda, exibirErro } from '../util.js';
 import { obterDashboard } from '../remotes/dashboard/getDashboardRemote.js';
 
 const CORES_GRAFICO = [
-    '#7c3aed', '#ec4899', '#6366f1', '#f59e0b', '#10b981',
-    '#3b82f6', '#f472b6', '#8b5cf6', '#ef4444', '#14b8a6'
+    '#7c3aed', 
+    '#ec4899', 
+    '#6366f1', 
+    '#f59e0b', 
+    '#10b981',
+    '#3b82f6', 
+    '#f472b6', 
+    '#8b5cf6', 
+    '#ef4444', 
+    '#14b8a6'
 ];
 
 const iniciarDashboard = () => {
@@ -57,7 +65,9 @@ const renderizarGraficoPizza = (despesas) => {
     const canvas = document.getElementById('dash-pie-chart');
     const legenda = document.getElementById('dash-chart-legend');
 
-    if (!canvas || !legenda) return;
+    if (!canvas || !legenda) {
+        return;
+    }
 
     if (!despesas || despesas.length === 0) {
         const container = document.getElementById('dash-chart-container');
@@ -72,23 +82,22 @@ const renderizarGraficoPizza = (despesas) => {
     const raio = 90;
     const raioInterno = 55;
 
-    // Limpar canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Desenhar donut
     let anguloInicial = -Math.PI / 2;
     despesas.forEach((item, i) => {
         const anguloFatia = (item.valor / total) * 2 * Math.PI;
+
         ctx.beginPath();
         ctx.arc(centroX, centroY, raio, anguloInicial, anguloInicial + anguloFatia);
         ctx.arc(centroX, centroY, raioInterno, anguloInicial + anguloFatia, anguloInicial, true);
         ctx.closePath();
         ctx.fillStyle = CORES_GRAFICO[i % CORES_GRAFICO.length];
         ctx.fill();
+
         anguloInicial += anguloFatia;
     });
 
-    // Texto central
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
     ctx.font = 'bold 16px Inter';
     ctx.textAlign = 'center';
@@ -98,7 +107,6 @@ const renderizarGraficoPizza = (despesas) => {
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
     ctx.fillText('Total', centroX, centroY + 12);
 
-    // Legenda
     legenda.innerHTML = despesas.map((item, i) => {
         const pct = ((item.valor / total) * 100).toFixed(1);
         return `

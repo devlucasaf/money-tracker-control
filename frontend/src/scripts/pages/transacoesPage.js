@@ -66,7 +66,15 @@ const conversaoFallback = (valor, de, para, elemento) => {
 };
 
 const formatarValorConvertido = (valor, moeda) => {
-    const locales = { USD: 'en-US', EUR: 'de-DE', GBP: 'en-GB', ARS: 'es-AR', JPY: 'ja-JP', BRL: 'pt-BR', CAD: 'en-CA' };
+    const locales = { 
+        USD: 'en-US', 
+        EUR: 'de-DE', 
+        GBP: 'en-GB', 
+        ARS: 'es-AR', 
+        JPY: 'ja-JP', 
+        BRL: 'pt-BR', 
+        CAD: 'en-CA' 
+    };
     return new Intl.NumberFormat(locales[moeda] || 'en-US', { style: 'currency', currency: moeda }).format(valor);
 };
 
@@ -133,7 +141,9 @@ const renderizarCalendario = () => {
         el.textContent = d;
 
         const ehHoje = d === hoje.getDate() && dpMes === hoje.getMonth() && dpAno === hoje.getFullYear();
-        if (ehHoje) el.classList.add('today');
+        if (ehHoje) {
+            el.classList.add('today');
+        }
 
         if (dpDataSelecionada && d === dpDataSelecionada.getDate() && dpMes === dpDataSelecionada.getMonth() && dpAno === dpDataSelecionada.getFullYear()) {
             el.classList.add('selected');
