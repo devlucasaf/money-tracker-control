@@ -1,10 +1,10 @@
-import { API_BASE_URL, getAuthHeaders, validateResponse } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
 
-const getDashboard = () => {
-    const url = `${API_BASE_URL}/dashboard`;
-    return fetch(url, { headers: getAuthHeaders() })
-        .then(validateResponse)
-        .then(response => response.json());
+const obterDashboard = () => {
+    const url = `${URL_BASE_API}/dashboard`;
+    return fetch(url, { headers: obterCabecalhosAuth() })
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
-export { getDashboard };
+export { obterDashboard };
