@@ -1,7 +1,7 @@
-import { formatCurrency, formatDate, showSuccess, showError } from '../util.js';
+import { formatarMoeda, formatarData, exibirSucesso, exibirErro } from '../util.js';
 import { pesquisarMetas, criarMeta, atualizarMeta, excluirMeta } from '../remotes/metas/metasRemote.js';
 
-const initMetas = () => {
+const iniciarMetas = () => {
     carregar();
     document.getElementById('btn-nova-meta').addEventListener('click', () => abrirModal(null));
     document.getElementById('modal-meta-close').addEventListener('click', fecharModal);
@@ -11,11 +11,11 @@ const initMetas = () => {
 
 const carregar = () => {
     pesquisarMetas()
-        .then(renderTabela)
-        .catch(showError);
+        .then(renderizarTabela)
+        .catch(exibirErro);
 };
 
-const renderTabela = (metas) => {
+const renderizarTabela = (metas) => {
     const container = document.getElementById('metas-body');
 
     if (metas === null || metas === undefined || metas.length === 0) {
@@ -38,10 +38,10 @@ const renderTabela = (metas) => {
                                 <div class="progress-bar">
                                     <div class="fill" style="width:${percentual}%;background:${cor}"></div>
                                 </div>
-                                <small style="color:var(--text-secondary)">${formatCurrency(m.valorAtual)} / ${formatCurrency(m.valorAlvo)} (${percentual.toFixed(0)}%)</small>
+                                <small style="color:var(--text-secondary)">${formatarMoeda(m.valorAtual)} / ${formatarMoeda(m.valorAlvo)} (${percentual.toFixed(0)}%)</small>
                             </td>
-                            <td>${formatCurrency(m.valorAlvo)}</td>
-                            <td>${m.dataLimite ? formatDate(m.dataLimite) : '-'}</td>
+                            <td>${formatarMoeda(m.valorAlvo)}</td>
+                            <td>${m.dataLimite ? formatarData(m.dataLimite) : '-'}</td>
                             <td>
                                 <button class="btn btn-outline btn-editar-meta" data-id="${m.id}" data-descricao="${m.descricao}" data-valoralvo="${m.valorAlvo}" data-valoratual="${m.valorAtual}" data-datalimite="${m.dataLimite ?? ''}" style="margin-right:0.5rem"><i class="pi pi-pencil"></i></button>
                                 <button class="btn btn-danger btn-excluir-meta" data-id="${m.id}"><i class="pi pi-trash"></i></button>
@@ -71,8 +71,8 @@ const renderTabela = (metas) => {
 };
 
 const abrirModal = (meta) => {
-    const form = document.getElementById('form-meta');
-    form.reset();
+    const formulario = document.getElementById('form-meta');
+    formulario.reset();
     if (meta !== null) {
         document.getElementById('modal-meta-title').textContent = 'Editar Meta';
         document.getElementById('meta-id').value = meta.id;
@@ -101,15 +101,15 @@ const salvar = (e) => {
         dataLimite: document.getElementById('meta-dataLimite').value || null,
     };
 
-    const promise = id !== '' ? atualizarMeta(id, payload) : criarMeta(payload);
+    const promessa = id !== '' ? atualizarMeta(id, payload) : criarMeta(payload);
 
-    promise
+    promessa
         .then(() => {
-            showSuccess(id !== '' ? 'Meta atualizada' : 'Meta criada');
+            exibirSucesso(id !== '' ? 'Meta atualizada' : 'Meta criada');
             fecharModal();
             carregar();
         })
-        .catch(showError);
+        .catch(exibirErro);
 };
 
 const excluir = (id) => {
@@ -117,8 +117,8 @@ const excluir = (id) => {
         return;
     }
     excluirMeta(id)
-        .then(() => { showSuccess('Meta excluída'); carregar(); })
-        .catch(showError);
+        .then(() => { exibirSucesso('Meta excluída'); carregar(); })
+        .catch(exibirErro);
 };
 
-export { initMetas };
+export { iniciarMetas };
