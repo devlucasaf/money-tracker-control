@@ -1,7 +1,7 @@
-import { formatCurrency, showSuccess, showError } from '../util.js';
+import { formatarMoeda, exibirSucesso, exibirErro } from '../util.js';
 import { pesquisarContas, criarConta, atualizarConta, excluirConta } from '../remotes/contas/contasRemote.js';
 
-const initContas = () => {
+const iniciarContas = () => {
     carregar();
     document.getElementById('btn-nova-conta').addEventListener('click', () => abrirModal(null));
     document.getElementById('modal-conta-close').addEventListener('click', fecharModal);
@@ -11,11 +11,11 @@ const initContas = () => {
 
 const carregar = () => {
     pesquisarContas()
-        .then(renderTabela)
-        .catch(showError);
+        .then(renderizarTabela)
+        .catch(exibirErro);
 };
 
-const renderTabela = (contas) => {
+const renderizarTabela = (contas) => {
     const container = document.getElementById('contas-body');
 
     if (contas === null || contas === undefined || contas.length === 0) {
@@ -32,7 +32,7 @@ const renderTabela = (contas) => {
                         <tr>
                             <td>${c.nome}</td>
                             <td><span class="badge badge-info">${c.tipo}</span></td>
-                            <td style="font-weight:600;color:${c.saldo >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatCurrency(c.saldo)}</td>
+                            <td style="font-weight:600;color:${c.saldo >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatarMoeda(c.saldo)}</td>
                             <td>
                                 <button class="btn btn-outline btn-editar-conta" data-id="${c.id}" data-nome="${c.nome}" data-tipo="${c.tipo}" data-saldo="${c.saldo}" style="margin-right:0.5rem"><i class="pi pi-pencil"></i></button>
                                 <button class="btn btn-danger btn-excluir-conta" data-id="${c.id}"><i class="pi pi-trash"></i></button>
@@ -61,8 +61,8 @@ const renderTabela = (contas) => {
 };
 
 const abrirModal = (conta) => {
-    const form = document.getElementById('form-conta');
-    form.reset();
+    const formulario = document.getElementById('form-conta');
+    formulario.reset();
     if (conta !== null) {
         document.getElementById('modal-conta-title').textContent = 'Editar Conta';
         document.getElementById('conta-id').value = conta.id;
@@ -89,15 +89,15 @@ const salvar = (e) => {
         saldo: parseFloat(document.getElementById('conta-saldo').value),
     };
 
-    const promise = id !== '' ? atualizarConta(id, payload) : criarConta(payload);
+    const promessa = id !== '' ? atualizarConta(id, payload) : criarConta(payload);
 
-    promise
+    promessa
         .then(() => {
-            showSuccess(id !== '' ? 'Conta atualizada' : 'Conta criada');
+            exibirSucesso(id !== '' ? 'Conta atualizada' : 'Conta criada');
             fecharModal();
             carregar();
         })
-        .catch(showError);
+        .catch(exibirErro);
 };
 
 const excluir = (id) => {
@@ -105,8 +105,8 @@ const excluir = (id) => {
         return;
     }
     excluirConta(id)
-        .then(() => { showSuccess('Conta excluída'); carregar(); })
-        .catch(showError);
+        .then(() => { exibirSucesso('Conta excluída'); carregar(); })
+        .catch(exibirErro);
 };
 
-export { initContas };
+export { iniciarContas };
