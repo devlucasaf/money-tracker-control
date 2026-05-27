@@ -1,8 +1,8 @@
-import { formatCurrency, showSuccess, showError } from '../util.js';
+import { formatarMoeda, exibirSucesso, exibirErro } from '../util.js';
 import { pesquisarOrcamentos, criarOrcamento, excluirOrcamento } from '../remotes/orcamentos/orcamentosRemote.js';
 import { pesquisarCategorias } from '../remotes/categorias/categoriasRemote.js';
 
-const initOrcamentos = () => {
+const iniciarOrcamentos = () => {
     carregar();
     carregarCategorias();
     document.getElementById('btn-novo-orcamento').addEventListener('click', abrirModal);
@@ -20,16 +20,16 @@ const carregarCategorias = () => {
                 select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
             });
         })
-        .catch(showError);
+        .catch(exibirErro);
 };
 
 const carregar = () => {
     pesquisarOrcamentos()
-        .then(renderTabela)
-        .catch(showError);
+        .then(renderizarTabela)
+        .catch(exibirErro);
 };
 
-const renderTabela = (orcamentos) => {
+const renderizarTabela = (orcamentos) => {
     const container = document.getElementById('orcamentos-body');
 
     if (orcamentos === null || orcamentos === undefined || orcamentos.length === 0) {
@@ -50,14 +50,14 @@ const renderTabela = (orcamentos) => {
                         return `
                         <tr>
                             <td>${o.categoriaNome ?? '-'}</td>
-                            <td>${formatCurrency(o.valorLimite)}</td>
+                            <td>${formatarMoeda(o.valorLimite)}</td>
                             <td>
                                 <div class="progress-bar" style="margin-bottom:4px">
                                     <div class="fill" style="width:${percentual}%;background:${cor}"></div>
                                 </div>
-                                <small>${formatCurrency(gasto)} (${percentual.toFixed(0)}%)</small>
+                                <small>${formatarMoeda(gasto)} (${percentual.toFixed(0)}%)</small>
                             </td>
-                            <td style="font-weight:600;color:${disponivel >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatCurrency(disponivel)}</td>
+                            <td style="font-weight:600;color:${disponivel >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatarMoeda(disponivel)}</td>
                             <td>${o.mesAno ?? '-'}</td>
                             <td><button class="btn btn-danger btn-excluir-orcamento" data-id="${o.id}"><i class="pi pi-trash"></i></button></td>
                         </tr>`;
@@ -91,11 +91,11 @@ const salvar = (e) => {
 
     criarOrcamento(payload)
         .then(() => {
-            showSuccess('Orçamento criado');
+            exibirSucesso('Orçamento criado');
             fecharModal();
             carregar();
         })
-        .catch(showError);
+        .catch(exibirErro);
 };
 
 const excluir = (id) => {
@@ -103,8 +103,8 @@ const excluir = (id) => {
         return;
     }
     excluirOrcamento(id)
-        .then(() => { showSuccess('Orçamento excluído'); carregar(); })
-        .catch(showError);
+        .then(() => { exibirSucesso('Orçamento excluído'); carregar(); })
+        .catch(exibirErro);
 };
 
-export { initOrcamentos };
+export { iniciarOrcamentos };
