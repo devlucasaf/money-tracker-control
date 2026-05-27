@@ -1,76 +1,81 @@
-import { initLogin } from './pages/loginPage.js';
-import { initRegister } from './pages/registerPage.js';
-import { initDashboard } from './pages/dashboardPage.js';
-import { initTransacoes } from './pages/transacoesPage.js';
-import { initContas } from './pages/contasPage.js';
-import { initCategorias } from './pages/categoriasPage.js';
-import { initMetas } from './pages/metasPage.js';
-import { initOrcamentos } from './pages/orcamentosPage.js';
+import { iniciarLogin } from './pages/loginPage.js';
+import { iniciarRegistro } from './pages/registerPage.js';
+import { iniciarDashboard } from './pages/dashboardPage.js';
+import { iniciarTransacoes } from './pages/transacoesPage.js';
+import { iniciarContas } from './pages/contasPage.js';
+import { iniciarCategorias } from './pages/categoriasPage.js';
+import { iniciarMetas } from './pages/metasPage.js';
+import { iniciarOrcamentos } from './pages/orcamentosPage.js';
+import { alternarTema, atualizarBotaoTema } from './util.js';
 
 const templates = {};
 
-const loadTemplate = (name) => {
-    if (templates[name] !== undefined) {
-        return Promise.resolve(templates[name]);
+const carregarTemplate = (nome) => {
+    if (templates[nome] !== undefined) {
+        return Promise.resolve(templates[nome]);
     }
 
-    return fetch(`/src/templates/${name}.html`)
+    return fetch(`/src/templates/${nome}.html`)
         .then(r => r.text())
         .then(html => {
-            templates[name] = html;
+            templates[nome] = html;
             return html;
         });
 };
 
-const isAuthenticated = () => {
+const estaAutenticado = () => {
     const token = localStorage.getItem('token');
     return token !== null && token !== undefined && token !== '';
 };
 
-const routes = {
-    '/login':       { template: 'login',        init: initLogin,        auth: false },
-    '/register':    { template: 'register',     init: initRegister,     auth: false },
-    '/dashboard':   { template: 'dashboard',    init: initDashboard,    auth: true  },
-    '/transacoes':  { template: 'transacoes',   init: initTransacoes,   auth: true  },
-    '/contas':      { template: 'contas',       init: initContas,       auth: true  },
-    '/categorias':  { template: 'categorias',   init: initCategorias,   auth: true  },
-    '/metas':       { template: 'metas',        init: initMetas,        auth: true  },
-    '/orcamentos':  { template: 'orcamentos',   init: initOrcamentos,   auth: true  },
+const rotas = {
+    '/login':       { template: 'login',        init: iniciarLogin,        auth: false },
+    '/register':    { template: 'register',     init: iniciarRegistro,     auth: false },
+    '/dashboard':   { template: 'dashboard',    init: iniciarDashboard,    auth: true  },
+    '/transacoes':  { template: 'transacoes',   init: iniciarTransacoes,   auth: true  },
+    '/contas':      { template: 'contas',       init: iniciarContas,       auth: true  },
+    '/categorias':  { template: 'categorias',   init: iniciarCategorias,   auth: true  },
+    '/metas':       { template: 'metas',        init: iniciarMetas,        auth: true  },
+    '/orcamentos':  { template: 'orcamentos',   init: iniciarOrcamentos,   auth: true  },
 };
 
-const navigate = () => {
+const navegar = () => {
     const hash = window.location.hash.slice(1) || '/login';
-    const route = routes[hash];
+    const rota = rotas[hash];
 
-    if (route === undefined) {
+    if (rota === undefined) {
         window.location.hash = '#/dashboard';
         return;
     }
 
-    if (route.auth && !isAuthenticated()) {
+    if (rota.auth && !estaAutenticado()) {
         window.location.hash = '#/login';
         return;
     }
 
-    if (!route.auth && isAuthenticated() && (hash === '/login' || hash === '/register')) {
+    if (!rota.auth && estaAutenticado() && (hash === '/login' || hash === '/register')) {
         window.location.hash = '#/dashboard';
         return;
     }
 
     const app = document.getElementById('app');
 
-    if (route.auth) {
-        loadTemplate('layout').then(layoutHtml => {
+    if (rota.auth) {
+        carregarTemplate('layout').then(layoutHtml => {
             app.innerHTML = layoutHtml;
 
-            const userName = localStorage.getItem('userName') ?? 'Usuário';
-            document.getElementById('sidebar-user-name').textContent = userName;
+            const nomeUsuario = localStorage.getItem('userName') ?? 'Usuário';
+            document.getElementById('sidebar-user-name').textContent = nomeUsuario;
 
             document.getElementById('btn-logout').addEventListener('click', () => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('userName');
                 window.location.hash = '#/login';
             });
+
+            // Alternância de tema
+            document.getElementById('btn-theme-toggle').addEventListener('click', alternarTema);
+            atualizarBotaoTema();
 
             document.querySelectorAll('.nav-item').forEach(item => {
                 const navHash = item.getAttribute('data-navigate');
@@ -81,15 +86,15 @@ const navigate = () => {
                 }
             });
 
-            loadTemplate(route.template).then(pageHtml => {
-                document.getElementById('page-content').innerHTML = pageHtml;
-                route.init();
+            carregarTemplate(rota.template).then(paginaHtml => {
+                document.getElementById('page-content').innerHTML = paginaHtml;
+                rota.init();
             });
         });
     } else {
-        loadTemplate(route.template).then(html => {
+        carregarTemplate(rota.template).then(html => {
             app.innerHTML = html;
-            route.init();
+            rota.init();
         });
     }
 };
@@ -102,5 +107,5 @@ document.addEventListener('click', (e) => {
     }
 });
 
-window.addEventListener('hashchange', navigate);
-navigate();
+window.addEventListener('hashchange', navegar);
+navegar();

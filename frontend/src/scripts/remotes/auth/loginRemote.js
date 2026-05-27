@@ -1,15 +1,15 @@
-import { API_BASE_URL, validateResponse } from '../remoteUtils.js';
+import { URL_BASE_API, validarResposta } from '../remoteUtils.js';
 
-const login = (params = {}) => {
-    const url = `${API_BASE_URL}/auth/login`;
-    const options = {
+const logar = (params = {}) => {
+    const url = `${URL_BASE_API}/auth/login`;
+    const opcoes = {
         method: 'POST',
         body: JSON.stringify(params),
         headers: { 'Content-Type': 'application/json' },
     };
-    return fetch(url, options)
-        .then(validateResponse)
-        .then(response => response.json());
+    return fetch(url, opcoes)
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
-export { login };
+export { logar };

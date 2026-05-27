@@ -1,7 +1,7 @@
-import { showSuccess, showError } from '../util.js';
+import { exibirSucesso, exibirErro } from '../util.js';
 import { pesquisarCategorias, criarCategoria, atualizarCategoria, excluirCategoria } from '../remotes/categorias/categoriasRemote.js';
 
-const initCategorias = () => {
+const iniciarCategorias = () => {
     carregar();
     document.getElementById('btn-nova-categoria').addEventListener('click', () => abrirModal(null));
     document.getElementById('modal-categoria-close').addEventListener('click', fecharModal);
@@ -11,11 +11,11 @@ const initCategorias = () => {
 
 const carregar = () => {
     pesquisarCategorias()
-        .then(renderTabela)
-        .catch(showError);
+        .then(renderizarTabela)
+        .catch(exibirErro);
 };
 
-const renderTabela = (categorias) => {
+const renderizarTabela = (categorias) => {
     const container = document.getElementById('categorias-body');
 
     if (categorias === null || categorias === undefined || categorias.length === 0) {
@@ -61,8 +61,8 @@ const renderTabela = (categorias) => {
 };
 
 const abrirModal = (categoria) => {
-    const form = document.getElementById('form-categoria');
-    form.reset();
+    const formulario = document.getElementById('form-categoria');
+    formulario.reset();
     if (categoria !== null) {
         document.getElementById('modal-categoria-title').textContent = 'Editar Categoria';
         document.getElementById('categoria-id').value = categoria.id;
@@ -89,15 +89,15 @@ const salvar = (e) => {
         cor:  document.getElementById('categoria-cor').value,
     };
 
-    const promise = id !== '' ? atualizarCategoria(id, payload) : criarCategoria(payload);
+    const promessa = id !== '' ? atualizarCategoria(id, payload) : criarCategoria(payload);
 
-    promise
+    promessa
         .then(() => {
-            showSuccess(id !== '' ? 'Categoria atualizada' : 'Categoria criada');
+            exibirSucesso(id !== '' ? 'Categoria atualizada' : 'Categoria criada');
             fecharModal();
             carregar();
         })
-        .catch(showError);
+        .catch(exibirErro);
 };
 
 const excluir = (id) => {
@@ -105,8 +105,8 @@ const excluir = (id) => {
         return;
     }
     excluirCategoria(id)
-        .then(() => { showSuccess('Categoria excluída'); carregar(); })
-        .catch(showError);
+        .then(() => { exibirSucesso('Categoria excluída'); carregar(); })
+        .catch(exibirErro);
 };
 
-export { initCategorias };
+export { iniciarCategorias };

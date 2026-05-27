@@ -14,12 +14,14 @@
 }
 
 .btn-primary { 
-    background: var(--primary); 
-    color: white; 
+    background: var(--gradient-primary);
+    color: white;
 }
 
 .btn-primary:hover { 
-    background: var(--primary-dark); 
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 .btn-danger { 
@@ -39,6 +41,7 @@
 
 .btn-outline:hover { 
     background: var(--bg-primary); 
+    border-color: var(--primary);
 }
 
 .btn-success { 
@@ -74,7 +77,9 @@
     border-radius: 8px;
     font-size: 0.9rem;
     font-family: inherit;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--bg-card);
+    color: var(--text-primary);
 }
 
 .form-group input:focus,
@@ -82,7 +87,7 @@
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 /* Modal */
@@ -92,7 +97,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(15, 10, 30, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,7 +115,8 @@
     max-width: 500px;
     max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border);
 }
 
 .modal-header {
@@ -121,7 +128,7 @@
 
 .modal-header h3 {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .modal-footer {
@@ -144,6 +151,7 @@
     color: var(--primary);
     cursor: pointer;
     font-size: 0.85rem;
+    font-weight: 500;
 }
 
 .link:hover { 
@@ -153,6 +161,6 @@
 /* Page title */
 .page-title {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1.5rem;
 }

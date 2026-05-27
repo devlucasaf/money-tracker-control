@@ -1,44 +1,44 @@
-import { API_BASE_URL, getAuthHeaders, validateResponse } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
 
 const pesquisarCategorias = () => {
-    const url = `${API_BASE_URL}/categorias`;
-    return fetch(url, { headers: getAuthHeaders() })
-        .then(validateResponse)
-        .then(response => response.json());
+    const url = `${URL_BASE_API}/categorias`;
+    return fetch(url, { headers: obterCabecalhosAuth() })
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
 const criarCategoria = (params = {}) => {
-    const url = `${API_BASE_URL}/categorias`;
-    const options = {
+    const url = `${URL_BASE_API}/categorias`;
+    const opcoes = {
         method: 'POST',
         body: JSON.stringify(params),
-        headers: getAuthHeaders(),
+        headers: obterCabecalhosAuth(),
     };
-    return fetch(url, options)
-        .then(validateResponse)
-        .then(response => response.json());
+    return fetch(url, opcoes)
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
 const atualizarCategoria = (id, params = {}) => {
-    const url = `${API_BASE_URL}/categorias/${id}`;
-    const options = {
+    const url = `${URL_BASE_API}/categorias/${id}`;
+    const opcoes = {
         method: 'PUT',
         body: JSON.stringify(params),
-        headers: getAuthHeaders(),
+        headers: obterCabecalhosAuth(),
     };
-    return fetch(url, options)
-        .then(validateResponse)
-        .then(response => response.json());
+    return fetch(url, opcoes)
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
 const excluirCategoria = (id) => {
-    const url = `${API_BASE_URL}/categorias/${id}`;
-    const options = { 
-        method: 'DELETE', 
-        headers: getAuthHeaders() 
+    const url = `${URL_BASE_API}/categorias/${id}`;
+    const opcoes = {
+        method: 'DELETE',
+        headers: obterCabecalhosAuth()
     };
-    return fetch(url, options)
-        .then(validateResponse)
+    return fetch(url, opcoes)
+        .then(validarResposta)
         .then(() => {});
 };
 

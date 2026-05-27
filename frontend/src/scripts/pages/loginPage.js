@@ -1,22 +1,22 @@
-import { showSuccess, showError } from '../util.js';
-import { login } from '../remotes/auth/loginRemote.js';
+import { exibirSucesso, exibirErro } from '../util.js';
+import { logar } from '../remotes/auth/loginRemote.js';
 
-const initLogin = () => {
-    const form = document.getElementById('login-form');
-    form.addEventListener('submit', (e) => {
+const iniciarLogin = () => {
+    const formulario = document.getElementById('login-form');
+    formulario.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const senha = document.getElementById('login-senha').value;
 
-        login({ email, senha })
-            .then(data => {
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userName', data.nome);
-                showSuccess('Login realizado com sucesso!');
+        logar({ email, senha })
+            .then(dados => {
+                localStorage.setItem('token', dados.token);
+                localStorage.setItem('userName', dados.nome);
+                exibirSucesso('Login realizado com sucesso!');
                 window.location.hash = '#/dashboard';
             })
-            .catch(showError);
+            .catch(exibirErro);
     });
 };
 
-export { initLogin };
+export { iniciarLogin };
