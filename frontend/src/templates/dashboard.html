@@ -19,9 +19,20 @@
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        <h2>Últimas Transações</h2>
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-header">
+            <h2>Despesas por Categoria</h2>
+        </div>
+        <div class="chart-container" id="dash-chart-container">
+            <canvas id="dash-pie-chart" width="220" height="220"></canvas>
+            <div class="chart-legend" id="dash-chart-legend"></div>
+        </div>
     </div>
-    <div id="dash-transacoes-body"></div>
+    <div class="card">
+        <div class="card-header">
+            <h2>Últimas Transações</h2>
+        </div>
+        <div id="dash-transacoes-body"></div>
+    </div>
 </div>
