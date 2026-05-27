@@ -1,0 +1,19 @@
+# Node
+node_modules/
+frontend/node_modules/
+
+# Maven
+backend/target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Environment
+backend/src/main/resources/application-local.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
