@@ -1,32 +1,32 @@
-import { API_BASE_URL, getAuthHeaders, validateResponse } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
 
 const pesquisarOrcamentos = () => {
-    const url = `${API_BASE_URL}/orcamentos`;
-    return fetch(url, { headers: getAuthHeaders() })
-        .then(validateResponse)
-        .then(response => response.json());
+    const url = `${URL_BASE_API}/orcamentos`;
+    return fetch(url, { headers: obterCabecalhosAuth() })
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
 const criarOrcamento = (params = {}) => {
-    const url = `${API_BASE_URL}/orcamentos`;
-    const options = {
+    const url = `${URL_BASE_API}/orcamentos`;
+    const opcoes = {
         method: 'POST',
         body: JSON.stringify(params),
-        headers: getAuthHeaders(),
+        headers: obterCabecalhosAuth(),
     };
-    return fetch(url, options)
-        .then(validateResponse)
-        .then(response => response.json());
+    return fetch(url, opcoes)
+        .then(validarResposta)
+        .then(resposta => resposta.json());
 };
 
 const excluirOrcamento = (id) => {
-    const url = `${API_BASE_URL}/orcamentos/${id}`;
-    const options = { 
-        method: 'DELETE', 
-        headers: getAuthHeaders() 
+    const url = `${URL_BASE_API}/orcamentos/${id}`;
+    const opcoes = {
+        method: 'DELETE',
+        headers: obterCabecalhosAuth()
     };
-    return fetch(url, options)
-        .then(validateResponse)
+    return fetch(url, opcoes)
+        .then(validarResposta)
         .then(() => {});
 };
 
