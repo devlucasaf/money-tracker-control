@@ -14,7 +14,10 @@
         src="https://img.shields.io/badge/Spring%20Boot-3.4.5-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" 
     />
     <img 
-        src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" 
+        src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" 
+    />
+    <img 
+        src="https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white" 
     />
     <img 
         src="https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" 
@@ -26,13 +29,13 @@
 
 <br/>
 
-> **SGFP** é um sistema web completo para gestão financeira pessoal, permitindo o controle de receitas, despesas, contas, categorias, metas e orçamentos — tudo em uma única plataforma.
+> **Money Tracker** é um sistema web completo para gestão financeira pessoal, permitindo o controle de receitas, despesas, contas, categorias, metas e orçamentos — tudo em uma única plataforma.
 
 ---
 
 ## 📋 Sobre o Projeto
 
-O **SGFP - Sistema de Gestão Financeira Pessoal** foi desenvolvido para ajudar usuários a organizarem e acompanharem suas finanças de forma prática e intuitiva. A plataforma oferece controle centralizado de todas as movimentações financeiras, com dashboard resumido, gestão de metas e controle de orçamento mensal por categoria.
+O **Money Tracker - Sistema de Gestão Financeira Pessoal** foi desenvolvido para ajudar usuários a organizarem e acompanharem suas finanças de forma prática e intuitiva. A plataforma oferece controle centralizado de todas as movimentações financeiras, com dashboard resumido, gestão de metas e controle de orçamento mensal por categoria.
 
 ---
 
@@ -40,24 +43,22 @@ O **SGFP - Sistema de Gestão Financeira Pessoal** foi desenvolvido para ajudar 
 
 O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separação clara entre frontend e backend:
 
-- **Frontend:** React 18 + Vite, responsável pela interface do usuário
+- **Frontend:** Vanilla JavaScript (ES6+ Modules) + Vite 5, SPA com template-based routing
 - **Backend:** API REST com Spring Boot 3.4.5, Spring Security (JWT Stateless), Spring Data JPA
-- **Banco de Dados:** SQL Server + Flyway (migrations)
+- **Banco de Dados:** SQL Server com Hibernate DDL Auto
 - **Segurança:** JWT para autenticação, BCrypt para senhas, CORS configurado globalmente
 - **Padrão DTO:** Separação completa entre entidades JPA e objetos de transferência
-
-> 📖 Para mais detalhes sobre a arquitetura utilizada, consulte a [documentação de introdução](https://cloudsupport.dev/manual/introducao/).
+- **Proxy:** Vite dev server com proxy `/api` para o backend
 
 ---
 
 ## 🗂️ Estrutura do Projeto
 
 ```
-📂 SGFP-Sistema-De-Gestao-Financeira-Pessoal
+📂 money-tracker-control
 ├── 📂 backend
-│   ├── 📂 src/main/java/com/tracker/control
+│   ├── 📂 src/main/java/com/moneytracker
 │   │   ├── 📂 dto/auth                  # DTOs de autenticação
-│   │   ├── 📂 entity                    # Entidades JPA
 │   │   ├── 📂 exception                 # Tratamento global de erros
 │   │   ├── 📂 infra                     # Camada de infraestrutura
 │   │   │   ├── 📂 config                # Configurações gerais (CORS)
@@ -74,11 +75,22 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 │   └── 📄 pom.xml
 ├── 📂 frontend
 │   ├── 📂 src
-│   │   ├── 📂 components                # Componentes reutilizáveis
-│   │   ├── 📂 pages                     # Páginas da aplicação
-│   │   │   └── 📂 auth                  # Login e Registro
-│   │   ├── 📂 services                  # Chamadas à API
-│   │   └── 📂 styles                    # Estilos globais
+│   │   ├── 📂 scripts                   # Lógica principal da aplicação
+│   │   │   ├── 📄 app.js                # Router e inicialização da SPA
+│   │   │   ├── 📄 util.js               # Utilitários (tema, helpers)
+│   │   │   ├── 📂 pages                 # Lógica de cada página
+│   │   │   └── 📂 remotes               # Chamadas à API (fetch)
+│   │   │       ├── 📂 auth              # Login e Registro
+│   │   │       ├── 📂 categorias        # CRUD de categorias
+│   │   │       ├── 📂 contas            # CRUD de contas
+│   │   │       ├── 📂 dashboard         # Dados do dashboard
+│   │   │       ├── 📂 metas             # CRUD de metas
+│   │   │       ├── 📂 orcamentos        # CRUD de orçamentos
+│   │   │       └── 📂 transacoes        # CRUD de transações
+│   │   ├── 📂 styles                    # Estilos globais e componentes
+│   │   └── 📂 templates                 # Templates HTML das páginas
+│   ├── 📄 index.html                    # Entry point da SPA
+│   ├── 📄 vite.config.js                # Configuração do Vite + proxy
 │   └── 📄 package.json
 └── 📄 README.md
 ```
@@ -94,6 +106,7 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 - 📊 **Dashboard** — Resumo mensal com total de receitas, despesas e saldo
 - 🎯 **Metas** — Definição de objetivos financeiros com acompanhamento de progresso
 - 📋 **Orçamentos** — Limite de gastos mensal por categoria com controle automático
+- 🌙 **Tema** — Alternância entre tema claro e escuro
 
 ---
 
@@ -127,13 +140,6 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
         width="40px" 
         style="padding: 5px;" 
         src="https://skillicons.dev/icons?i=javascript" 
-    />
-    <img 
-        alt="React" 
-        title="React" 
-        width="40px" 
-        style="padding: 5px;" 
-        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" 
     />
     <img 
         alt="Vite" 
@@ -200,8 +206,8 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/devlucasaf/SGFP-Sistema-De-Gestao-Financeira-Pessoal.git
-cd SGFP-Sistema-De-Gestao-Financeira-Pessoal
+git clone https://github.com/devlucasaf/money-tracker-control.git
+cd money-tracker-control
 ```
 
 ### 2. Configure o Backend
@@ -210,14 +216,13 @@ cd SGFP-Sistema-De-Gestao-Financeira-Pessoal
 cd backend
 ```
 
-Configure o arquivo `src/main/resources/application.properties`:
+Configure as variáveis de ambiente (ou edite `src/main/resources/application.properties`):
 
 ```properties
-spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=money_tracker;encrypt=true;trustServerCertificate=true
-spring.datasource.username=sa
-spring.datasource.password=sua_senha
-
-api.security.token.secret=sua-chave-secreta-jwt
+DB_URL=jdbc:sqlserver://localhost:1433;databaseName=money_tracker;encrypt=true;trustServerCertificate=true
+DB_USERNAME=sa
+DB_PASSWORD=sua_senha
+JWT_SECRET=sua-chave-secreta-jwt
 ```
 
 Inicie o servidor:
