@@ -10,25 +10,47 @@
     <div class="modal">
         <div class="modal-header">
             <h3 id="modal-meta-title">Nova Meta</h3>
-            <button class="btn btn-outline" id="modal-meta-close"><i class="pi pi-times"></i></button>
+            <button class="btn btn-outline" id="modal-meta-close">
+                <i class="pi pi-times"></i>
+            </button>
         </div>
+        
         <form id="form-meta">
             <input type="hidden" id="meta-id" />
             <div class="form-group">
                 <label>Descrição</label>
-                <input type="text" id="meta-descricao" required />
+                <input 
+                    type="text" 
+                    id="meta-descricao" 
+                    required 
+                />
             </div>
+
             <div class="form-group">
                 <label>Valor Alvo</label>
-                <input type="number" step="0.01" id="meta-valorAlvo" required />
+                <input 
+                    type="number" 
+                    step="0.01" 
+                    id="meta-valorAlvo" 
+                    required 
+                />
             </div>
+
             <div class="form-group">
                 <label>Valor Atual</label>
-                <input type="number" step="0.01" id="meta-valorAtual" value="0" />
+                <input 
+                    type="number" 
+                    step="0.01" 
+                    id="meta-valorAtual" 
+                    value="0" 
+                />
             </div>
             <div class="form-group">
                 <label>Data Limite</label>
-                <input type="date" id="meta-dataLimite" />
+                <input 
+                    type="date" 
+                    id="meta-dataLimite" 
+                />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-meta-cancel">Cancelar</button>

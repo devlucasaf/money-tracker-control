@@ -10,14 +10,22 @@
     <div class="modal">
         <div class="modal-header">
             <h3 id="modal-conta-title">Nova Conta</h3>
-            <button class="btn btn-outline" id="modal-conta-close"><i class="pi pi-times"></i></button>
+            <button class="btn btn-outline" id="modal-conta-close">
+                <i class="pi pi-times"></i>
+            </button>
         </div>
+
         <form id="form-conta">
             <input type="hidden" id="conta-id" />
             <div class="form-group">
                 <label>Nome</label>
-                <input type="text" id="conta-nome" required />
+                <input 
+                    type="text" 
+                    id="conta-nome" 
+                    required 
+                />
             </div>
+
             <div class="form-group">
                 <label>Tipo</label>
                 <select id="conta-tipo">
@@ -27,10 +35,17 @@
                     <option value="CARTEIRA">Carteira</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label>Saldo Inicial</label>
-                <input type="number" step="0.01" id="conta-saldo" required />
+                <input 
+                    type="number" 
+                    step="0.01" 
+                    id="conta-saldo" 
+                    required 
+                />
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-conta-cancel">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Salvar</button>

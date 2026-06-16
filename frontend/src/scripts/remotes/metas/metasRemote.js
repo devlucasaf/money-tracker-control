@@ -1,4 +1,4 @@
-import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from "../remoteUtils.js";
 
 const pesquisarMetas = () => {
     const url = `${URL_BASE_API}/metas`;
@@ -10,7 +10,7 @@ const pesquisarMetas = () => {
 const criarMeta = (params = {}) => {
     const url = `${URL_BASE_API}/metas`;
     const opcoes = {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(params),
         headers: obterCabecalhosAuth(),
     };
@@ -22,7 +22,7 @@ const criarMeta = (params = {}) => {
 const atualizarMeta = (id, params = {}) => {
     const url = `${URL_BASE_API}/metas/${id}`;
     const opcoes = {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(params),
         headers: obterCabecalhosAuth(),
     };
@@ -34,7 +34,7 @@ const atualizarMeta = (id, params = {}) => {
 const excluirMeta = (id) => {
     const url = `${URL_BASE_API}/metas/${id}`;
     const opcoes = {
-        method: 'DELETE',
+        method: "DELETE",
         headers: obterCabecalhosAuth()
     };
     return fetch(url, opcoes)

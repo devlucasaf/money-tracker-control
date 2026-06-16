@@ -39,7 +39,7 @@ const exibirNotificacao = (mensagem, tipo = 'info') => {
 const exibirSucesso = (msg) => exibirNotificacao(msg, 'success');
 const exibirErro = (err) => exibirNotificacao(err instanceof Error ? err.message : String(err), 'error');
 
-// Gerenciamento de tema
+// --- GERENCIAMENTO DE TEMA ---
 const inicializarTema = () => {
     const salvo = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', salvo);
@@ -55,14 +55,16 @@ const alternarTema = () => {
 
 const atualizarBotaoTema = () => {
     const btn = document.getElementById('btn-theme-toggle');
-    if (!btn) return;
+    if (!btn) {
+        return;
+    }
     const escuro = document.documentElement.getAttribute('data-theme') === 'dark';
     btn.innerHTML = escuro
         ? '<i class="pi pi-sun"></i> <span>Modo Claro</span>'
         : '<i class="pi pi-moon"></i> <span>Modo Escuro</span>';
 };
 
-// Inicializar tema ao carregar
+// --- INICIALIZAR TEMA AO CARREGAR ---
 inicializarTema();
 
 export { formatarMoeda, formatarData, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema };

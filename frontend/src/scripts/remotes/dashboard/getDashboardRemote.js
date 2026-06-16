@@ -1,4 +1,4 @@
-import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from "../remoteUtils.js";
 
 const obterDashboard = () => {
     const url = `${URL_BASE_API}/dashboard`;

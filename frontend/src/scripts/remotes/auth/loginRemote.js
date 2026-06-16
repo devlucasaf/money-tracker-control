@@ -1,11 +1,11 @@
-import { URL_BASE_API, validarResposta } from '../remoteUtils.js';
+import { URL_BASE_API, validarResposta } from "../remoteUtils.js";
 
 const logar = (params = {}) => {
     const url = `${URL_BASE_API}/auth/login`;
     const opcoes = {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(params),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
     };
     return fetch(url, opcoes)
         .then(validarResposta)

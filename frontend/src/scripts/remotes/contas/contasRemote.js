@@ -1,4 +1,4 @@
-import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from "../remoteUtils.js";
 
 const pesquisarContas = () => {
     const url = `${URL_BASE_API}/contas`;
@@ -10,7 +10,7 @@ const pesquisarContas = () => {
 const criarConta = (params = {}) => {
     const url = `${URL_BASE_API}/contas`;
     const opcoes = {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(params),
         headers: obterCabecalhosAuth(),
     };
@@ -22,7 +22,7 @@ const criarConta = (params = {}) => {
 const atualizarConta = (id, params = {}) => {
     const url = `${URL_BASE_API}/contas/${id}`;
     const opcoes = {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(params),
         headers: obterCabecalhosAuth(),
     };
@@ -34,7 +34,7 @@ const atualizarConta = (id, params = {}) => {
 const excluirConta = (id) => {
     const url = `${URL_BASE_API}/contas/${id}`;
     const opcoes = {
-        method: 'DELETE',
+        method: "DELETE",
         headers: obterCabecalhosAuth()
     };
     return fetch(url, opcoes)
