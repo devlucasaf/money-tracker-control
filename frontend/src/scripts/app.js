@@ -8,8 +8,10 @@ import { iniciarMetas }                     from "./pages/metasPage.js";
 import { iniciarOrcamentos }                from "./pages/orcamentosPage.js";
 import { alternarTema, atualizarBotaoTema } from "./util.js";
 
+// --- CACHE DE TEMPLATES ---
 const templates = {};
 
+// --- CARREGAMENTO DE TEMPLATE ---
 const carregarTemplate = (nome) => {
     if (templates[nome] !== undefined) {
         return Promise.resolve(templates[nome]);
@@ -23,11 +25,13 @@ const carregarTemplate = (nome) => {
         });
 };
 
+// --- VERIFICAÇÃO DE AUTENTICAÇÃO ---
 const estaAutenticado = () => {
     const token = localStorage.getItem("token");
     return token !== null && token !== undefined && token !== "";
 };
 
+// --- MAPA DE ROTAS ---
 const rotas = {
     "/login":       { template: "login",        init: iniciarLogin,        auth: false },
     "/register":    { template: "register",     init: iniciarRegistro,     auth: false },
@@ -39,20 +43,24 @@ const rotas = {
     "/orcamentos":  { template: "orcamentos",   init: iniciarOrcamentos,   auth: true  },
 };
 
+// --- NAVEGAÇÃO ENTRE ROTAS ---
 const navegar = () => {
     const hash = window.location.hash.slice(1) || "/login";
     const rota = rotas[hash];
 
+    // --- ROTA INEXISTENTE ---
     if (rota === undefined) {
         window.location.hash = "#/dashboard";
         return;
     }
 
+    // --- ROTA PROTEGIDA SEM AUTENTICAÇÃO ---
     if (rota.auth && !estaAutenticado()) {
         window.location.hash = "#/login";
         return;
     }
 
+    // --- ROTA PÚBLICA COM USUÁRIO JÁ AUTENTICADO ---
     if (!rota.auth && estaAutenticado() && (hash === "/login" || hash === "/register")) {
         window.location.hash = "#/dashboard";
         return;
@@ -60,6 +68,7 @@ const navegar = () => {
 
     const app = document.getElementById("app");
 
+    // --- ROTAS AUTENTICADAS ---
     if (rota.auth) {
         carregarTemplate("layout").then(layoutHtml => {
             app.innerHTML = layoutHtml;
@@ -67,16 +76,17 @@ const navegar = () => {
             const nomeUsuario = localStorage.getItem("userName") ?? "Usuário";
             document.getElementById("sidebar-user-name").textContent = nomeUsuario;
 
+            // --- LOGOUT ---
             document.getElementById("btn-logout").addEventListener("click", () => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("userName");
                 window.location.hash = "#/login";
             });
 
-            // --- ALTERNÂNCIA DE TEMA ---
             document.getElementById("btn-theme-toggle").addEventListener("click", alternarTema);
             atualizarBotaoTema();
 
+            // --- DESTAQUE DO ITEM DE MENU ATIVO ---
             document.querySelectorAll(".nav-item").forEach(item => {
                 const navHash = item.getAttribute("data-navigate");
                 if (navHash === `#${hash}`) {
@@ -86,6 +96,7 @@ const navegar = () => {
                 }
             });
 
+            // --- CARREGAMENTO DA PÁGINA E INICIALIZAÇÃO ---
             carregarTemplate(rota.template).then(paginaHtml => {
                 document.getElementById("page-content").innerHTML = paginaHtml;
                 rota.init();
@@ -99,6 +110,7 @@ const navegar = () => {
     }
 };
 
+// --- INTERCEPTAÇÃO DE CLIQUES EM LINKS DE NAVEGAÇÃO ---
 document.addEventListener("click", (e) => {
     const nav = e.target.closest("[data-navigate]");
     if (nav !== null) {
@@ -107,5 +119,6 @@ document.addEventListener("click", (e) => {
     }
 });
 
+// --- EVENTOS DE INICIALIZAÇÃO ---
 window.addEventListener("hashchange", navegar);
 navegar();

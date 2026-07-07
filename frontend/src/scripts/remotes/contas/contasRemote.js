@@ -1,26 +1,29 @@
 import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from "../remoteUtils.js";
 
+// --- PESQUISAR CONTAS ---
 const pesquisarContas = () => {
-    const url = `${URL_BASE_API}/contas`;
-    return fetch(url, { headers: obterCabecalhosAuth() })
-        .then(validarResposta)
-        .then(resposta => resposta.json());
+    const url = `${URL_BASE_API}/contas`;                    
+    return fetch(url, { headers: obterCabecalhosAuth() })    
+        .then(validarResposta)                               
+        .then(resposta => resposta.json());                  
 };
 
+// --- CRIAR CONTA ---
 const criarConta = (params = {}) => {
     const url = `${URL_BASE_API}/contas`;
     const opcoes = {
         method: "POST",
-        body: JSON.stringify(params),
-        headers: obterCabecalhosAuth(),
+        body: JSON.stringify(params),                        
+        headers: obterCabecalhosAuth(),                      
     };
     return fetch(url, opcoes)
         .then(validarResposta)
         .then(resposta => resposta.json());
 };
 
+// --- ATUALIZAR CONTA ---
 const atualizarConta = (id, params = {}) => {
-    const url = `${URL_BASE_API}/contas/${id}`;
+    const url = `${URL_BASE_API}/contas/${id}`;              
     const opcoes = {
         method: "PUT",
         body: JSON.stringify(params),
@@ -31,6 +34,7 @@ const atualizarConta = (id, params = {}) => {
         .then(resposta => resposta.json());
 };
 
+// --- EXCLUIR CONTA ---
 const excluirConta = (id) => {
     const url = `${URL_BASE_API}/contas/${id}`;
     const opcoes = {
