@@ -1,7 +1,9 @@
 <div class="card">
     <div class="card-header">
         <h2>Orçamentos</h2>
-        <button class="btn btn-primary" id="btn-novo-orcamento"><i class="pi pi-plus"></i> Novo Orçamento</button>
+        <button class="btn btn-primary" id="btn-novo-orcamento">
+            <i class="pi pi-plus"></i> Novo Orçamento
+        </button>
     </div>
     <div id="orcamentos-body"></div>
 </div>
@@ -10,20 +12,33 @@
     <div class="modal">
         <div class="modal-header">
             <h3>Novo Orçamento</h3>
-            <button class="btn btn-outline" id="modal-orcamento-close"><i class="pi pi-times"></i></button>
+            <button class="btn btn-outline" id="modal-orcamento-close">
+                <i class="pi pi-times"></i>
+            </button>
         </div>
         <form id="form-orcamento">
             <div class="form-group">
                 <label>Categoria</label>
-                <select id="orcamento-categoria" required><option value="">Selecione...</option></select>
+                <select id="orcamento-categoria" required>
+                    <option value="">Selecione...</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Valor Limite</label>
-                <input type="number" step="0.01" id="orcamento-valorLimite" required />
+                <input 
+                    type="number" 
+                    step="0.01" 
+                    id="orcamento-valorLimite" 
+                    required 
+                />
             </div>
             <div class="form-group">
                 <label>Mês/Ano</label>
-                <input type="month" id="orcamento-mesAno" required />
+                <input 
+                    type="month" 
+                    id="orcamento-mesAno" 
+                    required 
+                />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-orcamento-cancel">Cancelar</button>
