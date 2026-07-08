@@ -61,11 +61,7 @@ const atualizarBotaoTema = () => {
     btn.innerHTML = '';
     const icone = document.createElement('i');
     icone.className = escuro ? 'pi pi-sun' : 'pi pi-moon';
-    const texto = document.createElement('span');
-    texto.textContent = escuro ? 'Modo Claro' : 'Modo Escuro';
     btn.appendChild(icone);
-    btn.appendChild(document.createTextNode(' '));
-    btn.appendChild(texto);
 };
 
 // Inicializar tema ao carregar

@@ -52,3 +52,32 @@
         </form>
     </div>
 </div>
+
+<template id="tpl-categorias-vazio">
+    <div class="empty-state">
+        <i class="pi pi-tag"></i>
+        <p>Nenhuma categoria cadastrada</p>
+    </div>
+</template>
+
+<template id="tpl-categorias-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Cor</th><th>Nome</th><th>Tipo</th><th></th></tr>
+            </thead>
+            <tbody id="categorias-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-categorias-linha">
+    <tr>
+        <td data-campo="cor"></td>
+        <td data-campo="nome"></td>
+        <td data-campo="tipo"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
+
+

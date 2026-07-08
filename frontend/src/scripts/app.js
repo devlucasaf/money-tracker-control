@@ -1,6 +1,5 @@
 import { iniciarLogin }                     from "./pages/loginPage.js";
 import { iniciarRegistro }                  from "./pages/registerPage.js";
-import { iniciarDashboard }                 from "./pages/dashboardPage.js";
 import { iniciarTransacoes }                from "./pages/transacoesPage.js";
 import { iniciarContas }                    from "./pages/contasPage.js";
 import { iniciarCategorias }                from "./pages/categoriasPage.js";
@@ -35,7 +34,6 @@ const estaAutenticado = () => {
 const rotas = {
     "/login":       { template: "login",        init: iniciarLogin,        auth: false },
     "/register":    { template: "register",     init: iniciarRegistro,     auth: false },
-    "/dashboard":   { template: "dashboard",    init: iniciarDashboard,    auth: true  },
     "/transacoes":  { template: "transacoes",   init: iniciarTransacoes,   auth: true  },
     "/contas":      { template: "contas",       init: iniciarContas,       auth: true  },
     "/categorias":  { template: "categorias",   init: iniciarCategorias,   auth: true  },
@@ -50,7 +48,7 @@ const navegar = () => {
 
     // --- ROTA INEXISTENTE ---
     if (rota === undefined) {
-        window.location.hash = "#/dashboard";
+        window.location.hash = "#/transacoes";
         return;
     }
 
@@ -62,7 +60,7 @@ const navegar = () => {
 
     // --- ROTA PÚBLICA COM USUÁRIO JÁ AUTENTICADO ---
     if (!rota.auth && estaAutenticado() && (hash === "/login" || hash === "/register")) {
-        window.location.hash = "#/dashboard";
+        window.location.hash = "#/transacoes";
         return;
     }
 
@@ -87,7 +85,7 @@ const navegar = () => {
             atualizarBotaoTema();
 
             // --- DESTAQUE DO ITEM DE MENU ATIVO ---
-            document.querySelectorAll(".nav-item").forEach(item => {
+            document.querySelectorAll(".nav-link").forEach(item => {
                 const navHash = item.getAttribute("data-navigate");
                 if (navHash === `#${hash}`) {
                     item.classList.add("active");
