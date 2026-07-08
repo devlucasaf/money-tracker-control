@@ -28,37 +28,46 @@ const renderizarDashboard = (dados) => {
     document.getElementById('dash-economia').textContent = formatarMoeda(dados.economiaMes);
     document.getElementById('dash-economia').className = `value ${dados.economiaMes >= 0 ? 'positive' : 'negative'}`;
 
-    // Gráfico pizza
     renderizarGraficoPizza(dados.despesasPorCategoria || []);
 
-    // Transações recentes
     const container = document.getElementById('dash-transacoes-body');
     const transacoes = dados.ultimasTransacoes;
 
     if (transacoes === null || transacoes === undefined || transacoes.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-inbox"></i><p>Nenhuma transação recente</p></div>';
+        const tplVazio = document.getElementById('tpl-dash-vazio-transacoes');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
-    container.innerHTML = `
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Data</th></tr></thead>
-                <tbody>
-                    ${transacoes.map(t => `
-                        <tr>
-                            <td>${t.descricao}</td>
-                            <td style="font-weight:600;color:${t.tipo === 'RECEITA' ? 'var(--success)' : 'var(--danger)'}">
-                                ${t.tipo === 'RECEITA' ? '+' : '-'} ${formatarMoeda(t.valor)}
-                            </td>
-                            <td><span class="badge ${t.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}">${t.tipo}</span></td>
-                            <td>${t.data ?? ''}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+    const tplTabela = document.getElementById('tpl-dash-tabela-transacoes');
+    const tplLinha = document.getElementById('tpl-dash-transacao-linha');
+
+    container.innerHTML = '';
+    container.appendChild(tplTabela.content.cloneNode(true));
+
+    const tbody = container.querySelector('#dash-transacoes-tbody');
+    transacoes.forEach(t => {
+        const linha = tplLinha.content.cloneNode(true);
+        const tr = linha.querySelector('tr');
+
+        tr.querySelector('[data-campo="descricao"]').textContent = t.descricao;
+
+        const tdValor = tr.querySelector('[data-campo="valor"]');
+        tdValor.style.fontWeight = '600';
+        tdValor.style.color = t.tipo === 'RECEITA' ? 'var(--success)' : 'var(--danger)';
+        tdValor.textContent = `${t.tipo === 'RECEITA' ? '+' : '-'} ${formatarMoeda(t.valor)}`;
+
+        const tdTipo = tr.querySelector('[data-campo="tipo"]');
+        const badge = document.createElement('span');
+        badge.className = `badge ${t.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}`;
+        badge.textContent = t.tipo;
+        tdTipo.appendChild(badge);
+
+        tr.querySelector('[data-campo="data"]').textContent = t.data ?? '';
+
+        tbody.appendChild(tr);
+    });
 };
 
 const renderizarGraficoPizza = (despesas) => {
@@ -71,7 +80,9 @@ const renderizarGraficoPizza = (despesas) => {
 
     if (!despesas || despesas.length === 0) {
         const container = document.getElementById('dash-chart-container');
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-chart-pie"></i><p>Sem despesas este mês</p></div>';
+        const tplVazio = document.getElementById('tpl-dash-vazio-grafico');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
@@ -107,15 +118,15 @@ const renderizarGraficoPizza = (despesas) => {
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
     ctx.fillText('Total', centroX, centroY + 12);
 
-    legenda.innerHTML = despesas.map((item, i) => {
+    const tplLegendaItem = document.getElementById('tpl-dash-legenda-item');
+    legenda.innerHTML = '';
+    despesas.forEach((item, i) => {
         const pct = ((item.valor / total) * 100).toFixed(1);
-        return `
-            <div class="chart-legend-item">
-                <span class="chart-legend-dot" style="background:${CORES_GRAFICO[i % CORES_GRAFICO.length]}"></span>
-                ${item.categoriaNome || 'Sem categoria'} (${pct}%)
-            </div>
-        `;
-    }).join('');
+        const clone = tplLegendaItem.content.cloneNode(true);
+        clone.querySelector('[data-campo="dot"]').style.background = CORES_GRAFICO[i % CORES_GRAFICO.length];
+        clone.querySelector('[data-campo="texto"]').textContent = `${item.categoriaNome || 'Sem categoria'} (${pct}%)`;
+        legenda.appendChild(clone);
+    });
 };
 
 export { iniciarDashboard };

@@ -38,3 +38,32 @@
         </form>
     </div>
 </div>
+
+<!-- Templates -->
+<template id="tpl-contas-vazio">
+    <div class="empty-state">
+        <i class="pi pi-wallet"></i>
+        <p>Nenhuma conta cadastrada</p>
+    </div>
+</template>
+
+<template id="tpl-contas-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Nome</th><th>Tipo</th><th>Saldo</th><th></th></tr>
+            </thead>
+            <tbody id="contas-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-contas-linha">
+    <tr>
+        <td data-campo="nome"></td>
+        <td data-campo="tipo"></td>
+        <td data-campo="saldo"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
+

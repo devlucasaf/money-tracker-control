@@ -19,30 +19,61 @@ const renderizarTabela = (categorias) => {
     const container = document.getElementById('categorias-body');
 
     if (categorias === null || categorias === undefined || categorias.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-tag"></i><p>Nenhuma categoria cadastrada</p></div>';
+        const tplVazio = document.getElementById('tpl-categorias-vazio');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
-    container.innerHTML = `
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Cor</th><th>Nome</th><th>Tipo</th><th></th></tr></thead>
-                <tbody>
-                    ${categorias.map(c => `
-                        <tr>
-                            <td><span class="color-dot" style="background:${c.cor ?? '#6366f1'}"></span></td>
-                            <td>${c.nome}</td>
-                            <td><span class="badge ${c.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}">${c.tipo}</span></td>
-                            <td>
-                                <button class="btn btn-outline btn-editar-categoria" data-id="${c.id}" data-nome="${c.nome}" data-tipo="${c.tipo}" data-cor="${c.cor ?? '#6366f1'}" style="margin-right:0.5rem"><i class="pi pi-pencil"></i></button>
-                                <button class="btn btn-danger btn-excluir-categoria" data-id="${c.id}"><i class="pi pi-trash"></i></button>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+    const tplTabela = document.getElementById('tpl-categorias-tabela');
+    const tplLinha = document.getElementById('tpl-categorias-linha');
+
+    container.innerHTML = '';
+    container.appendChild(tplTabela.content.cloneNode(true));
+
+    const tbody = container.querySelector('#categorias-tbody');
+    categorias.forEach(c => {
+        const linha = tplLinha.content.cloneNode(true);
+        const tr = linha.querySelector('tr');
+
+        const tdCor = tr.querySelector('[data-campo="cor"]');
+        const dot = document.createElement('span');
+        dot.className = 'color-dot';
+        dot.style.background = c.cor ?? '#6366f1';
+        tdCor.appendChild(dot);
+
+        tr.querySelector('[data-campo="nome"]').textContent = c.nome;
+
+        const tdTipo = tr.querySelector('[data-campo="tipo"]');
+        const badge = document.createElement('span');
+        badge.className = `badge ${c.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}`;
+        badge.textContent = c.tipo;
+        tdTipo.appendChild(badge);
+
+        const tdAcoes = tr.querySelector('[data-campo="acoes"]');
+
+        const btnEditar = document.createElement('button');
+        btnEditar.className = 'btn btn-outline btn-editar-categoria';
+        btnEditar.style.marginRight = '0.5rem';
+        btnEditar.dataset.id = c.id;
+        btnEditar.dataset.nome = c.nome;
+        btnEditar.dataset.tipo = c.tipo;
+        btnEditar.dataset.cor = c.cor ?? '#6366f1';
+        const iconeEditar = document.createElement('i');
+        iconeEditar.className = 'pi pi-pencil';
+        btnEditar.appendChild(iconeEditar);
+        tdAcoes.appendChild(btnEditar);
+
+        const btnExcluir = document.createElement('button');
+        btnExcluir.className = 'btn btn-danger btn-excluir-categoria';
+        btnExcluir.dataset.id = c.id;
+        const iconeExcluir = document.createElement('i');
+        iconeExcluir.className = 'pi pi-trash';
+        btnExcluir.appendChild(iconeExcluir);
+        tdAcoes.appendChild(btnExcluir);
+
+        tbody.appendChild(tr);
+    });
 
     container.querySelectorAll('.btn-editar-categoria').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -101,9 +132,7 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta categoria?')) {
-        return;
-    }
+    if (!confirm('Deseja excluir esta categoria?')) return;
     excluirCategoria(id)
         .then(() => { exibirSucesso('Categoria excluída'); carregar(); })
         .catch(exibirErro);

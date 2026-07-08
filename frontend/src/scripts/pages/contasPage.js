@@ -19,30 +19,60 @@ const renderizarTabela = (contas) => {
     const container = document.getElementById('contas-body');
 
     if (contas === null || contas === undefined || contas.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-wallet"></i><p>Nenhuma conta cadastrada</p></div>';
+        const tplVazio = document.getElementById('tpl-contas-vazio');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
-    container.innerHTML = `
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Nome</th><th>Tipo</th><th>Saldo</th><th></th></tr></thead>
-                <tbody>
-                    ${contas.map(c => `
-                        <tr>
-                            <td>${c.nome}</td>
-                            <td><span class="badge badge-info">${c.tipo}</span></td>
-                            <td style="font-weight:600;color:${c.saldo >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatarMoeda(c.saldo)}</td>
-                            <td>
-                                <button class="btn btn-outline btn-editar-conta" data-id="${c.id}" data-nome="${c.nome}" data-tipo="${c.tipo}" data-saldo="${c.saldo}" style="margin-right:0.5rem"><i class="pi pi-pencil"></i></button>
-                                <button class="btn btn-danger btn-excluir-conta" data-id="${c.id}"><i class="pi pi-trash"></i></button>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+    const tplTabela = document.getElementById('tpl-contas-tabela');
+    const tplLinha = document.getElementById('tpl-contas-linha');
+
+    container.innerHTML = '';
+    container.appendChild(tplTabela.content.cloneNode(true));
+
+    const tbody = container.querySelector('#contas-tbody');
+    contas.forEach(c => {
+        const linha = tplLinha.content.cloneNode(true);
+        const tr = linha.querySelector('tr');
+
+        tr.querySelector('[data-campo="nome"]').textContent = c.nome;
+
+        const tdTipo = tr.querySelector('[data-campo="tipo"]');
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-info';
+        badge.textContent = c.tipo;
+        tdTipo.appendChild(badge);
+
+        const tdSaldo = tr.querySelector('[data-campo="saldo"]');
+        tdSaldo.style.fontWeight = '600';
+        tdSaldo.style.color = c.saldo >= 0 ? 'var(--success)' : 'var(--danger)';
+        tdSaldo.textContent = formatarMoeda(c.saldo);
+
+        const tdAcoes = tr.querySelector('[data-campo="acoes"]');
+
+        const btnEditar = document.createElement('button');
+        btnEditar.className = 'btn btn-outline btn-editar-conta';
+        btnEditar.style.marginRight = '0.5rem';
+        btnEditar.dataset.id = c.id;
+        btnEditar.dataset.nome = c.nome;
+        btnEditar.dataset.tipo = c.tipo;
+        btnEditar.dataset.saldo = c.saldo;
+        const iconeEditar = document.createElement('i');
+        iconeEditar.className = 'pi pi-pencil';
+        btnEditar.appendChild(iconeEditar);
+        tdAcoes.appendChild(btnEditar);
+
+        const btnExcluir = document.createElement('button');
+        btnExcluir.className = 'btn btn-danger btn-excluir-conta';
+        btnExcluir.dataset.id = c.id;
+        const iconeExcluir = document.createElement('i');
+        iconeExcluir.className = 'pi pi-trash';
+        btnExcluir.appendChild(iconeExcluir);
+        tdAcoes.appendChild(btnExcluir);
+
+        tbody.appendChild(tr);
+    });
 
     container.querySelectorAll('.btn-editar-conta').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -101,9 +131,7 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta conta?')) {
-        return;
-    }
+    if (!confirm('Deseja excluir esta conta?')) return;
     excluirConta(id)
         .then(() => { exibirSucesso('Conta excluída'); carregar(); })
         .catch(exibirErro);

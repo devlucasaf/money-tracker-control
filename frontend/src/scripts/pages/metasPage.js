@@ -19,39 +19,64 @@ const renderizarTabela = (metas) => {
     const container = document.getElementById('metas-body');
 
     if (metas === null || metas === undefined || metas.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-flag"></i><p>Nenhuma meta cadastrada</p></div>';
+        const tplVazio = document.getElementById('tpl-metas-vazio');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
-    container.innerHTML = `
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Descrição</th><th>Progresso</th><th>Valor Alvo</th><th>Data Limite</th><th></th></tr></thead>
-                <tbody>
-                    ${metas.map(m => {
-                        const percentual = m.valorAlvo > 0 ? Math.min((m.valorAtual / m.valorAlvo) * 100, 100) : 0;
-                        const cor = percentual >= 100 ? 'var(--success)' : 'var(--primary)';
-                        return `
-                        <tr>
-                            <td>${m.descricao}</td>
-                            <td style="min-width:150px">
-                                <div class="progress-bar">
-                                    <div class="fill" style="width:${percentual}%;background:${cor}"></div>
-                                </div>
-                                <small style="color:var(--text-secondary)">${formatarMoeda(m.valorAtual)} / ${formatarMoeda(m.valorAlvo)} (${percentual.toFixed(0)}%)</small>
-                            </td>
-                            <td>${formatarMoeda(m.valorAlvo)}</td>
-                            <td>${m.dataLimite ? formatarData(m.dataLimite) : '-'}</td>
-                            <td>
-                                <button class="btn btn-outline btn-editar-meta" data-id="${m.id}" data-descricao="${m.descricao}" data-valoralvo="${m.valorAlvo}" data-valoratual="${m.valorAtual}" data-datalimite="${m.dataLimite ?? ''}" style="margin-right:0.5rem"><i class="pi pi-pencil"></i></button>
-                                <button class="btn btn-danger btn-excluir-meta" data-id="${m.id}"><i class="pi pi-trash"></i></button>
-                            </td>
-                        </tr>`;
-                    }).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+    const tplTabela = document.getElementById('tpl-metas-tabela');
+    const tplLinha = document.getElementById('tpl-metas-linha');
+
+    container.innerHTML = '';
+    container.appendChild(tplTabela.content.cloneNode(true));
+
+    const tbody = container.querySelector('#metas-tbody');
+    metas.forEach(m => {
+        const percentual = m.valorAlvo > 0 ? Math.min((m.valorAtual / m.valorAlvo) * 100, 100) : 0;
+        const cor = percentual >= 100 ? 'var(--success)' : 'var(--primary)';
+
+        const linha = tplLinha.content.cloneNode(true);
+        const tr = linha.querySelector('tr');
+
+        tr.querySelector('[data-campo="descricao"]').textContent = m.descricao;
+
+        const fill = tr.querySelector('[data-campo="fill"]');
+        fill.style.width = `${percentual}%`;
+        fill.style.background = cor;
+
+        const progressoTexto = tr.querySelector('[data-campo="progresso-texto"]');
+        progressoTexto.style.color = 'var(--text-secondary)';
+        progressoTexto.textContent = `${formatarMoeda(m.valorAtual)} / ${formatarMoeda(m.valorAlvo)} (${percentual.toFixed(0)}%)`;
+
+        tr.querySelector('[data-campo="valorAlvo"]').textContent = formatarMoeda(m.valorAlvo);
+        tr.querySelector('[data-campo="dataLimite"]').textContent = m.dataLimite ? formatarData(m.dataLimite) : '-';
+
+        const tdAcoes = tr.querySelector('[data-campo="acoes"]');
+
+        const btnEditar = document.createElement('button');
+        btnEditar.className = 'btn btn-outline btn-editar-meta';
+        btnEditar.style.marginRight = '0.5rem';
+        btnEditar.dataset.id = m.id;
+        btnEditar.dataset.descricao = m.descricao;
+        btnEditar.dataset.valoralvo = m.valorAlvo;
+        btnEditar.dataset.valoratual = m.valorAtual;
+        btnEditar.dataset.datalimite = m.dataLimite ?? '';
+        const iconeEditar = document.createElement('i');
+        iconeEditar.className = 'pi pi-pencil';
+        btnEditar.appendChild(iconeEditar);
+        tdAcoes.appendChild(btnEditar);
+
+        const btnExcluir = document.createElement('button');
+        btnExcluir.className = 'btn btn-danger btn-excluir-meta';
+        btnExcluir.dataset.id = m.id;
+        const iconeExcluir = document.createElement('i');
+        iconeExcluir.className = 'pi pi-trash';
+        btnExcluir.appendChild(iconeExcluir);
+        tdAcoes.appendChild(btnExcluir);
+
+        tbody.appendChild(tr);
+    });
 
     container.querySelectorAll('.btn-editar-meta').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -113,9 +138,7 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta meta?')) {
-        return;
-    }
+    if (!confirm('Deseja excluir esta meta?')) return;
     excluirMeta(id)
         .then(() => { exibirSucesso('Meta excluída'); carregar(); })
         .catch(exibirErro);

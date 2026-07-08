@@ -37,3 +37,38 @@
         </form>
     </div>
 </div>
+
+<!-- Templates -->
+<template id="tpl-metas-vazio">
+    <div class="empty-state">
+        <i class="pi pi-flag"></i>
+        <p>Nenhuma meta cadastrada</p>
+    </div>
+</template>
+
+<template id="tpl-metas-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Descrição</th><th>Progresso</th><th>Valor Alvo</th><th>Data Limite</th><th></th></tr>
+            </thead>
+            <tbody id="metas-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-metas-linha">
+    <tr>
+        <td data-campo="descricao"></td>
+        <td data-campo="progresso" style="min-width:150px">
+            <div class="progress-bar">
+                <div class="fill" data-campo="fill"></div>
+            </div>
+            <small data-campo="progresso-texto"></small>
+        </td>
+        <td data-campo="valorAlvo"></td>
+        <td data-campo="dataLimite"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
+

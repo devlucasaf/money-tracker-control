@@ -32,3 +32,39 @@
         </form>
     </div>
 </div>
+
+<!-- Templates -->
+<template id="tpl-orcamentos-vazio">
+    <div class="empty-state">
+        <i class="pi pi-chart-pie"></i>
+        <p>Nenhum orçamento cadastrado</p>
+    </div>
+</template>
+
+<template id="tpl-orcamentos-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Categoria</th><th>Limite</th><th>Gasto</th><th>Disponível</th><th>Mês/Ano</th><th></th></tr>
+            </thead>
+            <tbody id="orcamentos-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-orcamentos-linha">
+    <tr>
+        <td data-campo="categoria"></td>
+        <td data-campo="limite"></td>
+        <td data-campo="gasto">
+            <div class="progress-bar" style="margin-bottom:4px">
+                <div class="fill" data-campo="fill"></div>
+            </div>
+            <small data-campo="gasto-texto"></small>
+        </td>
+        <td data-campo="disponivel"></td>
+        <td data-campo="mesAno"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
+

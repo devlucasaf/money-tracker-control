@@ -18,11 +18,9 @@ const iniciarTransacoes = () => {
     document.getElementById('modal-transacao-cancel').addEventListener('click', fecharModal);
     document.getElementById('form-transacao').addEventListener('submit', salvar);
 
-    // Conversor de moeda
     document.getElementById('transacao-valor').addEventListener('input', converterMoeda);
     document.getElementById('converter-moeda').addEventListener('change', converterMoeda);
 
-    // Calendário personalizado
     inicializarCalendario();
 };
 
@@ -34,7 +32,7 @@ const converterMoeda = () => {
     const moedaBase = obterMoedaUsuario();
 
     if (!valor || isNaN(valor)) {
-        elementoResultado.textContent = '—';
+        elementoResultado.textContent = '\u2014';
         return;
     }
 
@@ -43,7 +41,6 @@ const converterMoeda = () => {
         return;
     }
 
-    // Tentar API real primeiro
     fetch(`https://open.er-api.com/v6/latest/${moedaBase}`)
         .then(r => r.json())
         .then(dados => {
@@ -62,23 +59,18 @@ const conversaoFallback = (valor, de, para, elemento) => {
     const taxaPara = TAXAS_FALLBACK[para] || 1;
     const emBRL = valor * taxaDe;
     const convertido = emBRL / taxaPara;
-    elemento.textContent = `≈ ${formatarValorConvertido(convertido, para)}`;
+    elemento.textContent = `\u2248 ${formatarValorConvertido(convertido, para)}`;
 };
 
 const formatarValorConvertido = (valor, moeda) => {
     const locales = { 
-        USD: 'en-US', 
-        EUR: 'de-DE', 
-        GBP: 'en-GB', 
-        ARS: 'es-AR', 
-        JPY: 'ja-JP', 
-        BRL: 'pt-BR', 
-        CAD: 'en-CA' 
+        USD: 'en-US', EUR: 'de-DE', GBP: 'en-GB',
+        ARS: 'es-AR', JPY: 'ja-JP', BRL: 'pt-BR', CAD: 'en-CA'
     };
     return new Intl.NumberFormat(locales[moeda] || 'en-US', { style: 'currency', currency: moeda }).format(valor);
 };
 
-// ---- CALENDÁRIO PERSONALIZADO ----
+// ---- CALENDARIO PERSONALIZADO ----
 const inicializarCalendario = () => {
     const hoje = new Date();
     dpMes = hoje.getMonth();
@@ -105,7 +97,6 @@ const inicializarCalendario = () => {
         renderizarCalendario();
     });
 
-    // Fechar ao clicar fora
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#datepicker-wrapper')) {
             dropdown.classList.remove('open');
@@ -124,16 +115,13 @@ const renderizarCalendario = () => {
     const diasNoMes = new Date(dpAno, dpMes + 1, 0).getDate();
     const hoje = new Date();
 
-    // Células vazias antes do primeiro dia
     for (let i = 0; i < primeiroDia; i++) {
         const el = document.createElement('button');
         el.type = 'button';
         el.className = 'datepicker-day other-month';
-        el.textContent = '';
         containerDias.appendChild(el);
     }
 
-    // Dias
     for (let d = 1; d <= diasNoMes; d++) {
         const el = document.createElement('button');
         el.type = 'button';
@@ -141,9 +129,7 @@ const renderizarCalendario = () => {
         el.textContent = d;
 
         const ehHoje = d === hoje.getDate() && dpMes === hoje.getMonth() && dpAno === hoje.getFullYear();
-        if (ehHoje) {
-            el.classList.add('today');
-        }
+        if (ehHoje) el.classList.add('today');
 
         if (dpDataSelecionada && d === dpDataSelecionada.getDate() && dpMes === dpDataSelecionada.getMonth() && dpAno === dpDataSelecionada.getFullYear()) {
             el.classList.add('selected');
@@ -162,14 +148,21 @@ const selecionarData = (dia) => {
     document.getElementById('datepicker-dropdown').classList.remove('open');
 };
 
-// ---- LÓGICA PRINCIPAL ----
+// ---- LOGICA PRINCIPAL ----
 const carregarDependencias = () => {
     pesquisarCategorias()
         .then(categorias => {
             const select = document.getElementById('transacao-categoria');
-            select.innerHTML = '<option value="">Selecione...</option>';
+            select.innerHTML = '';
+            const optPadrao = document.createElement('option');
+            optPadrao.value = '';
+            optPadrao.textContent = 'Selecione...';
+            select.appendChild(optPadrao);
             categorias.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.nome;
+                select.appendChild(opt);
             });
         })
         .catch(exibirErro);
@@ -177,9 +170,16 @@ const carregarDependencias = () => {
     pesquisarContas()
         .then(contas => {
             const select = document.getElementById('transacao-conta');
-            select.innerHTML = '<option value="">Selecione...</option>';
+            select.innerHTML = '';
+            const optPadrao = document.createElement('option');
+            optPadrao.value = '';
+            optPadrao.textContent = 'Selecione...';
+            select.appendChild(optPadrao);
             contas.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.nome;
+                select.appendChild(opt);
             });
         })
         .catch(exibirErro);
@@ -197,33 +197,52 @@ const renderizarTabela = (dados) => {
     const transacoes = dados.content;
 
     if (transacoes === null || transacoes === undefined || transacoes.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-inbox"></i><p>Nenhuma transação cadastrada</p></div>';
+        const tplVazio = document.getElementById('tpl-transacoes-vazio');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         document.getElementById('transacoes-pagination').innerHTML = '';
         return;
     }
 
-    container.innerHTML = `
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Data</th><th>Categoria</th><th>Conta</th><th></th></tr></thead>
-                <tbody>
-                    ${transacoes.map(t => `
-                        <tr>
-                            <td>${t.descricao}</td>
-                            <td style="font-weight:600;color:${t.tipo === 'RECEITA' ? 'var(--success)' : 'var(--danger)'}">
-                                ${t.tipo === 'RECEITA' ? '+' : '-'} ${formatarMoeda(t.valor)}
-                            </td>
-                            <td><span class="badge ${t.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}">${t.tipo}</span></td>
-                            <td>${formatarData(t.data)}</td>
-                            <td>${t.categoriaNome ?? '-'}</td>
-                            <td>${t.contaNome ?? '-'}</td>
-                            <td><button class="btn btn-danger btn-excluir-transacao" data-id="${t.id}"><i class="pi pi-trash"></i></button></td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+    const tplTabela = document.getElementById('tpl-transacoes-tabela');
+    const tplLinha = document.getElementById('tpl-transacoes-linha');
+
+    container.innerHTML = '';
+    container.appendChild(tplTabela.content.cloneNode(true));
+
+    const tbody = container.querySelector('#transacoes-tbody');
+    transacoes.forEach(t => {
+        const linha = tplLinha.content.cloneNode(true);
+        const tr = linha.querySelector('tr');
+
+        tr.querySelector('[data-campo="descricao"]').textContent = t.descricao;
+
+        const tdValor = tr.querySelector('[data-campo="valor"]');
+        tdValor.style.fontWeight = '600';
+        tdValor.style.color = t.tipo === 'RECEITA' ? 'var(--success)' : 'var(--danger)';
+        tdValor.textContent = `${t.tipo === 'RECEITA' ? '+' : '-'} ${formatarMoeda(t.valor)}`;
+
+        const tdTipo = tr.querySelector('[data-campo="tipo"]');
+        const badge = document.createElement('span');
+        badge.className = `badge ${t.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}`;
+        badge.textContent = t.tipo;
+        tdTipo.appendChild(badge);
+
+        tr.querySelector('[data-campo="data"]').textContent = formatarData(t.data);
+        tr.querySelector('[data-campo="categoria"]').textContent = t.categoriaNome ?? '-';
+        tr.querySelector('[data-campo="conta"]').textContent = t.contaNome ?? '-';
+
+        const tdAcoes = tr.querySelector('[data-campo="acoes"]');
+        const btnExcluir = document.createElement('button');
+        btnExcluir.className = 'btn btn-danger btn-excluir-transacao';
+        btnExcluir.dataset.id = t.id;
+        const icone = document.createElement('i');
+        icone.className = 'pi pi-trash';
+        btnExcluir.appendChild(icone);
+        tdAcoes.appendChild(btnExcluir);
+
+        tbody.appendChild(tr);
+    });
 
     container.querySelectorAll('.btn-excluir-transacao').forEach(btn => {
         btn.addEventListener('click', () => excluir(btn.dataset.id));
@@ -234,20 +253,28 @@ const renderizarTabela = (dados) => {
 
 const renderizarPaginacao = (dados) => {
     const paginacao = document.getElementById('transacoes-pagination');
-    paginacao.innerHTML = `
-        <button ${paginaAtual === 0 ? 'disabled' : ''} id="pag-prev">Anterior</button>
-        <span>Página ${paginaAtual + 1} de ${dados.totalPages}</span>
-        <button ${paginaAtual >= dados.totalPages - 1 ? 'disabled' : ''} id="pag-next">Próxima</button>
-    `;
-    document.getElementById('pag-prev')?.addEventListener('click', () => carregar(paginaAtual - 1));
-    document.getElementById('pag-next')?.addEventListener('click', () => carregar(paginaAtual + 1));
+    const tplPag = document.getElementById('tpl-transacoes-paginacao');
+
+    paginacao.innerHTML = '';
+    paginacao.appendChild(tplPag.content.cloneNode(true));
+
+    const btnPrev = paginacao.querySelector('#pag-prev');
+    const btnNext = paginacao.querySelector('#pag-next');
+    const info = paginacao.querySelector('#pag-info');
+
+    btnPrev.disabled = paginaAtual === 0;
+    btnNext.disabled = paginaAtual >= dados.totalPages - 1;
+    info.textContent = `Página ${paginaAtual + 1} de ${dados.totalPages}`;
+
+    btnPrev.addEventListener('click', () => carregar(paginaAtual - 1));
+    btnNext.addEventListener('click', () => carregar(paginaAtual + 1));
 };
 
 const abrirModal = () => {
     document.getElementById('form-transacao').reset();
     document.getElementById('transacao-data').value = '';
     document.getElementById('transacao-data-display').value = '';
-    document.getElementById('converted-value').textContent = '—';
+    document.getElementById('converted-value').textContent = '\u2014';
     dpDataSelecionada = null;
     document.getElementById('modal-transacao').classList.remove('hidden');
 };
@@ -267,13 +294,8 @@ const salvar = (e) => {
         contaId:        document.getElementById('transacao-conta').value || null,
     };
     
-    if (payload.categoriaId !== null) {
-        payload.categoriaId = parseInt(payload.categoriaId);
-    }
-
-    if (payload.contaId !== null) {
-        payload.contaId = parseInt(payload.contaId);
-    }
+    if (payload.categoriaId !== null) payload.categoriaId = parseInt(payload.categoriaId);
+    if (payload.contaId !== null) payload.contaId = parseInt(payload.contaId);
 
     criarTransacao(payload)
         .then(() => {
@@ -285,9 +307,7 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir esta transação?')) {
-        return;
-    }
+    if (!confirm('Deseja excluir esta transação?')) return;
     excluirTransacao(id)
         .then(() => {
             exibirSucesso('Transação excluída');

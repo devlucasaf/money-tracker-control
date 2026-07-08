@@ -57,9 +57,15 @@ const atualizarBotaoTema = () => {
     const btn = document.getElementById('btn-theme-toggle');
     if (!btn) return;
     const escuro = document.documentElement.getAttribute('data-theme') === 'dark';
-    btn.innerHTML = escuro
-        ? '<i class="pi pi-sun"></i> <span>Modo Claro</span>'
-        : '<i class="pi pi-moon"></i> <span>Modo Escuro</span>';
+
+    btn.innerHTML = '';
+    const icone = document.createElement('i');
+    icone.className = escuro ? 'pi pi-sun' : 'pi pi-moon';
+    const texto = document.createElement('span');
+    texto.textContent = escuro ? 'Modo Claro' : 'Modo Escuro';
+    btn.appendChild(icone);
+    btn.appendChild(document.createTextNode(' '));
+    btn.appendChild(texto);
 };
 
 // Inicializar tema ao carregar

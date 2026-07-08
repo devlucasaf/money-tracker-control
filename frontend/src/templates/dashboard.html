@@ -36,3 +36,46 @@
         <div id="dash-transacoes-body"></div>
     </div>
 </div>
+
+<!-- Templates -->
+<template id="tpl-dash-vazio-transacoes">
+    <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <p>Nenhuma transação recente</p>
+    </div>
+</template>
+
+<template id="tpl-dash-vazio-grafico">
+    <div class="empty-state">
+        <i class="pi pi-chart-pie"></i>
+        <p>Sem despesas este mês</p>
+    </div>
+</template>
+
+<template id="tpl-dash-tabela-transacoes">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Data</th></tr>
+            </thead>
+            <tbody id="dash-transacoes-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-dash-transacao-linha">
+    <tr>
+        <td data-campo="descricao"></td>
+        <td data-campo="valor"></td>
+        <td data-campo="tipo"></td>
+        <td data-campo="data"></td>
+    </tr>
+</template>
+
+<template id="tpl-dash-legenda-item">
+    <div class="chart-legend-item">
+        <span class="chart-legend-dot" data-campo="dot"></span>
+        <span data-campo="texto"></span>
+    </div>
+</template>
+

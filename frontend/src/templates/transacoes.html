@@ -74,3 +74,45 @@
         </form>
     </div>
 </div>
+
+<!-- Templates -->
+<template id="tpl-transacoes-vazio">
+    <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <p>Nenhuma transação cadastrada</p>
+    </div>
+</template>
+
+<template id="tpl-transacoes-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Data</th><th>Categoria</th><th>Conta</th><th></th></tr>
+            </thead>
+            <tbody id="transacoes-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-transacoes-linha">
+    <tr>
+        <td data-campo="descricao"></td>
+        <td data-campo="valor"></td>
+        <td data-campo="tipo"></td>
+        <td data-campo="data"></td>
+        <td data-campo="categoria"></td>
+        <td data-campo="conta"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
+
+<template id="tpl-transacoes-paginacao">
+    <button id="pag-prev">Anterior</button>
+    <span id="pag-info"></span>
+    <button id="pag-next">Próxima</button>
+</template>
+
+<template id="tpl-opcao-select">
+    <option></option>
+</template>
+

@@ -15,9 +15,16 @@ const carregarCategorias = () => {
     pesquisarCategorias()
         .then(categorias => {
             const select = document.getElementById('orcamento-categoria');
-            select.innerHTML = '<option value="">Selecione...</option>';
+            select.innerHTML = '';
+            const optPadrao = document.createElement('option');
+            optPadrao.value = '';
+            optPadrao.textContent = 'Selecione...';
+            select.appendChild(optPadrao);
             categorias.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.nome;
+                select.appendChild(opt);
             });
         })
         .catch(exibirErro);
@@ -33,39 +40,55 @@ const renderizarTabela = (orcamentos) => {
     const container = document.getElementById('orcamentos-body');
 
     if (orcamentos === null || orcamentos === undefined || orcamentos.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="pi pi-chart-pie"></i><p>Nenhum orçamento cadastrado</p></div>';
+        const tplVazio = document.getElementById('tpl-orcamentos-vazio');
+        container.innerHTML = '';
+        container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
-    container.innerHTML = `
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Categoria</th><th>Limite</th><th>Gasto</th><th>Disponível</th><th>Mês/Ano</th><th></th></tr></thead>
-                <tbody>
-                    ${orcamentos.map(o => {
-                        const gasto = o.valorGasto ?? 0;
-                        const disponivel = o.valorLimite - gasto;
-                        const percentual = o.valorLimite > 0 ? Math.min((gasto / o.valorLimite) * 100, 100) : 0;
-                        const cor = percentual >= 90 ? 'var(--danger)' : percentual >= 70 ? 'var(--warning)' : 'var(--success)';
-                        return `
-                        <tr>
-                            <td>${o.categoriaNome ?? '-'}</td>
-                            <td>${formatarMoeda(o.valorLimite)}</td>
-                            <td>
-                                <div class="progress-bar" style="margin-bottom:4px">
-                                    <div class="fill" style="width:${percentual}%;background:${cor}"></div>
-                                </div>
-                                <small>${formatarMoeda(gasto)} (${percentual.toFixed(0)}%)</small>
-                            </td>
-                            <td style="font-weight:600;color:${disponivel >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatarMoeda(disponivel)}</td>
-                            <td>${o.mesAno ?? '-'}</td>
-                            <td><button class="btn btn-danger btn-excluir-orcamento" data-id="${o.id}"><i class="pi pi-trash"></i></button></td>
-                        </tr>`;
-                    }).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+    const tplTabela = document.getElementById('tpl-orcamentos-tabela');
+    const tplLinha = document.getElementById('tpl-orcamentos-linha');
+
+    container.innerHTML = '';
+    container.appendChild(tplTabela.content.cloneNode(true));
+
+    const tbody = container.querySelector('#orcamentos-tbody');
+    orcamentos.forEach(o => {
+        const gasto = o.valorGasto ?? 0;
+        const disponivel = o.valorLimite - gasto;
+        const percentual = o.valorLimite > 0 ? Math.min((gasto / o.valorLimite) * 100, 100) : 0;
+        const cor = percentual >= 90 ? 'var(--danger)' : percentual >= 70 ? 'var(--warning)' : 'var(--success)';
+
+        const linha = tplLinha.content.cloneNode(true);
+        const tr = linha.querySelector('tr');
+
+        tr.querySelector('[data-campo="categoria"]').textContent = o.categoriaNome ?? '-';
+        tr.querySelector('[data-campo="limite"]').textContent = formatarMoeda(o.valorLimite);
+
+        const fill = tr.querySelector('[data-campo="fill"]');
+        fill.style.width = `${percentual}%`;
+        fill.style.background = cor;
+
+        tr.querySelector('[data-campo="gasto-texto"]').textContent = `${formatarMoeda(gasto)} (${percentual.toFixed(0)}%)`;
+
+        const tdDisponivel = tr.querySelector('[data-campo="disponivel"]');
+        tdDisponivel.style.fontWeight = '600';
+        tdDisponivel.style.color = disponivel >= 0 ? 'var(--success)' : 'var(--danger)';
+        tdDisponivel.textContent = formatarMoeda(disponivel);
+
+        tr.querySelector('[data-campo="mesAno"]').textContent = o.mesAno ?? '-';
+
+        const tdAcoes = tr.querySelector('[data-campo="acoes"]');
+        const btnExcluir = document.createElement('button');
+        btnExcluir.className = 'btn btn-danger btn-excluir-orcamento';
+        btnExcluir.dataset.id = o.id;
+        const icone = document.createElement('i');
+        icone.className = 'pi pi-trash';
+        btnExcluir.appendChild(icone);
+        tdAcoes.appendChild(btnExcluir);
+
+        tbody.appendChild(tr);
+    });
 
     container.querySelectorAll('.btn-excluir-orcamento').forEach(btn => {
         btn.addEventListener('click', () => excluir(btn.dataset.id));
@@ -99,9 +122,7 @@ const salvar = (e) => {
 };
 
 const excluir = (id) => {
-    if (!confirm('Deseja excluir este orçamento?')) {
-        return;
-    }
+    if (!confirm('Deseja excluir este orçamento?')) return;
     excluirOrcamento(id)
         .then(() => { exibirSucesso('Orçamento excluído'); carregar(); })
         .catch(exibirErro);
