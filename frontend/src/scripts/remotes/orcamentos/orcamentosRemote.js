@@ -1,4 +1,4 @@
-import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from '../remoteUtils.js';
+import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from "../remoteUtils.js";
 
 const pesquisarOrcamentos = () => {
     const url = `${URL_BASE_API}/orcamentos`;
@@ -10,7 +10,7 @@ const pesquisarOrcamentos = () => {
 const criarOrcamento = (params = {}) => {
     const url = `${URL_BASE_API}/orcamentos`;
     const opcoes = {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(params),
         headers: obterCabecalhosAuth(),
     };
@@ -22,7 +22,7 @@ const criarOrcamento = (params = {}) => {
 const excluirOrcamento = (id) => {
     const url = `${URL_BASE_API}/orcamentos/${id}`;
     const opcoes = {
-        method: 'DELETE',
+        method: "DELETE",
         headers: obterCabecalhosAuth()
     };
     return fetch(url, opcoes)

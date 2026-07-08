@@ -1,7 +1,9 @@
 <div class="card">
     <div class="card-header">
         <h2>Categorias</h2>
-        <button class="btn btn-primary" id="btn-nova-categoria"><i class="pi pi-plus"></i> Nova Categoria</button>
+        <button class="btn btn-primary" id="btn-nova-categoria">
+            <i class="pi pi-plus"></i> Nova Categoria
+        </button>
     </div>
     <div id="categorias-body"></div>
 </div>
@@ -10,14 +12,22 @@
     <div class="modal">
         <div class="modal-header">
             <h3 id="modal-categoria-title">Nova Categoria</h3>
-            <button class="btn btn-outline" id="modal-categoria-close"><i class="pi pi-times"></i></button>
+            <button class="btn btn-outline" id="modal-categoria-close">
+                <i class="pi pi-times"></i>
+            </button>
         </div>
+
         <form id="form-categoria">
             <input type="hidden" id="categoria-id" />
             <div class="form-group">
                 <label>Nome</label>
-                <input type="text" id="categoria-nome" required />
+                <input 
+                    type="text" 
+                    id="categoria-nome" 
+                    required 
+                />
             </div>
+
             <div class="form-group">
                 <label>Tipo</label>
                 <select id="categoria-tipo">
@@ -25,10 +35,16 @@
                     <option value="RECEITA">Receita</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label>Cor</label>
-                <input type="color" id="categoria-cor" value="#6366f1" />
+                <input 
+                    type="color" 
+                    id="categoria-cor" 
+                    value="#6366f1"
+                />
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-categoria-cancel">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Salvar</button>
