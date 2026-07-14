@@ -16,8 +16,97 @@
         <button class="btn-icon" id="btn-theme-toggle" title="Alternar tema">
             <i class="pi pi-moon"></i>
         </button>
-        <span class="user-label" id="sidebar-user-name"></span>
-        <button class="btn-sm btn-ghost" id="btn-logout">Sair</button>
+
+        <div class="user-menu">
+            <button class="user-menu-toggle" id="btn-user-menu">
+                <i class="pi pi-user"></i>
+            </button>
+            <div class="user-menu-dropdown" id="user-menu-dropdown">
+                <div class="user-menu-header">
+                    <span class="user-menu-name" id="sidebar-user-name"></span>
+                    <span class="user-menu-email" id="user-menu-email"></span>
+                </div>
+
+                <div class="user-menu-divider"></div>
+                <button class="user-menu-item" id="btn-meu-perfil">
+                    <i class="pi pi-id-card"></i> Meu Perfil
+                </button>
+                <button cl
+                        ass="user-menu-item" id="btn-alterar-dados">
+                    <i class="pi pi-pencil"></i> Alterar dados pessoais
+                </button>
+
+                <div class="user-menu-divider"></div>
+                <button class="user-menu-item user-menu-item-danger" id="btn-logout">
+                    <i class="pi pi-sign-out"></i> Sair
+                </button>
+            </div>
+        </div>
     </div>
 </header>
+
+<!-- Modal Meu Perfil -->
+<div class="modal-overlay hidden" id="modal-perfil">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Meu Perfil</h3>
+            <button class="btn-icon" id="btn-fechar-perfil"><i class="pi pi-times"></i></button>
+        </div>
+        <div class="perfil-info">
+            <div class="perfil-campo">
+                <span class="perfil-label">Nome</span>
+                <span class="perfil-valor" id="perfil-nome"></span>
+            </div>
+            <div class="perfil-campo">
+                <span class="perfil-label">E-mail</span>
+                <span class="perfil-valor" id="perfil-email"></span>
+            </div>
+            <div class="perfil-campo">
+                <span class="perfil-label">Moeda preferida</span>
+                <span class="perfil-valor" id="perfil-moeda"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Alterar Dados -->
+<div class="modal-overlay hidden" id="modal-alterar-dados">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Alterar dados pessoais</h3>
+            <button class="btn-icon" id="btn-fechar-alterar"><i class="pi pi-times"></i></button>
+        </div>
+        <form id="form-alterar-dados">
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" id="alterar-nome" required placeholder="Seu nome" />
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="alterar-email" required placeholder="seu@email.com" />
+            </div>
+            <div class="form-group">
+                <label>Moeda preferida</label>
+                <select id="alterar-moeda">
+                    <option value="BRL">🇧🇷 Real (BRL)</option>
+                    <option value="USD">🇺🇸 Dólar (USD)</option>
+                    <option value="EUR">🇪🇺 Euro (EUR)</option>
+                    <option value="GBP">🇬🇧 Libra (GBP)</option>
+                    <option value="ARS">🇦🇷 Peso Argentino (ARS)</option>
+                    <option value="JPY">🇯🇵 Iene (JPY)</option>
+                    <option value="CAD">🇨🇦 Dólar Canadense (CAD)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Nova senha (deixe em branco para não alterar)</label>
+                <input type="password" id="alterar-senha" placeholder="••••••••" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="btn-cancelar-alterar">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <main class="page-wrapper" id="page-content"></main>

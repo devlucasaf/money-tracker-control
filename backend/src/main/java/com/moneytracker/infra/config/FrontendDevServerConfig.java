@@ -48,9 +48,9 @@ public class FrontendDevServerConfig {
     @PreDestroy
     public void stopFrontend() {
         if (frontendProcess != null && frontendProcess.isAlive()) {
+            frontendProcess.descendants().forEach(ProcessHandle::destroyForcibly);
             frontendProcess.destroyForcibly();
             log.info("Frontend dev server stopped");
         }
     }
 }
-

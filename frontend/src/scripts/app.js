@@ -5,7 +5,7 @@ import { iniciarContas }                    from "./pages/contasPage.js";
 import { iniciarCategorias }                from "./pages/categoriasPage.js";
 import { iniciarMetas }                     from "./pages/metasPage.js";
 import { iniciarOrcamentos }                from "./pages/orcamentosPage.js";
-import { alternarTema, atualizarBotaoTema } from "./util.js";
+import { alternarTema, atualizarBotaoTema, exibirSucesso } from "./util.js";
 
 // --- CACHE DE TEMPLATES ---
 const templates = {};
@@ -72,12 +72,94 @@ const navegar = () => {
             app.innerHTML = layoutHtml;
 
             const nomeUsuario = localStorage.getItem("userName") ?? "Usuário";
+            const emailUsuario = localStorage.getItem("userEmail") ?? "";
+            const moedaUsuario = localStorage.getItem("userCurrency") ?? "BRL";
+
             document.getElementById("sidebar-user-name").textContent = nomeUsuario;
+            document.getElementById("user-menu-email").textContent = emailUsuario;
+
+            // --- USER MENU DROPDOWN ---
+            const btnUserMenu = document.getElementById("btn-user-menu");
+            const userDropdown = document.getElementById("user-menu-dropdown");
+
+            btnUserMenu.addEventListener("click", (e) => {
+                e.stopPropagation();
+                userDropdown.classList.toggle("open");
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest(".user-menu")) {
+                    userDropdown.classList.remove("open");
+                }
+            });
+
+            // --- MEU PERFIL ---
+            document.getElementById("btn-meu-perfil").addEventListener("click", () => {
+                userDropdown.classList.remove("open");
+                document.getElementById("perfil-nome").textContent = localStorage.getItem("userName") ?? "";
+                document.getElementById("perfil-email").textContent = localStorage.getItem("userEmail") ?? "";
+                document.getElementById("perfil-moeda").textContent = localStorage.getItem("userCurrency") ?? "BRL";
+                document.getElementById("modal-perfil").classList.remove("hidden");
+            });
+
+            document.getElementById("btn-fechar-perfil").addEventListener("click", () => {
+                document.getElementById("modal-perfil").classList.add("hidden");
+            });
+
+            document.getElementById("modal-perfil").addEventListener("click", (e) => {
+                if (e.target.classList.contains("modal-overlay")) {
+                    document.getElementById("modal-perfil").classList.add("hidden");
+                }
+            });
+
+            // --- ALTERAR DADOS ---
+            document.getElementById("btn-alterar-dados").addEventListener("click", () => {
+                userDropdown.classList.remove("open");
+                document.getElementById("alterar-nome").value = localStorage.getItem("userName") ?? "";
+                document.getElementById("alterar-email").value = localStorage.getItem("userEmail") ?? "";
+                document.getElementById("alterar-moeda").value = localStorage.getItem("userCurrency") ?? "BRL";
+                document.getElementById("alterar-senha").value = "";
+                document.getElementById("modal-alterar-dados").classList.remove("hidden");
+            });
+
+            document.getElementById("btn-fechar-alterar").addEventListener("click", () => {
+                document.getElementById("modal-alterar-dados").classList.add("hidden");
+            });
+
+            document.getElementById("btn-cancelar-alterar").addEventListener("click", () => {
+                document.getElementById("modal-alterar-dados").classList.add("hidden");
+            });
+
+            document.getElementById("modal-alterar-dados").addEventListener("click", (e) => {
+                if (e.target.classList.contains("modal-overlay")) {
+                    document.getElementById("modal-alterar-dados").classList.add("hidden");
+                }
+            });
+
+            document.getElementById("form-alterar-dados").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const nome = document.getElementById("alterar-nome").value;
+                const email = document.getElementById("alterar-email").value;
+                const moeda = document.getElementById("alterar-moeda").value;
+                const senha = document.getElementById("alterar-senha").value;
+
+                localStorage.setItem("userName", nome);
+                localStorage.setItem("userEmail", email);
+                localStorage.setItem("userCurrency", moeda);
+
+                document.getElementById("sidebar-user-name").textContent = nome;
+                document.getElementById("user-menu-email").textContent = email;
+
+                document.getElementById("modal-alterar-dados").classList.add("hidden");
+                exibirSucesso("Dados atualizados com sucesso!");
+            });
 
             // --- LOGOUT ---
             document.getElementById("btn-logout").addEventListener("click", () => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("userName");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("userCurrency");
                 window.location.hash = "#/login";
             });
 

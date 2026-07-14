@@ -6,7 +6,6 @@ import { pesquisarContas } from '../remotes/contas/contasRemote.js';
 let paginaAtual = 0;
 let dpMes, dpAno, dpDataSelecionada;
 
-// Taxas aproximadas (fallback)
 const TAXAS_FALLBACK = { USD: 5.1, EUR: 5.6, GBP: 6.5, ARS: 0.006, JPY: 0.034, BRL: 1, CAD: 3.8 };
 
 const iniciarTransacoes = () => {
@@ -19,7 +18,31 @@ const iniciarTransacoes = () => {
     document.getElementById('form-transacao').addEventListener('submit', salvar);
 
     document.getElementById('transacao-valor').addEventListener('input', converterMoeda);
-    document.getElementById('converter-moeda').addEventListener('change', converterMoeda);
+
+    const toggleMoeda = document.getElementById('converter-moeda-toggle');
+    const wrapperMoeda = document.getElementById('converter-moeda-wrapper');
+    const opcoesMoeda = document.getElementById('converter-moeda-options');
+
+    toggleMoeda.addEventListener('click', () => {
+        wrapperMoeda.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#converter-moeda-wrapper')) {
+            wrapperMoeda.classList.remove('open');
+        }
+    });
+
+    opcoesMoeda.querySelectorAll('.custom-select-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            opcoesMoeda.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            document.getElementById('converter-moeda-label').textContent = opt.textContent;
+            document.getElementById('converter-moeda').value = opt.dataset.value;
+            wrapperMoeda.classList.remove('open');
+            converterMoeda();
+        });
+    });
 
     inicializarCalendario();
 };
@@ -275,6 +298,11 @@ const abrirModal = () => {
     document.getElementById('transacao-data').value = '';
     document.getElementById('transacao-data-display').value = '';
     document.getElementById('converted-value').textContent = '\u2014';
+    document.getElementById('converter-moeda').value = 'USD';
+    document.getElementById('converter-moeda-label').textContent = '🇺🇸 Dólar (USD)';
+    const opcoes = document.getElementById('converter-moeda-options');
+    opcoes.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+    opcoes.querySelector('[data-value="USD"]').classList.add('selected');
     dpDataSelecionada = null;
     document.getElementById('modal-transacao').classList.remove('hidden');
 };

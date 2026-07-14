@@ -38,15 +38,24 @@
                     required 
                 />
                 <div class="currency-converter" id="currency-converter">
-                    <span>Converter para:</span>
-                    <select id="converter-moeda">
-                        <option value="USD">🇺🇸 USD</option>
-                        <option value="EUR">🇪🇺 EUR</option>
-                        <option value="GBP">🇬🇧 GBP</option>
-                        <option value="ARS">🇦🇷 ARS</option>
-                        <option value="JPY">🇯🇵 JPY</option>
-                        <option value="BRL">🇧🇷 BRL</option>
-                    </select>
+                    <i class="pi pi-sync converter-icon"></i>
+                    <div class="custom-select" id="converter-moeda-wrapper">
+                        <button type="button" class="custom-select-toggle" id="converter-moeda-toggle">
+                            <span id="converter-moeda-label">🇺🇸 Dólar (USD)</span>
+                            <i class="pi pi-chevron-down custom-select-arrow"></i>
+                        </button>
+                        <div class="custom-select-options" id="converter-moeda-options">
+                            <div class="custom-select-option selected" data-value="USD">🇺🇸 Dólar (USD)</div>
+                            <div class="custom-select-option" data-value="EUR">🇪🇺 Euro (EUR)</div>
+                            <div class="custom-select-option" data-value="GBP">🇬🇧 Libra (GBP)</div>
+                            <div class="custom-select-option" data-value="ARS">🇦🇷 Peso (ARS)</div>
+                            <div class="custom-select-option" data-value="JPY">🇯🇵 Iene (JPY)</div>
+                            <div class="custom-select-option" data-value="BRL">🇧🇷 Real (BRL)</div>
+                            <div class="custom-select-option" data-value="CAD">🇨🇦 Dólar (CAD)</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="converter-moeda" value="USD" />
+                    <span class="converter-equal">=</span>
                     <span class="converted-value" id="converted-value">—</span>
                 </div>
             </div>

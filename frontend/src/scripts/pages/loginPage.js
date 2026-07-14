@@ -12,8 +12,9 @@ const iniciarLogin = () => {
             .then(dados => {
                 localStorage.setItem("token", dados.token);
                 localStorage.setItem("userName", dados.nome);
+                localStorage.setItem("userEmail", email);
                 exibirSucesso("Login realizado com sucesso!");
-                window.location.hash = "#/dashboard";
+                window.location.hash = "#/transacoes";
             })
             .catch(exibirErro);
     });
