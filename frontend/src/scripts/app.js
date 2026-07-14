@@ -7,7 +7,6 @@ import { iniciarMetas }                     from "./pages/metasPage.js";
 import { iniciarOrcamentos }                from "./pages/orcamentosPage.js";
 import { alternarTema, atualizarBotaoTema, exibirSucesso } from "./util.js";
 
-// --- CACHE DE TEMPLATES ---
 const templates = {};
 
 // --- CARREGAMENTO DE TEMPLATE ---

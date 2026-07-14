@@ -1,5 +1,6 @@
 import { URL_BASE_API, validarResposta } from "../remoteUtils.js";
 
+// --- REGISTRAR ---
 const registrar = (params = {}) => {
     const url = `${URL_BASE_API}/auth/register`;
     const opcoes = {

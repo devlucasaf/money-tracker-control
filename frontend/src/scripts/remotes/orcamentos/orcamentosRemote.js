@@ -1,5 +1,6 @@
 import { URL_BASE_API, obterCabecalhosAuth, validarResposta } from "../remoteUtils.js";
 
+// --- PESQUISAR ORCAMENTOS DO USUÁRIO AUTENTICADO ---
 const pesquisarOrcamentos = () => {
     const url = `${URL_BASE_API}/orcamentos`;
     return fetch(url, { headers: obterCabecalhosAuth() })
@@ -7,6 +8,7 @@ const pesquisarOrcamentos = () => {
         .then(resposta => resposta.json());
 };
 
+// --- CRIA UM NOVO ORCAMENTO E ENVIA PARA O BACKEND ---
 const criarOrcamento = (params = {}) => {
     const url = `${URL_BASE_API}/orcamentos`;
     const opcoes = {
@@ -19,6 +21,7 @@ const criarOrcamento = (params = {}) => {
         .then(resposta => resposta.json());
 };
 
+// --- EXCLUIR ORCAMENTO PELO ID ---
 const excluirOrcamento = (id) => {
     const url = `${URL_BASE_API}/orcamentos/${id}`;
     const opcoes = {

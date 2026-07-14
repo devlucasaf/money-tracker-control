@@ -1,5 +1,6 @@
 import { URL_BASE_API, validarResposta } from "../remoteUtils.js";
 
+// --- LOGAR ---
 const logar = (params = {}) => {
     const url = `${URL_BASE_API}/auth/login`;
     const opcoes = {
