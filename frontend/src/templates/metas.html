@@ -49,10 +49,46 @@
             </div>
             <div class="form-group">
                 <label>Data Limite</label>
-                <input 
-                    type="date" 
-                    id="meta-dataLimite" 
-                />
+                <div class="custom-datepicker" id="meta-datepicker-wrapper">
+                    <input
+                        type="text"
+                        id="meta-dataLimite-display"
+                        class="datepicker-input"
+                        placeholder="Selecione a data"
+                        readonly
+                    />
+                    <input
+                            type="hidden"
+                            id="meta-dataLimite"
+                    />
+                    <div class="datepicker-dropdown" id="meta-datepicker-dropdown">
+                        <div class="datepicker-header">
+                            <button type="button" id="meta-dp-prev">
+                                <i class="pi pi-chevron-left"></i>
+                            </button>
+
+                            <button type="button" class="datepicker-title" id="meta-dp-title">
+                                <span id="meta-dp-month-year"></span>
+                                <i class="pi pi-chevron-down"></i>
+                            </button>
+
+                            <button type="button" id="meta-dp-next">
+                                <i class="pi pi-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="datepicker-weekdays">
+                            <span>Dom</span>
+                            <span>Seg</span>
+                            <span>Ter</span>
+                            <span>Qua</span>
+                            <span>Qui</span>
+                            <span>Sex</span>
+                            <span>Sáb</span>
+                        </div>
+                        <div class="datepicker-days" id="meta-dp-days"></div>
+                        <div class="datepicker-years" id="meta-dp-years"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-meta-cancel">Cancelar</button>
@@ -62,7 +98,6 @@
     </div>
 </div>
 
-<!-- Templates -->
 <template id="tpl-metas-vazio">
     <div class="empty-state">
         <i class="pi pi-flag"></i>
@@ -74,7 +109,13 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th>Descrição</th><th>Progresso</th><th>Valor Alvo</th><th>Data Limite</th><th></th></tr>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Progresso</th>
+                    <th>Valor Alvo</th>
+                    <th>Data Limite</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody id="metas-tbody"></tbody>
         </table>

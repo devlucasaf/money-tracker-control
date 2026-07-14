@@ -71,7 +71,24 @@ const atualizarBotaoTema = () => {
     btn.appendChild(icone);
 };
 
-// --- EXECUCAO INICIAL ---
+// --- TOGGLE DE VISIBILIDADE DE SENHA ---
+const configurarToggleSenha = () => {
+    document.querySelectorAll(".password-toggle").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const campo = document.getElementById(btn.dataset.target);
+            if (!campo) {
+                return;
+            }
+            const icone = btn.querySelector("i");
+            const visivel = campo.type === "text";
+
+            campo.type = visivel ? "password" : "text";
+            icone.className = visivel ? "pi pi-eye" : "pi pi-eye-slash";
+            btn.setAttribute("aria-label", visivel ? "Mostrar senha" : "Ocultar senha");
+        });
+    });
+};
+
 inicializarTema();
 
-export { formatarMoeda, formatarData, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema };
+export { formatarMoeda, formatarData, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema, configurarToggleSenha };

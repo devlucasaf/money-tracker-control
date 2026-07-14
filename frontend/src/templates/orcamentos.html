@@ -34,11 +34,38 @@
             </div>
             <div class="form-group">
                 <label>Mês/Ano</label>
-                <input 
-                    type="month" 
-                    id="orcamento-mesAno" 
-                    required 
-                />
+                <div class="custom-datepicker" id="orcamento-datepicker-wrapper">
+                    <input
+                        type="text"
+                        id="orcamento-mesAno-display"
+                        class="datepicker-input"
+                        placeholder="Selecione o mês"
+                        readonly
+                        required
+                    />
+                    <input
+                            type="hidden"
+                            id="orcamento-mesAno"
+                    />
+                    <div class="datepicker-dropdown" id="orcamento-datepicker-dropdown">
+                        <div class="datepicker-header">
+                            <button type="button" id="orc-dp-prev">
+                                <i class="pi pi-chevron-left"></i>
+                            </button>
+
+                            <button type="button" class="datepicker-title" id="orc-dp-title">
+                                <span id="orc-dp-year"></span>
+                                <i class="pi pi-chevron-down"></i>
+                            </button>
+
+                            <button type="button" id="orc-dp-next">
+                                <i class="pi pi-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="datepicker-months" id="orc-dp-months"></div>
+                        <div class="datepicker-years" id="orc-dp-years"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-orcamento-cancel">Cancelar</button>
@@ -48,7 +75,6 @@
     </div>
 </div>
 
-<!-- Templates -->
 <template id="tpl-orcamentos-vazio">
     <div class="empty-state">
         <i class="pi pi-chart-pie"></i>
@@ -60,7 +86,14 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th>Categoria</th><th>Limite</th><th>Gasto</th><th>Disponível</th><th>Mês/Ano</th><th></th></tr>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Limite</th>
+                    <th>Gasto</th>
+                    <th>Disponível</th>
+                    <th>Mês/Ano</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody id="orcamentos-tbody"></tbody>
         </table>

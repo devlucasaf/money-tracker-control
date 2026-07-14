@@ -5,7 +5,9 @@ import { iniciarContas }                    from "./pages/contasPage.js";
 import { iniciarCategorias }                from "./pages/categoriasPage.js";
 import { iniciarMetas }                     from "./pages/metasPage.js";
 import { iniciarOrcamentos }                from "./pages/orcamentosPage.js";
+import { iniciarInvestimentos }             from "./pages/investimentosPage.js";
 import { alternarTema, atualizarBotaoTema, exibirSucesso } from "./util.js";
+import { aprimorarSelects } from "./customSelect.js";
 
 const templates = {};
 
@@ -38,6 +40,7 @@ const rotas = {
     "/categorias":  { template: "categorias",   init: iniciarCategorias,   auth: true  },
     "/metas":       { template: "metas",        init: iniciarMetas,        auth: true  },
     "/orcamentos":  { template: "orcamentos",   init: iniciarOrcamentos,   auth: true  },
+    "/investimentos": { template: "investimentos", init: iniciarInvestimentos, auth: true },
 };
 
 // --- NAVEGAÇÃO ENTRE ROTAS ---
@@ -116,7 +119,9 @@ const navegar = () => {
                 userDropdown.classList.remove("open");
                 document.getElementById("alterar-nome").value = localStorage.getItem("userName") ?? "";
                 document.getElementById("alterar-email").value = localStorage.getItem("userEmail") ?? "";
-                document.getElementById("alterar-moeda").value = localStorage.getItem("userCurrency") ?? "BRL";
+                const selMoeda = document.getElementById("alterar-moeda");
+                selMoeda.value = localStorage.getItem("userCurrency") ?? "BRL";
+                selMoeda.dispatchEvent(new Event("change"));
                 document.getElementById("alterar-senha").value = "";
                 document.getElementById("modal-alterar-dados").classList.remove("hidden");
             });
@@ -179,12 +184,14 @@ const navegar = () => {
             carregarTemplate(rota.template).then(paginaHtml => {
                 document.getElementById("page-content").innerHTML = paginaHtml;
                 rota.init();
+                aprimorarSelects();
             });
         });
     } else {
         carregarTemplate(rota.template).then(html => {
             app.innerHTML = html;
             rota.init();
+            aprimorarSelects();
         });
     }
 };

@@ -1,8 +1,3 @@
-// Componente que transforma <select> nativos em dropdowns customizados,
-// mantendo o <select> original como fonte de dados (o JS existente continua
-// lendo/escrevendo .value normalmente). Suporta opcoes adicionadas
-// dinamicamente via MutationObserver.
-
 const construirOpcoes = (select, listaOpcoes, valueSpan) => {
     listaOpcoes.innerHTML = "";
 
@@ -47,11 +42,9 @@ const aprimorarSelect = (select) => {
     }
     select.dataset.csDone = "true";
 
-    // Wrapper
     const wrapper = document.createElement("div");
     wrapper.className = "custom-select";
 
-    // Botao toggle
     const toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "custom-select-toggle";
@@ -69,7 +62,6 @@ const aprimorarSelect = (select) => {
     const listaOpcoes = document.createElement("div");
     listaOpcoes.className = "custom-select-options";
 
-    // Posiciona wrapper antes do select e move o select para dentro
     select.parentNode.insertBefore(wrapper, select);
     wrapper.appendChild(toggle);
     wrapper.appendChild(listaOpcoes);
@@ -78,7 +70,9 @@ const aprimorarSelect = (select) => {
 
     construirOpcoes(select, listaOpcoes, valueSpan);
 
-    // Abrir/fechar
+    select._csSync = () => atualizarSelecionado(select, listaOpcoes, valueSpan);
+
+    // --- ABRIR/FECHAR ---
     toggle.addEventListener("click", (e) => {
         e.stopPropagation();
         const jaAberto = wrapper.classList.contains("open");
@@ -88,10 +82,8 @@ const aprimorarSelect = (select) => {
         }
     });
 
-    // Mudancas programaticas no select (ex.: reset de formulario)
     select.addEventListener("change", () => atualizarSelecionado(select, listaOpcoes, valueSpan));
 
-    // Opcoes adicionadas dinamicamente (categorias/contas)
     const observer = new MutationObserver(() => construirOpcoes(select, listaOpcoes, valueSpan));
     observer.observe(select, { childList: true });
 };
@@ -100,11 +92,22 @@ const aprimorarSelects = (root = document) => {
     root.querySelectorAll("select:not([data-cs-done])").forEach(aprimorarSelect);
 };
 
-// Fecha dropdowns ao clicar fora
+// --- FECHA DROPDOWNS AO CLICAR FORA ---
 document.addEventListener("click", (e) => {
     if (!e.target.closest(".custom-select")) {
         fecharTodos();
     }
+});
+
+// --- RE-SINCRONIZA DROPDOWNS APÓS RESET DE FORMULÁRIO ---
+document.addEventListener("reset", (e) => {
+    setTimeout(() => {
+        e.target.querySelectorAll("select").forEach((select) => {
+            if (typeof select._csSync === "function") {
+                select._csSync();
+            }
+        });
+    }, 0);
 });
 
 export { aprimorarSelects };

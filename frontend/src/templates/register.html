@@ -25,24 +25,36 @@
             </div>
             <div class="form-group">
                 <label>Senha</label>
-                <input 
-                    type="password" 
-                    id="register-senha" 
-                    required 
-                    placeholder="••••••••" 
-                />
+                <div class="password-field">
+                    <input
+                        type="password"
+                        id="register-senha"
+                        required
+                        placeholder="••••••••"
+                    />
+                    <button type="button" class="password-toggle" data-target="register-senha" aria-label="Mostrar senha">
+                        <i class="pi pi-eye"></i>
+                    </button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Moeda Preferida</label>
-                <select id="register-moeda">
-                    <option value="BRL">🇧🇷 Real (BRL)</option>
-                    <option value="USD">🇺🇸 Dólar (USD)</option>
-                    <option value="EUR">🇪🇺 Euro (EUR)</option>
-                    <option value="GBP">🇬🇧 Libra (GBP)</option>
-                    <option value="ARS">🇦🇷 Peso Argentino (ARS)</option>
-                    <option value="JPY">🇯🇵 Iene (JPY)</option>
-                    <option value="CAD">🇨🇦 Dólar Canadense (CAD)</option>
-                </select>
+                <div class="custom-select" id="register-moeda-wrapper">
+                    <button type="button" class="custom-select-toggle" id="register-moeda-toggle">
+                        <span id="register-moeda-label">🇧🇷 Real (BRL)</span>
+                        <i class="pi pi-chevron-down custom-select-arrow"></i>
+                    </button>
+                    <div class="custom-select-options" id="register-moeda-options">
+                        <div class="custom-select-option selected" data-value="BRL">🇧🇷 Real (BRL)</div>
+                        <div class="custom-select-option" data-value="USD">🇺🇸 Dólar (USD)</div>
+                        <div class="custom-select-option" data-value="EUR">🇪🇺 Euro (EUR)</div>
+                        <div class="custom-select-option" data-value="GBP">🇬🇧 Libra (GBP)</div>
+                        <div class="custom-select-option" data-value="ARS">🇦🇷 Peso Argentino (ARS)</div>
+                        <div class="custom-select-option" data-value="JPY">🇯🇵 Iene (JPY)</div>
+                        <div class="custom-select-option" data-value="CAD">🇨🇦 Dólar Canadense (CAD)</div>
+                    </div>
+                </div>
+                <input type="hidden" id="register-moeda" value="BRL" />
             </div>
             <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
         </form>

@@ -29,25 +29,16 @@ public class InvestimentoDTO {
     @NotNull
     @Positive
     private BigDecimal valorAplicado;
-
     private BigDecimal valorAtual;
-
     private String instituicao;
-
     private BigDecimal taxa;
 
     @NotNull
     private LocalDate dataAplicacao;
-
     private LocalDate dataVencimento;
-
     private StatusInvestimento status;
-
     private ResultadoAposta resultadoAposta;
-
     private String observacao;
-
-    // --- CAMPOS CALCULADOS (SOMENTE LEITURA) ---
     private BigDecimal rendimento;
     private BigDecimal percentualRendimento;
 }

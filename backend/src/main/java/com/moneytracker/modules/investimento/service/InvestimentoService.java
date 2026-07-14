@@ -7,6 +7,7 @@ import com.moneytracker.modules.investimento.model.StatusInvestimento;
 import com.moneytracker.modules.investimento.model.TipoInvestimento;
 import com.moneytracker.modules.investimento.repository.InvestimentoRepository;
 import com.moneytracker.modules.usuario.model.Usuario;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

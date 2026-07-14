@@ -1,7 +1,8 @@
-import { exibirSucesso, exibirErro } from "../util.js";
+import { exibirSucesso, exibirErro, configurarToggleSenha } from "../util.js";
 import { logar } from "../remotes/auth/loginRemote.js";
 
 const iniciarLogin = () => {
+    configurarToggleSenha();
     const formulario = document.getElementById("login-form");
     formulario.addEventListener("submit", (e) => {
         e.preventDefault();

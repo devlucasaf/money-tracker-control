@@ -88,7 +88,12 @@
                             <button type="button" id="dp-prev">
                                 <i class="pi pi-chevron-left"></i>
                             </button>
-                            <span id="dp-month-year"></span>
+
+                            <button type="button" class="datepicker-title" id="dp-title">
+                                <span id="dp-month-year"></span>
+                                <i class="pi pi-chevron-down"></i>
+                            </button>
+
                             <button type="button" id="dp-next">
                                 <i class="pi pi-chevron-right"></i>
                             </button>
@@ -103,6 +108,7 @@
                             <span>Sáb</span>
                         </div>
                         <div class="datepicker-days" id="dp-days"></div>
+                        <div class="datepicker-years" id="dp-years"></div>
                     </div>
                 </div>
             </div>
@@ -129,7 +135,6 @@
     </div>
 </div>
 
-<!-- Templates -->
 <template id="tpl-transacoes-vazio">
     <div class="empty-state">
         <i class="pi pi-inbox"></i>
@@ -141,7 +146,15 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Data</th><th>Categoria</th><th>Conta</th><th></th></tr>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Tipo</th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Conta</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody id="transacoes-tbody"></tbody>
         </table>

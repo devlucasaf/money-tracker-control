@@ -1,27 +1,193 @@
-import { formatarMoeda, exibirSucesso, exibirErro } from '../util.js';
-import { pesquisarOrcamentos, criarOrcamento, excluirOrcamento } from '../remotes/orcamentos/orcamentosRemote.js';
-import { pesquisarCategorias } from '../remotes/categorias/categoriasRemote.js';
+import { formatarMoeda, exibirSucesso, exibirErro } from "../util.js";
+import { pesquisarOrcamentos, criarOrcamento, excluirOrcamento } from "../remotes/orcamentos/orcamentosRemote.js";
+import { pesquisarCategorias } from "../remotes/categorias/categoriasRemote.js";
 
+// --- MESES ---
+const MESES = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
+];
+
+// --- MESES ABREVIADOS ---
+const MESES_ABREV = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez"
+];
+
+// --- ESTADO DO SELETOR DE MÊS/ANO ---
+let mpAno, mpMesSelecionado, mpAnoSelecionado;
+
+// --- INICIALIZAÇÃO DA PÁGINA ---
 const iniciarOrcamentos = () => {
     carregar();
     carregarCategorias();
-    document.getElementById('btn-novo-orcamento').addEventListener('click', abrirModal);
-    document.getElementById('modal-orcamento-close').addEventListener('click', fecharModal);
-    document.getElementById('modal-orcamento-cancel').addEventListener('click', fecharModal);
-    document.getElementById('form-orcamento').addEventListener('submit', salvar);
+
+    document.getElementById("btn-novo-orcamento").addEventListener("click", abrirModal);
+    document.getElementById("modal-orcamento-close").addEventListener("click", fecharModal);
+    document.getElementById("modal-orcamento-cancel").addEventListener("click", fecharModal);
+    document.getElementById("form-orcamento").addEventListener("submit", salvar);
+
+    inicializarSeletorMes();
 };
 
+// --- SELETOR DE MÊS/ANO ---
+const inicializarSeletorMes = () => {
+    const hoje = new Date();
+    mpAno = hoje.getFullYear();
+    mpMesSelecionado = null;
+    mpAnoSelecionado = null;
+
+    const exibicao = document.getElementById("orcamento-mesAno-display");
+    const dropdown = document.getElementById("orcamento-datepicker-dropdown");
+
+    // --- ABRIR/FECHAR O SELETOR ---
+    exibicao.addEventListener("click", () => {
+        dropdown.classList.toggle("open");
+        dropdown.classList.remove("showing-years");
+        renderizarMeses();
+    });
+
+    // --- ANO ANTERIOR ---
+    document.getElementById("orc-dp-prev").addEventListener("click", () => {
+        mpAno--;
+        renderizarMeses();
+    });
+
+    // --- PRÓXIMO ANO ---
+    document.getElementById("orc-dp-next").addEventListener("click", () => {
+        mpAno++;
+        renderizarMeses();
+    });
+
+    // --- ALTERNA PARA A VISUALIZAÇÃO DE ANOS ---
+    document.getElementById("orc-dp-title").addEventListener("click", () => {
+        const aberto = dropdown.classList.toggle("showing-years");
+        if (aberto) {
+            renderizarAnos();
+        }
+    });
+
+    // --- FECHAR O SELETOR AO CLICAR FORA ---
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest("#orcamento-datepicker-wrapper")) {
+            dropdown.classList.remove("open");
+            dropdown.classList.remove("showing-years");
+        }
+    });
+};
+
+// --- RENDERIZAÇÃO DA LISTA DE ANOS ---
+const renderizarAnos = () => {
+    const container = document.getElementById("orc-dp-years");
+    container.innerHTML = "";
+
+    const anoAtual = new Date().getFullYear();
+    const inicio = anoAtual - 100;
+    const fim = anoAtual + 20;
+
+    // --- GERAÇÃO DOS BOTÕES DE ANO ---
+    for (let ano = fim; ano >= inicio; ano--) {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "datepicker-year-item";
+        el.textContent = ano;
+
+        if (ano === anoAtual) {
+            el.classList.add("today");
+        }
+
+        if (ano === mpAno) {
+            el.classList.add("selected");
+        }
+
+        el.addEventListener("click", () => {
+            mpAno = ano;
+            document.getElementById("orcamento-datepicker-dropdown").classList.remove("showing-years");
+            renderizarMeses();
+        });
+        container.appendChild(el);
+    }
+
+    const selecionado = container.querySelector(".selected");
+    if (selecionado) {
+        selecionado.scrollIntoView({
+            block: "center"
+        });
+    }
+};
+
+// --- RENDERIZAÇÃO DA GRADE DE MESES ---
+const renderizarMeses = () => {
+    document.getElementById("orc-dp-year").textContent = mpAno;
+
+    const container = document.getElementById("orc-dp-months");
+    container.innerHTML = "";
+
+    const hoje = new Date();
+
+    for (let m = 0; m < 12; m++) {
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "datepicker-month";
+        el.textContent = MESES_ABREV[m];
+
+        const ehAtual = m === hoje.getMonth() && mpAno === hoje.getFullYear();
+        if (ehAtual) {
+            el.classList.add("today");
+        }
+
+        if (mpMesSelecionado === m && mpAnoSelecionado === mpAno) {
+            el.classList.add("selected");
+        }
+
+        el.addEventListener("click", () => selecionarMes(m));
+        container.appendChild(el);
+    }
+};
+
+// --- SELEÇÃO DE UM MÊS ---
+const selecionarMes = (mes) => {
+    mpMesSelecionado = mes;
+    mpAnoSelecionado = mpAno;
+
+    const valor = `${mpAno}-${String(mes + 1).padStart(2, "0")}`;
+    document.getElementById("orcamento-mesAno").value = valor;
+    document.getElementById("orcamento-mesAno-display").value = `${MESES[mes]} ${mpAno}`;
+    document.getElementById("orcamento-datepicker-dropdown").classList.remove("open");
+};
+
+// --- CARREGAMENTO DE CATEGORIAS ---
 const carregarCategorias = () => {
     pesquisarCategorias()
         .then(categorias => {
-            const select = document.getElementById('orcamento-categoria');
-            select.innerHTML = '';
-            const optPadrao = document.createElement('option');
-            optPadrao.value = '';
-            optPadrao.textContent = 'Selecione...';
+            const select = document.getElementById("orcamento-categoria");
+            select.innerHTML = "";
+            const optPadrao = document.createElement("option");
+            optPadrao.value = "";
+            optPadrao.textContent = "Selecione...";
             select.appendChild(optPadrao);
             categorias.forEach(c => {
-                const opt = document.createElement('option');
+                const opt = document.createElement("option");
                 opt.value = c.id;
                 opt.textContent = c.nome;
                 select.appendChild(opt);
@@ -30,102 +196,127 @@ const carregarCategorias = () => {
         .catch(exibirErro);
 };
 
+// --- CARREGAMENTO DOS ORÇAMENTOS ---
 const carregar = () => {
     pesquisarOrcamentos()
         .then(renderizarTabela)
         .catch(exibirErro);
 };
 
+// --- RENDERIZAÇÃO DA TABELA DE ORÇAMENTOS ---
 const renderizarTabela = (orcamentos) => {
-    const container = document.getElementById('orcamentos-body');
+    const container = document.getElementById("orcamentos-body");
 
     if (orcamentos === null || orcamentos === undefined || orcamentos.length === 0) {
-        const tplVazio = document.getElementById('tpl-orcamentos-vazio');
-        container.innerHTML = '';
+        const tplVazio = document.getElementById("tpl-orcamentos-vazio");
+        container.innerHTML = "";
         container.appendChild(tplVazio.content.cloneNode(true));
         return;
     }
 
-    const tplTabela = document.getElementById('tpl-orcamentos-tabela');
-    const tplLinha = document.getElementById('tpl-orcamentos-linha');
+    // --- MONTAGEM DA TABELA A PARTIR DOS TEMPLATES ---
+    const tplTabela = document.getElementById("tpl-orcamentos-tabela");
+    const tplLinha = document.getElementById("tpl-orcamentos-linha");
 
-    container.innerHTML = '';
+    container.innerHTML = "";
     container.appendChild(tplTabela.content.cloneNode(true));
 
-    const tbody = container.querySelector('#orcamentos-tbody');
+    // --- PREENCHIMENTO DAS LINHAS ---
+    const tbody = container.querySelector("#orcamentos-tbody");
     orcamentos.forEach(o => {
         const gasto = o.valorGasto ?? 0;
         const disponivel = o.valorLimite - gasto;
         const percentual = o.valorLimite > 0 ? Math.min((gasto / o.valorLimite) * 100, 100) : 0;
-        const cor = percentual >= 90 ? 'var(--danger)' : percentual >= 70 ? 'var(--warning)' : 'var(--success)';
+        const cor = percentual >= 90 ? "var(--danger)" : percentual >= 70 ? "var(--warning)" : "var(--success)";
 
         const linha = tplLinha.content.cloneNode(true);
-        const tr = linha.querySelector('tr');
+        const tr = linha.querySelector("tr");
 
-        tr.querySelector('[data-campo="categoria"]').textContent = o.categoriaNome ?? '-';
-        tr.querySelector('[data-campo="limite"]').textContent = formatarMoeda(o.valorLimite);
+        tr.querySelector("[data-campo='categoria']").textContent = o.categoriaNome ?? "-";
+        tr.querySelector("[data-campo='limite']").textContent = formatarMoeda(o.valorLimite);
 
-        const fill = tr.querySelector('[data-campo="fill"]');
+        // --- BARRA DE PROGRESSO ---
+        const fill = tr.querySelector("[data-campo='fill']");
         fill.style.width = `${percentual}%`;
         fill.style.background = cor;
 
-        tr.querySelector('[data-campo="gasto-texto"]').textContent = `${formatarMoeda(gasto)} (${percentual.toFixed(0)}%)`;
+        tr.querySelector("[data-campo='gasto-texto']").textContent = `${formatarMoeda(gasto)} (${percentual.toFixed(0)}%)`;
 
-        const tdDisponivel = tr.querySelector('[data-campo="disponivel"]');
-        tdDisponivel.style.fontWeight = '600';
-        tdDisponivel.style.color = disponivel >= 0 ? 'var(--success)' : 'var(--danger)';
+        // --- VALOR DISPONÍVEL ---
+        const tdDisponivel = tr.querySelector("[data-campo='disponivel']");
+        tdDisponivel.style.fontWeight = "600";
+        tdDisponivel.style.color = disponivel >= 0 ? "var(--success)" : "var(--danger)";
         tdDisponivel.textContent = formatarMoeda(disponivel);
 
-        tr.querySelector('[data-campo="mesAno"]').textContent = o.mesAno ?? '-';
+        tr.querySelector("[data-campo='mesAno']").textContent = o.mesAno ?? "-";
 
-        const tdAcoes = tr.querySelector('[data-campo="acoes"]');
-        const btnExcluir = document.createElement('button');
-        btnExcluir.className = 'btn btn-danger btn-excluir-orcamento';
+        // --- BOTÃO DE EXCLUIR ---
+        const tdAcoes = tr.querySelector("[data-campo='acoes']");
+        const btnExcluir = document.createElement("button");
+        btnExcluir.className = "btn btn-danger btn-excluir-orcamento";
         btnExcluir.dataset.id = o.id;
-        const icone = document.createElement('i');
-        icone.className = 'pi pi-trash';
+        const icone = document.createElement("i");
+        icone.className = "pi pi-trash";
         btnExcluir.appendChild(icone);
         tdAcoes.appendChild(btnExcluir);
 
         tbody.appendChild(tr);
     });
 
-    container.querySelectorAll('.btn-excluir-orcamento').forEach(btn => {
-        btn.addEventListener('click', () => excluir(btn.dataset.id));
+    // --- VÍNCULO DOS BOTÕES DE EXCLUSÃO ---
+    container.querySelectorAll(".btn-excluir-orcamento").forEach(btn => {
+        btn.addEventListener("click", () => excluir(btn.dataset.id));
     });
 };
 
+// --- ABERTURA DO MODAL ---
 const abrirModal = () => {
-    document.getElementById('form-orcamento').reset();
-    document.getElementById('modal-orcamento').classList.remove('hidden');
+    document.getElementById("form-orcamento").reset();
+    document.getElementById("orcamento-mesAno").value = "";
+    document.getElementById("orcamento-mesAno-display").value = "";
+
+    // --- RESET DO SELETOR DE MÊS/ANO ---
+    mpAno = new Date().getFullYear();
+    mpMesSelecionado = null;
+    mpAnoSelecionado = null;
+    document.getElementById("modal-orcamento").classList.remove("hidden");
 };
 
+// --- FECHAMENTO DO MODAL ---
 const fecharModal = () => {
-    document.getElementById('modal-orcamento').classList.add('hidden');
+    document.getElementById("modal-orcamento").classList.add("hidden");
 };
 
+// --- SALVAR ORÇAMENTO ---
 const salvar = (e) => {
     e.preventDefault();
+
+    // --- MONTAGEM DO PAYLOAD ---
     const payload = {
-        categoriaId: parseInt(document.getElementById('orcamento-categoria').value),
-        valorLimite: parseFloat(document.getElementById('orcamento-valorLimite').value),
-        mesAno:      document.getElementById('orcamento-mesAno').value,
+        categoriaId: parseInt(document.getElementById("orcamento-categoria").value),
+        valorLimite: parseFloat(document.getElementById("orcamento-valorLimite").value),
+        mesAno:      document.getElementById("orcamento-mesAno").value,
     };
 
+    // --- ENVIO AO BACKEND ---
     criarOrcamento(payload)
         .then(() => {
-            exibirSucesso('Orçamento criado');
+            exibirSucesso("Orçamento criado");
             fecharModal();
             carregar();
         })
         .catch(exibirErro);
 };
 
+// --- EXCLUSÃO DE ORÇAMENTO ---
 const excluir = (id) => {
-    if (!confirm('Deseja excluir este orçamento?')) return;
+    if (!confirm("Deseja excluir este orçamento?")) {
+        return;
+    }
     excluirOrcamento(id)
-        .then(() => { exibirSucesso('Orçamento excluído'); carregar(); })
+        .then(() => { exibirSucesso("Orçamento excluído"); carregar(); })
         .catch(exibirErro);
 };
 
+// --- EXPORTAÇÃO ---
 export { iniciarOrcamentos };
