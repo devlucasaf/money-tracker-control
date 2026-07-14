@@ -1,22 +1,49 @@
+
 import { formatarMoeda, formatarData, exibirSucesso, exibirErro } from "../util.js";
 import { pesquisarInvestimentos, criarInvestimento, atualizarInvestimento, excluirInvestimento } from "../remotes/investimentos/investimentosRemote.js";
 
 // --- RÓTULOS ---
 const MESES = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
 ];
 
 const ROTULO_TIPO = {
-    CDB: "CDB", CDI: "CDI", TESOURO: "Tesouro Direto", POUPANCA: "Poupança",
-    LCI_LCA: "LCI/LCA", ACOES: "Ações", FUNDOS: "Fundos", CRIPTO: "Cripto",
-    OURO: "Ouro", BET: "Aposta", OUTRO: "Outro"
+    CDB: "CDB",
+    CDI: "CDI",
+    TESOURO: "Tesouro Direto",
+    POUPANCA: "Poupança",
+    LCI_LCA: "LCI/LCA",
+    ACOES: "Ações",
+    FUNDOS: "Fundos",
+    CRIPTO: "Cripto",
+    OURO: "Ouro",
+    BET: "Aposta",
+    OUTRO: "Outro"
 };
 
-const ROTULO_STATUS = { ATIVO: "Ativo", RESGATADO: "Resgatado", PERDIDO: "Perdido" };
-const CLASSE_STATUS = { ATIVO: "badge-info", RESGATADO: "badge-success", PERDIDO: "badge-danger" };
+const ROTULO_STATUS = {
+    ATIVO: "Ativo",
+    RESGATADO: "Resgatado",
+    PERDIDO: "Perdido"
+};
 
-// --- DATEPICKERS ---
+const CLASSE_STATUS = {
+    ATIVO: "badge-info",
+    RESGATADO: "badge-success",
+    PERDIDO: "badge-danger"
+};
+
 let dpAplicacao, dpVencimento;
 
 // --- INICIALIZAÇÃO DA PÁGINA ---
@@ -28,15 +55,13 @@ const iniciarInvestimentos = () => {
     document.getElementById("modal-investimento-cancel").addEventListener("click", fecharModal);
     document.getElementById("form-investimento").addEventListener("submit", salvar);
 
-    // Alterna os campos específicos de "Aposta" conforme o tipo
     document.getElementById("investimento-tipo").addEventListener("change", atualizarCamposBet);
 
-    // Cria os dois seletores de data
     dpAplicacao = criarDatepicker("inv-dataAplicacao");
     dpVencimento = criarDatepicker("inv-dataVencimento");
 };
 
-// --- FÁBRICA DE DATEPICKER (reutilizável por prefixo de IDs) ---
+// --- FÁBRICA DE DATEPICKER ---
 const criarDatepicker = (p) => {
     const hoje = new Date();
     let mes = hoje.getMonth();
@@ -117,7 +142,9 @@ const criarDatepicker = (p) => {
 
         const sel = container.querySelector(".selected");
         if (sel) {
-            sel.scrollIntoView({ block: "center" });
+            sel.scrollIntoView({
+                block: "center"
+            });
         }
     };
 
@@ -139,13 +166,19 @@ const criarDatepicker = (p) => {
 
     document.getElementById(`${p}-prev`).addEventListener("click", () => {
         mes--;
-        if (mes < 0) { mes = 11; ano--; }
+        if (mes < 0) {
+            mes = 11;
+            ano--;
+        }
         renderizar();
     });
 
     document.getElementById(`${p}-next`).addEventListener("click", () => {
         mes++;
-        if (mes > 11) { mes = 0; ano++; }
+        if (mes > 11) {
+            mes = 0;
+            ano++;
+        }
         renderizar();
     });
 
@@ -205,7 +238,6 @@ const renderizarTabela = (investimentos) => {
 
     atualizarResumo(investimentos);
 
-    // --- ESTADO VAZIO ---
     if (investimentos === null || investimentos === undefined || investimentos.length === 0) {
         const tplVazio = document.getElementById("tpl-investimentos-vazio");
         container.innerHTML = "";
@@ -227,7 +259,6 @@ const renderizarTabela = (investimentos) => {
 
         tr.querySelector("[data-campo='nome']").textContent = inv.nome;
 
-        // --- TIPO (BADGE) ---
         const tdTipo = tr.querySelector("[data-campo='tipo']");
         const badgeTipo = document.createElement("span");
         badgeTipo.className = "badge badge-info";
@@ -237,7 +268,7 @@ const renderizarTabela = (investimentos) => {
         tr.querySelector("[data-campo='aplicado']").textContent = formatarMoeda(inv.valorAplicado);
         tr.querySelector("[data-campo='atual']").textContent = formatarMoeda(inv.valorAtual);
 
-        // --- RENDIMENTO (COR CONFORME GANHO/PERDA) ---
+        // --- RENDIMENTO ---
         const tdRend = tr.querySelector("[data-campo='rendimento']");
         const rendimento = inv.rendimento ?? 0;
         const percentual = inv.percentualRendimento ?? 0;
@@ -246,14 +277,12 @@ const renderizarTabela = (investimentos) => {
         const sinal = rendimento >= 0 ? "+" : "";
         tdRend.textContent = `${sinal}${formatarMoeda(rendimento)} (${percentual}%)`;
 
-        // --- STATUS (BADGE) ---
         const tdStatus = tr.querySelector("[data-campo='status']");
         const badgeStatus = document.createElement("span");
         badgeStatus.className = `badge ${CLASSE_STATUS[inv.status] ?? "badge-info"}`;
         badgeStatus.textContent = ROTULO_STATUS[inv.status] ?? inv.status;
         tdStatus.appendChild(badgeStatus);
 
-        // --- AÇÕES (EDITAR / EXCLUIR) ---
         const tdAcoes = tr.querySelector("[data-campo='acoes']");
 
         const btnEditar = document.createElement("button");
@@ -302,7 +331,7 @@ const atualizarResumo = (investimentos) => {
     elRend.textContent = `${sinal}${formatarMoeda(rendimento)}`;
 };
 
-// --- ABERTURA DO MODAL (NOVO / EDIÇÃO) ---
+// --- ABERTURA DO MODAL ---
 const abrirModal = (investimento) => {
     const formulario = document.getElementById("form-investimento");
     formulario.reset();
@@ -334,7 +363,6 @@ const abrirModal = (investimento) => {
         dpVencimento.definir(null);
     }
 
-    // Sincroniza os custom selects e alterna os campos de aposta
     selTipo.dispatchEvent(new Event("change"));
     selStatus.dispatchEvent(new Event("change"));
     selResultado.dispatchEvent(new Event("change"));
