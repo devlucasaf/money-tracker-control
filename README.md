@@ -45,9 +45,10 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 
 - **Frontend:** Vanilla JavaScript (ES6+ Modules) + Vite 5, SPA com template-based routing
 - **Backend:** API REST com Spring Boot 3.4.5, Spring Security (JWT Stateless), Spring Data JPA
-- **Banco de Dados:** SQL Server com Hibernate DDL Auto
-- **Segurança:** JWT para autenticação, BCrypt para senhas, CORS configurado globalmente
+- **Banco de Dados:** SQL Server (Microsoft) com Hibernate DDL Auto e suporte a Flyway
+- **Segurança:** JWT (Auth0 java-jwt) para autenticação, BCrypt para senhas, CORS configurado globalmente
 - **Padrão DTO:** Separação completa entre entidades JPA e objetos de transferência
+- **Arquitetura Modular:** Backend organizado por módulos de negócio (feature-based)
 - **Proxy:** Vite dev server com proxy `/api` para o backend
 
 ---
@@ -57,36 +58,47 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 ```
 📂 money-tracker-control
 ├── 📂 backend
-│   ├── 📂 src/main/java/com/moneytracker
-│   │   ├── 📂 dto/auth                  # DTOs de autenticação
+│   ├── 📂 src/main/java/cloudsupport/moneytracker
+│   │   ├── 📂 dto/auth                  # DTOs de autenticação (login/registro)
 │   │   ├── 📂 exception                 # Tratamento global de erros
 │   │   ├── 📂 infra                     # Camada de infraestrutura
-│   │   │   ├── 📂 config                # Configurações gerais (CORS)
-│   │   │   └── 📂 security              # JWT, SecurityConfig, SecurityFilter
+│   │   │   ├── 📂 config                # Configurações gerais (CORS, dev server)
+│   │   │   └── 📂 security              # JWT, SecurityConfig, SecurityFilter, TokenService
 │   │   └── 📂 modules                   # Módulos de negócio
-│   │       ├── 📂 autenticacao           # Login e registro de usuários
-│   │       ├── 📂 categoria              # Categorias de receita/despesa
-│   │       ├── 📂 conta                  # Contas bancárias e carteiras
-│   │       ├── 📂 dashboard              # Resumo financeiro mensal
-│   │       ├── 📂 meta                   # Metas financeiras
-│   │       ├── 📂 orcamento              # Orçamento mensal por categoria
-│   │       ├── 📂 transacao              # Receitas e despesas
-│   │       └── 📂 usuario                # Controle de usuários
+│   │       ├── 📂 autenticacao          # Login e registro de usuários
+│   │       ├── 📂 categoria             # Categorias de receita/despesa
+│   │       ├── 📂 conta                 # Contas bancárias e carteiras
+│   │       ├── 📂 contapagar            # Contas a pagar (contas/boletos)
+│   │       ├── 📂 dashboard             # Resumo financeiro e evolução mensal
+│   │       ├── 📂 investimento          # Controle de investimentos
+│   │       ├── 📂 meta                  # Metas financeiras e movimentações
+│   │       ├── 📂 orcamento             # Orçamento mensal por categoria
+│   │       ├── 📂 plano                 # Plano de gastos
+│   │       ├── 📂 transacao             # Receitas, despesas e recorrências
+│   │       ├── 📂 transferencia         # Transferências entre contas
+│   │       └── 📂 usuario               # Controle e perfil de usuários
 │   └── 📄 pom.xml
 ├── 📂 frontend
 │   ├── 📂 src
 │   │   ├── 📂 scripts                   # Lógica principal da aplicação
 │   │   │   ├── 📄 app.js                # Router e inicialização da SPA
 │   │   │   ├── 📄 util.js               # Utilitários (tema, helpers)
+│   │   │   ├── 📄 customSelect.js       # Componente de select customizado
+│   │   │   ├── 📄 datepicker.js         # Componente de seleção de datas
 │   │   │   ├── 📂 pages                 # Lógica de cada página
 │   │   │   └── 📂 remotes               # Chamadas à API (fetch)
 │   │   │       ├── 📂 auth              # Login e Registro
 │   │   │       ├── 📂 categorias        # CRUD de categorias
 │   │   │       ├── 📂 contas            # CRUD de contas
+│   │   │       ├── 📂 contaspagar       # CRUD de contas a pagar
 │   │   │       ├── 📂 dashboard         # Dados do dashboard
+│   │   │       ├── 📂 investimentos     # CRUD de investimentos
 │   │   │       ├── 📂 metas             # CRUD de metas
 │   │   │       ├── 📂 orcamentos        # CRUD de orçamentos
-│   │   │       └── 📂 transacoes        # CRUD de transações
+│   │   │       ├── 📂 plano             # CRUD de plano de gastos
+│   │   │       ├── 📂 transacoes        # CRUD de transações
+│   │   │       ├── 📂 transferencias    # Transferências entre contas
+│   │   │       └── 📂 usuario           # Perfil do usuário
 │   │   ├── 📂 styles                    # Estilos globais e componentes
 │   │   └── 📂 templates                 # Templates HTML das páginas
 │   ├── 📄 index.html                    # Entry point da SPA
@@ -100,12 +112,16 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 ## ✨ Funcionalidades
 
 - 🔐 **Autenticação** — Registro e login com JWT
-- 💰 **Transações** — Cadastro de receitas e despesas com categoria e conta
+- 💰 **Transações** — Cadastro de receitas e despesas com categoria, conta e recorrência
 - 🏦 **Contas** — Gerenciamento de contas bancárias, carteiras e poupanças
+- 🔄 **Transferências** — Movimentação de valores entre contas
 - 🏷️ **Categorias** — Organização por tipo (receita/despesa) com ícone e cor
-- 📊 **Dashboard** — Resumo mensal com total de receitas, despesas e saldo
+- 📄 **Contas a Pagar** — Controle de contas e boletos a vencer
+- 📈 **Investimentos** — Acompanhamento de investimentos e resultados
+- 📊 **Dashboard** — Resumo mensal com receitas, despesas, saldo e evolução
 - 🎯 **Metas** — Definição de objetivos financeiros com acompanhamento de progresso
 - 📋 **Orçamentos** — Limite de gastos mensal por categoria com controle automático
+- 🗓️ **Plano de Gastos** — Planejamento financeiro personalizado
 - 🌙 **Tema** — Alternância entre tema claro e escuro
 
 ---
@@ -224,6 +240,8 @@ DB_USERNAME=sa
 DB_PASSWORD=sua_senha
 JWT_SECRET=sua-chave-secreta-jwt
 ```
+
+> 💡 Para desenvolvimento local, você pode usar o profile `local` (`application-local.properties`), ativo por padrão.
 
 Inicie o servidor:
 
