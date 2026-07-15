@@ -5,10 +5,13 @@
     </div>
 
     <nav class="topbar-nav">
+        <a class="nav-link" data-navigate="#/dashboard">Visão Geral</a>
         <a class="nav-link" data-navigate="#/transacoes">Transações</a>
         <a class="nav-link" data-navigate="#/contas">Contas</a>
+        <a class="nav-link" data-navigate="#/contas-pagar">A Pagar</a>
         <a class="nav-link" data-navigate="#/categorias">Categorias</a>
         <a class="nav-link" data-navigate="#/orcamentos">Orçamentos</a>
+        <a class="nav-link" data-navigate="#/plano">Plano</a>
         <a class="nav-link" data-navigate="#/metas">Metas</a>
         <a class="nav-link" data-navigate="#/investimentos">Investimentos</a>
     </nav>
@@ -45,22 +48,26 @@
     </div>
 </header>
 
-<!-- Modal Meu Perfil -->
 <div class="modal-overlay hidden" id="modal-perfil">
     <div class="modal">
         <div class="modal-header">
             <h3>Meu Perfil</h3>
-            <button class="btn-icon" id="btn-fechar-perfil"><i class="pi pi-times"></i></button>
+            <button class="btn-icon" id="btn-fechar-perfil">
+                <i class="pi pi-times"></i>
+            </button>
         </div>
+
         <div class="perfil-info">
             <div class="perfil-campo">
                 <span class="perfil-label">Nome</span>
                 <span class="perfil-valor" id="perfil-nome"></span>
             </div>
+
             <div class="perfil-campo">
                 <span class="perfil-label">E-mail</span>
                 <span class="perfil-valor" id="perfil-email"></span>
             </div>
+
             <div class="perfil-campo">
                 <span class="perfil-label">Moeda preferida</span>
                 <span class="perfil-valor" id="perfil-moeda"></span>
@@ -69,21 +76,32 @@
     </div>
 </div>
 
-<!-- Modal Alterar Dados -->
 <div class="modal-overlay hidden" id="modal-alterar-dados">
     <div class="modal">
         <div class="modal-header">
             <h3>Alterar dados pessoais</h3>
-            <button class="btn-icon" id="btn-fechar-alterar"><i class="pi pi-times"></i></button>
+            <button class="btn-icon" id="btn-fechar-alterar">
+                <i class="pi pi-times"></i>
+            </button>
         </div>
         <form id="form-alterar-dados">
             <div class="form-group">
                 <label>Nome</label>
-                <input type="text" id="alterar-nome" required placeholder="Seu nome" />
+                <input
+                        type="text"
+                        id="alterar-nome"
+                        required
+                        placeholder="Seu nome"
+                />
             </div>
             <div class="form-group">
                 <label>E-mail</label>
-                <input type="email" id="alterar-email" required placeholder="seu@email.com" />
+                <input
+                        type="email"
+                        id="alterar-email"
+                        required
+                        placeholder="seu@email.com"
+                />
             </div>
             <div class="form-group">
                 <label>Moeda preferida</label>
@@ -99,7 +117,11 @@
             </div>
             <div class="form-group">
                 <label>Nova senha (deixe em branco para não alterar)</label>
-                <input type="password" id="alterar-senha" placeholder="••••••••" />
+                <input
+                        type="password"
+                        id="alterar-senha"
+                        placeholder="••••••••"
+                />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="btn-cancelar-alterar">Cancelar</button>
@@ -110,3 +132,19 @@
 </div>
 
 <main class="page-wrapper" id="page-content"></main>
+
+<div class="modal-overlay hidden" id="modal-confirmacao">
+    <div class="modal modal-confirm">
+        <div class="modal-confirm-icon">
+            <i class="pi pi-exclamation-triangle"></i>
+        </div>
+        <h3 class="modal-confirm-title" id="confirmacao-titulo">Confirmar ação</h3>
+        <p class="modal-confirm-message" id="confirmacao-mensagem">Tem certeza?</p>
+        <div class="modal-confirm-actions">
+            <button type="button" class="btn btn-outline" id="confirmacao-cancelar">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmacao-confirmar">Excluir</button>
+        </div>
+    </div>
+</div>
+
+

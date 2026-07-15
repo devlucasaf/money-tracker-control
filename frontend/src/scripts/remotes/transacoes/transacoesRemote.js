@@ -10,6 +10,35 @@ const pesquisarTransacoes = (params = {}) => {
         urlParams.set("size", params.size);
     }
 
+    // --- FILTROS OPCIONAIS ---
+    if (params.busca) {
+        urlParams.set("busca", params.busca);
+    }
+
+    if (params.categoriaId) {
+        urlParams.set("categoriaId", params.categoriaId);
+    }
+
+    if (params.contaId) {
+        urlParams.set("contaId", params.contaId);
+    }
+
+    if (params.tipo) {
+        urlParams.set("tipo", params.tipo);
+    }
+
+    if (params.dataInicio) {
+        urlParams.set("dataInicio", params.dataInicio);
+    }
+
+    if (params.dataFim) {
+        urlParams.set("dataFim", params.dataFim);
+    }
+
+    if (params.tag) {
+        urlParams.set("tag", params.tag);
+    }
+
     const url = `${URL_BASE_API}/transacoes?${urlParams}`;
     return fetch(url, { headers: obterCabecalhosAuth() })
         .then(validarResposta)

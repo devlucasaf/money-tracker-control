@@ -13,7 +13,8 @@ const iniciarLogin = () => {
             .then(dados => {
                 localStorage.setItem("token", dados.token);
                 localStorage.setItem("userName", dados.nome);
-                localStorage.setItem("userEmail", email);
+                localStorage.setItem("userEmail", dados.email ?? email);
+                localStorage.setItem("userCurrency", dados.moeda ?? "BRL");
                 exibirSucesso("Login realizado com sucesso!");
                 window.location.hash = "#/transacoes";
             })

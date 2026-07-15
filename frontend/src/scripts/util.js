@@ -89,6 +89,72 @@ const configurarToggleSenha = () => {
     });
 };
 
+// --- MODAL DE CONFIRMAÇÃO PERSONALIZADO ---
+const confirmar = (opcoes = {}) => {
+    const {
+        titulo = "Confirmar ação",
+        mensagem = "Tem certeza que deseja continuar?",
+        textoConfirmar = "Excluir",
+        textoCancelar = "Cancelar",
+    } = typeof opcoes === "string" ? { mensagem: opcoes } : opcoes;
+
+    return new Promise((resolve) => {
+        const overlay = document.getElementById("modal-confirmacao");
+        if (!overlay) {
+            resolve(window.confirm(mensagem));
+            return;
+        }
+
+        const elTitulo = document.getElementById("confirmacao-titulo");
+        const elMensagem = document.getElementById("confirmacao-mensagem");
+        const btnConfirmar = document.getElementById("confirmacao-confirmar");
+        const btnCancelar = document.getElementById("confirmacao-cancelar");
+
+        // --- PREENCHE OS TEXTOS ---
+        elTitulo.textContent = titulo;
+        elMensagem.textContent = mensagem;
+        btnConfirmar.textContent = textoConfirmar;
+        btnCancelar.textContent = textoCancelar;
+
+        // --- EXIBE O MODAL ---
+        overlay.classList.remove("hidden");
+
+        // --- FUNÇÃO DE FECHAMENTO E LIMPEZA DOS EVENTOS ---
+        const fechar = (resultado) => {
+            overlay.classList.add("hidden");
+            btnConfirmar.removeEventListener("click", aoConfirmar);
+            btnCancelar.removeEventListener("click", aoCancelar);
+            overlay.removeEventListener("click", aoClicarFora);
+            document.removeEventListener("keydown", aoTeclar);
+            resolve(resultado);
+        };
+
+        const aoConfirmar = () => fechar(true);
+        const aoCancelar = () => fechar(false);
+        const aoClicarFora = (e) => {
+            if (e.target === overlay) {
+                fechar(false);
+            }
+        };
+        const aoTeclar = (e) => {
+            if (e.key === "Escape") {
+                fechar(false);
+            } else if (e.key === "Enter") {
+                fechar(true);
+            }
+        };
+
+        // --- REGISTRA OS EVENTOS ---
+        btnConfirmar.addEventListener("click", aoConfirmar);
+        btnCancelar.addEventListener("click", aoCancelar);
+        overlay.addEventListener("click", aoClicarFora);
+        document.addEventListener("keydown", aoTeclar);
+
+        // --- FOCO NO BOTÃO DE CONFIRMAR ---
+        btnConfirmar.focus();
+    });
+};
+
 inicializarTema();
 
-export { formatarMoeda, formatarData, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema, configurarToggleSenha };
+export { formatarMoeda, formatarData, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema, configurarToggleSenha, confirmar };

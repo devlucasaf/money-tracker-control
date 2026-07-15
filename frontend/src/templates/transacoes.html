@@ -6,6 +6,50 @@
         </button>
     </div>
 
+    <div class="filtros" id="transacoes-filtros">
+        <div class="filtro-busca">
+            <i class="pi pi-search"></i>
+            <input
+                    type="text"
+                    id="filtro-busca"
+                    placeholder="Buscar por descrição..."
+            />
+        </div>
+
+        <select id="filtro-tipo" class="filtro-select">
+            <option value="">Todos os tipos</option>
+            <option value="RECEITA">Receitas</option>
+            <option value="DESPESA">Despesas</option>
+        </select>
+
+        <select id="filtro-categoria" class="filtro-select">
+            <option value="">Todas as categorias</option>
+        </select>
+
+        <select id="filtro-conta" class="filtro-select">
+            <option value="">Todas as contas</option>
+        </select>
+
+        <div class="filtro-busca filtro-tag">
+            <i class="pi pi-tag"></i>
+            <input
+                    type="text"
+                    id="filtro-tag"
+                    placeholder="Filtrar por tag..."
+            />
+        </div>
+
+        <div class="filtro-datas">
+            <div id="filtro-data-inicio"></div>
+            <span class="filtro-datas-sep">até</span>
+            <div id="filtro-data-fim"></div>
+        </div>
+
+        <button class="btn btn-outline" id="btn-limpar-filtros" title="Limpar filtros">
+            <i class="pi pi-filter-slash"></i>
+        </button>
+    </div>
+
     <div id="transacoes-body"></div>
     <div class="pagination" id="transacoes-pagination"></div>
 </div>
@@ -23,9 +67,9 @@
             <div class="form-group">
                 <label>Descrição</label>
                 <input 
-                    type="text" 
-                    id="transacao-descricao" 
-                    required 
+                        type="text"
+                        id="transacao-descricao"
+                        required
                 />
             </div>
 
@@ -72,16 +116,16 @@
                 <label>Data</label>
                 <div class="custom-datepicker" id="datepicker-wrapper">
                     <input 
-                        type="text" 
-                        id="transacao-data-display" 
-                        class="datepicker-input" 
-                        placeholder="Selecione a data" 
-                        readonly 
-                        required 
+                            type="text"
+                            id="transacao-data-display"
+                            class="datepicker-input"
+                            placeholder="Selecione a data"
+                            readonly
+                            required
                     />
                     <input 
-                        type="hidden" 
-                        id="transacao-data" 
+                            type="hidden"
+                            id="transacao-data"
                     />
                     <div class="datepicker-dropdown" id="datepicker-dropdown">
                         <div class="datepicker-header">
@@ -124,6 +168,42 @@
                 <label>Conta</label>
                 <select id="transacao-conta">
                     <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Tags (opcional)</label>
+                <input type="text" id="transacao-tags" placeholder="Ex: viagem, trabalho, lazer" />
+                <small class="campo-ajuda">Separe as etiquetas por vírgula.</small>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-field">
+                    <input type="checkbox" id="transacao-parcelar" />
+                    <span>Compra parcelada</span>
+                </label>
+                <small class="campo-ajuda">Gera uma transação por mês, dividindo o valor total.</small>
+            </div>
+
+            <div class="form-group hidden" id="grupo-parcelas">
+                <label>Número de parcelas</label>
+                <input type="number" id="transacao-parcelas" min="2" max="60" step="1" value="2" />
+                <small class="campo-ajuda" id="parcelas-preview"></small>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-field">
+                    <input type="checkbox" id="transacao-recorrente" />
+                    <span>Transação recorrente</span>
+                </label>
+                <small class="campo-ajuda">Gera automaticamente novas transações na frequência escolhida.</small>
+            </div>
+
+            <div class="form-group hidden" id="grupo-frequencia">
+                <label>Frequência</label>
+                <select id="transacao-frequencia">
+                    <option value="MENSAL">Mensal</option>
+                    <option value="SEMANAL">Semanal</option>
                 </select>
             </div>
 

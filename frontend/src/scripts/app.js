@@ -1,13 +1,17 @@
 import { iniciarLogin }                     from "./pages/loginPage.js";
 import { iniciarRegistro }                  from "./pages/registerPage.js";
+import { iniciarDashboard }                 from "./pages/dashboardPage.js";
 import { iniciarTransacoes }                from "./pages/transacoesPage.js";
 import { iniciarContas }                    from "./pages/contasPage.js";
 import { iniciarCategorias }                from "./pages/categoriasPage.js";
 import { iniciarMetas }                     from "./pages/metasPage.js";
 import { iniciarOrcamentos }                from "./pages/orcamentosPage.js";
 import { iniciarInvestimentos }             from "./pages/investimentosPage.js";
-import { alternarTema, atualizarBotaoTema, exibirSucesso } from "./util.js";
+import { iniciarPlano }                      from "./pages/planoPage.js";
+import { iniciarContasPagar }                from "./pages/contasPagarPage.js";
+import { alternarTema, atualizarBotaoTema, exibirSucesso, exibirErro } from "./util.js";
 import { aprimorarSelects } from "./customSelect.js";
+import { atualizarPerfil } from "./remotes/usuario/usuarioRemote.js";
 
 const templates = {};
 
@@ -35,12 +39,15 @@ const estaAutenticado = () => {
 const rotas = {
     "/login":       { template: "login",        init: iniciarLogin,        auth: false },
     "/register":    { template: "register",     init: iniciarRegistro,     auth: false },
+    "/dashboard":   { template: "dashboard",    init: iniciarDashboard,    auth: true  },
     "/transacoes":  { template: "transacoes",   init: iniciarTransacoes,   auth: true  },
     "/contas":      { template: "contas",       init: iniciarContas,       auth: true  },
     "/categorias":  { template: "categorias",   init: iniciarCategorias,   auth: true  },
     "/metas":       { template: "metas",        init: iniciarMetas,        auth: true  },
     "/orcamentos":  { template: "orcamentos",   init: iniciarOrcamentos,   auth: true  },
     "/investimentos": { template: "investimentos", init: iniciarInvestimentos, auth: true },
+    "/plano":       { template: "plano",        init: iniciarPlano,        auth: true  },
+    "/contas-pagar":{ template: "contasPagar",  init: iniciarContasPagar,  auth: true  },
 };
 
 // --- NAVEGAÇÃO ENTRE ROTAS ---
@@ -147,15 +154,25 @@ const navegar = () => {
                 const moeda = document.getElementById("alterar-moeda").value;
                 const senha = document.getElementById("alterar-senha").value;
 
-                localStorage.setItem("userName", nome);
-                localStorage.setItem("userEmail", email);
-                localStorage.setItem("userCurrency", moeda);
+                const payload = { nome, email, moeda };
+                if (senha && senha.trim() !== "") {
+                    payload.senha = senha;
+                }
 
-                document.getElementById("sidebar-user-name").textContent = nome;
-                document.getElementById("user-menu-email").textContent = email;
+                // --- PERSISTE NO BACKEND E ATUALIZA O ARMAZENAMENTO LOCAL ---
+                atualizarPerfil(payload)
+                    .then((perfil) => {
+                        localStorage.setItem("userName", perfil.nome);
+                        localStorage.setItem("userEmail", perfil.email);
+                        localStorage.setItem("userCurrency", perfil.moeda);
 
-                document.getElementById("modal-alterar-dados").classList.add("hidden");
-                exibirSucesso("Dados atualizados com sucesso!");
+                        document.getElementById("sidebar-user-name").textContent = perfil.nome;
+                        document.getElementById("user-menu-email").textContent = perfil.email;
+
+                        document.getElementById("modal-alterar-dados").classList.add("hidden");
+                        exibirSucesso("Dados atualizados com sucesso!");
+                    })
+                    .catch(exibirErro);
             });
 
             // --- LOGOUT ---

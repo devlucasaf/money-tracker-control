@@ -1,0 +1,20 @@
+package cloudsupport.moneytracker.modules.dashboard.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DashboardDTO {
+    private BigDecimal              totalReceitas;
+    private BigDecimal              totalDespesas;
+    private BigDecimal              saldo;
+    private BigDecimal              saldoContas;
+    private List<CategoriaValorDTO> despesasPorCategoria;
+    private List<EvolucaoMensalDTO> evolucaoMensal;
+}

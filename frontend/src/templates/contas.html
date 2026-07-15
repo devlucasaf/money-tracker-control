@@ -1,11 +1,23 @@
 <div class="card">
     <div class="card-header">
         <h2>Contas</h2>
-        <button class="btn btn-primary" id="btn-nova-conta">
-            <i class="pi pi-plus"></i> Nova Conta
-        </button>
+        <div class="card-header-actions">
+            <button class="btn btn-outline" id="btn-transferir">
+                <i class="pi pi-arrow-right-arrow-left"></i> Transferir
+            </button>
+            <button class="btn btn-primary" id="btn-nova-conta">
+                <i class="pi pi-plus"></i> Nova Conta
+            </button>
+        </div>
     </div>
     <div id="contas-body"></div>
+</div>
+
+<div class="card" id="card-transferencias">
+    <div class="card-header">
+        <h2>Transferências recentes</h2>
+    </div>
+    <div id="transferencias-body"></div>
 </div>
 
 <div class="modal-overlay hidden" id="modal-conta">
@@ -56,7 +68,62 @@
     </div>
 </div>
 
-<!-- Templates -->
+<div class="modal-overlay hidden" id="modal-transferencia">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Nova Transferência</h3>
+            <button class="btn btn-outline" id="modal-transferencia-close">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
+
+        <form id="form-transferencia">
+            <div class="form-group">
+                <label>Conta de origem</label>
+                <select id="transferencia-origem" required>
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Conta de destino</label>
+                <select id="transferencia-destino" required>
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Valor</label>
+                <input
+                        type="number"
+                        step="0.01"
+                        id="transferencia-valor"
+                        required
+                />
+            </div>
+
+            <div class="form-group">
+                <label>Data</label>
+                <div id="transferencia-data-container"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Descrição (opcional)</label>
+                <input
+                        type="text"
+                        id="transferencia-descricao"
+                        placeholder="Ex: reserva de emergência"
+                />
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="modal-transferencia-cancel">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Transferir</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <template id="tpl-contas-vazio">
     <div class="empty-state">
         <i class="pi pi-wallet"></i>
@@ -68,7 +135,12 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th>Nome</th><th>Tipo</th><th>Saldo</th><th></th></tr>
+                <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Saldo</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody id="contas-tbody"></tbody>
         </table>
@@ -80,6 +152,42 @@
         <td data-campo="nome"></td>
         <td data-campo="tipo"></td>
         <td data-campo="saldo"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
+
+<template id="tpl-transferencias-vazio">
+    <div class="empty-state">
+        <i class="pi pi-arrow-right-arrow-left"></i>
+        <p>Nenhuma transferência realizada</p>
+    </div>
+</template>
+
+<template id="tpl-transferencias-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Valor</th>
+                    <th>Descrição</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="transferencias-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-transferencias-linha">
+    <tr>
+        <td data-campo="data"></td>
+        <td data-campo="origem"></td>
+        <td data-campo="destino"></td>
+        <td data-campo="valor"></td>
+        <td data-campo="descricao"></td>
         <td data-campo="acoes"></td>
     </tr>
 </template>

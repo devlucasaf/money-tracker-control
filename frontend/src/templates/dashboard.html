@@ -1,86 +1,103 @@
-<h2 class="page-title">Dashboard</h2>
+<div class="dash-topo">
+    <h2 class="page-title">Visão Geral</h2>
+    <div class="month-nav">
+        <button class="btn-icon" id="dash-mes-prev" title="Mês anterior">
+            <i class="pi pi-chevron-left"></i>
+        </button>
+        <span class="month-nav-label" id="dash-mes-label">—</span>
+        <button class="btn-icon" id="dash-mes-next" title="Próximo mês">
+            <i class="pi pi-chevron-right"></i>
+        </button>
+    </div>
+</div>
 
 <div class="summary-grid">
     <div class="summary-card">
-        <div class="label">Saldo Total</div>
-        <div class="value" id="dash-saldo">R$ 0,00</div>
-    </div>
-    
-    <div class="summary-card">
-        <div class="label">Receitas do Mês</div>
-        <div class="value positive" id="dash-receitas">R$ 0,00</div>
-    </div>
-
-    <div class="summary-card">
-        <div class="label">Despesas do Mês</div>
-        <div class="value negative" id="dash-despesas">R$ 0,00</div>
+        <div class="summary-icon summary-icon-primary">
+            <i class="pi pi-wallet"></i>
+        </div>
+        <div class="summary-info">
+            <span class="summary-label">Saldo em contas</span>
+            <span class="summary-value" id="dash-saldo-contas">—</span>
+        </div>
     </div>
 
     <div class="summary-card">
-        <div class="label">Economia do Mês</div>
-        <div class="value" id="dash-economia">R$ 0,00</div>
+        <div class="summary-icon summary-icon-success">
+            <i class="pi pi-arrow-down-left"></i>
+        </div>
+        <div class="summary-info">
+            <span class="summary-label">Receitas do mês</span>
+            <span class="summary-value" id="dash-receitas">—</span>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-icon summary-icon-danger">
+            <i class="pi pi-arrow-up-right"></i>
+        </div>
+        <div class="summary-info">
+            <span class="summary-label">Despesas do mês</span>
+            <span class="summary-value" id="dash-despesas">—</span>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-icon summary-icon-info">
+            <i class="pi pi-chart-line"></i>
+        </div>
+        <div class="summary-info">
+            <span class="summary-label">Saldo do mês</span>
+            <span class="summary-value" id="dash-saldo-mes">—</span>
+        </div>
     </div>
 </div>
 
 <div class="dashboard-grid">
     <div class="card">
         <div class="card-header">
-            <h2>Despesas por Categoria</h2>
+            <h2>Despesas por categoria</h2>
         </div>
-
-        <div class="chart-container" id="dash-chart-container">
-            <canvas id="dash-pie-chart" width="220" height="220"></canvas>
-            <div class="chart-legend" id="dash-chart-legend"></div>
+        <div class="chart-area" id="dash-pizza-area">
+            <div class="chart-pizza" id="dash-pizza"></div>
+            <div class="chart-legend" id="dash-pizza-legend"></div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">
-            <h2>Últimas Transações</h2>
+            <h2>Receitas x Despesas</h2>
+            <span class="chart-subtitle">Últimos 6 meses</span>
         </div>
-        <div id="dash-transacoes-body"></div>
+        <div class="chart-area" id="dash-barras-area">
+            <div class="chart-barras" id="dash-barras"></div>
+            <div class="chart-legend chart-legend-inline">
+                <div class="chart-legend-item">
+                    <span class="chart-legend-dot" style="background: var(--color-green)"></span>
+                    <span>Receitas</span>
+                </div>
+                <div class="chart-legend-item">
+                    <span class="chart-legend-dot" style="background: var(--color-red)"></span>
+                    <span>Despesas</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Templates -->
-<template id="tpl-dash-vazio-transacoes">
-    <div class="empty-state">
-        <i class="pi pi-inbox"></i>
-        <p>Nenhuma transação recente</p>
+<div class="card dash-linha-card">
+    <div class="card-header">
+        <h2>Evolução do saldo</h2>
+        <span class="chart-subtitle">Fluxo acumulado (últimos 6 meses)</span>
     </div>
-</template>
+    <div class="chart-area" id="dash-linha-area">
+        <div class="chart-linha" id="dash-linha"></div>
+    </div>
+</div>
 
 <template id="tpl-dash-vazio-grafico">
     <div class="empty-state">
         <i class="pi pi-chart-pie"></i>
-        <p>Sem despesas este mês</p>
+        <p>Sem dados para exibir neste período</p>
     </div>
 </template>
-
-<template id="tpl-dash-tabela-transacoes">
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Data</th></tr>
-            </thead>
-            <tbody id="dash-transacoes-tbody"></tbody>
-        </table>
-    </div>
-</template>
-
-<template id="tpl-dash-transacao-linha">
-    <tr>
-        <td data-campo="descricao"></td>
-        <td data-campo="valor"></td>
-        <td data-campo="tipo"></td>
-        <td data-campo="data"></td>
-    </tr>
-</template>
-
-<template id="tpl-dash-legenda-item">
-    <div class="chart-legend-item">
-        <span class="chart-legend-dot" data-campo="dot"></span>
-        <span data-campo="texto"></span>
-    </div>
-</template>
-

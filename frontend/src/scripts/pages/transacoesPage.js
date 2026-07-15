@@ -1,10 +1,13 @@
-import { formatarMoeda, formatarData, exibirSucesso, exibirErro, obterMoedaUsuario } from "../util.js";
+import { formatarMoeda, formatarData, exibirSucesso, exibirErro, obterMoedaUsuario, confirmar } from "../util.js";
 import { pesquisarTransacoes, criarTransacao, excluirTransacao } from "../remotes/transacoes/transacoesRemote.js";
 import { pesquisarCategorias } from "../remotes/categorias/categoriasRemote.js";
 import { pesquisarContas } from "../remotes/contas/contasRemote.js";
+import { criarDatepicker } from "../datepicker.js";
 
 let paginaAtual = 0;
 let dpMes, dpAno, dpDataSelecionada;
+let debounceBusca;
+let dpFiltroInicio, dpFiltroFim;
 
 // --- TAXAS DE CÂMBIO ---
 const TAXAS_FALLBACK = {
@@ -27,6 +30,29 @@ const iniciarTransacoes = () => {
     document.getElementById("modal-transacao-close").addEventListener("click", fecharModal);
     document.getElementById("modal-transacao-cancel").addEventListener("click", fecharModal);
     document.getElementById("form-transacao").addEventListener("submit", salvar);
+
+    // --- MOSTRA/ESCONDE A FREQUÊNCIA CONFORME O CHECKBOX ---
+    document.getElementById("transacao-recorrente").addEventListener("change", (e) => {
+        document.getElementById("grupo-frequencia").classList.toggle("hidden", !e.target.checked);
+        if (e.target.checked) {
+            document.getElementById("transacao-parcelar").checked = false;
+            document.getElementById("grupo-parcelas").classList.add("hidden");
+        }
+    });
+
+    // --- MOSTRA/ESCONDE O Nº DE PARCELAS CONFORME O CHECKBOX ---
+    document.getElementById("transacao-parcelar").addEventListener("change", (e) => {
+        document.getElementById("grupo-parcelas").classList.toggle("hidden", !e.target.checked);
+        if (e.target.checked) {
+            document.getElementById("transacao-recorrente").checked = false;
+            document.getElementById("grupo-frequencia").classList.add("hidden");
+        }
+        atualizarPreviewParcelas();
+    });
+
+    // --- ATUALIZA A PRÉVIA DO VALOR DA PARCELA ---
+    document.getElementById("transacao-parcelas").addEventListener("input", atualizarPreviewParcelas);
+    document.getElementById("transacao-valor").addEventListener("input", atualizarPreviewParcelas);
 
     // --- RECÁLCULO DA CONVERSÃO AO DIGITAR O VALOR ---
     document.getElementById("transacao-valor").addEventListener("input", converterMoeda);
@@ -61,6 +87,81 @@ const iniciarTransacoes = () => {
     });
 
     inicializarCalendario();
+    configurarFiltros();
+};
+
+// --- CONFIGURA OS EVENTOS DA BARRA DE FILTROS ---
+const configurarFiltros = () => {
+    document.getElementById("filtro-busca").addEventListener("input", () => {
+        clearTimeout(debounceBusca);
+        debounceBusca = setTimeout(() => carregar(0), 350);
+    });
+
+    document.getElementById("filtro-tag").addEventListener("input", () => {
+        clearTimeout(debounceBusca);
+        debounceBusca = setTimeout(() => carregar(0), 350);
+    });
+
+    ["filtro-tipo", "filtro-categoria", "filtro-conta"]
+        .forEach(id => {
+            document.getElementById(id).addEventListener("change", () => carregar(0));
+        });
+
+    // --- DATEPICKERS DE INÍCIO E FIM ---
+    dpFiltroInicio = criarDatepicker({
+        placeholder: "Data inicial",
+        classeInput: "filtro-select",
+        aoSelecionar: () => carregar(0),
+    });
+
+    dpFiltroFim = criarDatepicker({
+        placeholder: "Data final",
+        classeInput: "filtro-select",
+        aoSelecionar: () => carregar(0),
+    });
+
+    document.getElementById("filtro-data-inicio").appendChild(dpFiltroInicio.element);
+    document.getElementById("filtro-data-fim").appendChild(dpFiltroFim.element);
+
+    // --- LIMPAR FILTROS ---
+    document.getElementById("btn-limpar-filtros").addEventListener("click", () => {
+        document.getElementById("filtro-busca").value = "";
+        document.getElementById("filtro-tag").value = "";
+        ["filtro-tipo", "filtro-categoria", "filtro-conta"].forEach(id => {
+            const sel = document.getElementById(id);
+            sel.value = "";
+            sel.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+        dpFiltroInicio.limpar();
+        dpFiltroFim.limpar();
+        carregar(0);
+    });
+};
+
+// --- LÊ OS FILTROS ATUAIS ---
+const obterFiltros = () => ({
+    busca: document.getElementById("filtro-busca").value.trim(),
+    tipo: document.getElementById("filtro-tipo").value,
+    categoriaId: document.getElementById("filtro-categoria").value,
+    contaId: document.getElementById("filtro-conta").value,
+    dataInicio: dpFiltroInicio ? dpFiltroInicio.getValor() : "",
+    dataFim: dpFiltroFim ? dpFiltroFim.getValor() : "",
+    tag: document.getElementById("filtro-tag").value.trim(),
+});
+
+// --- ATUALIZA A PRÉVIA DO VALOR DAS PARCELAS ---
+const atualizarPreviewParcelas = () => {
+    const preview = document.getElementById("parcelas-preview");
+    if (!preview) {
+        return;
+    }
+    const total = parseFloat(document.getElementById("transacao-valor").value);
+    const parcelas = parseInt(document.getElementById("transacao-parcelas").value);
+    if (!total || !parcelas || parcelas < 2) {
+        preview.textContent = "";
+        return;
+    }
+    preview.textContent = `${parcelas}x de ${formatarMoeda(total / parcelas)} (total ${formatarMoeda(total)})`;
 };
 
 // --- CONVERSOR DE MOEDA ---
@@ -286,6 +387,17 @@ const carregarDependencias = () => {
                 opt.textContent = c.nome;
                 select.appendChild(opt);
             });
+
+            // --- POPULA O FILTRO DE CATEGORIA ---
+            const filtro = document.getElementById("filtro-categoria");
+            if (filtro) {
+                categorias.forEach(c => {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.nome;
+                    filtro.appendChild(opt);
+                });
+            }
         })
         .catch(exibirErro);
 
@@ -304,6 +416,17 @@ const carregarDependencias = () => {
                 opt.textContent = c.nome;
                 select.appendChild(opt);
             });
+
+            // --- POPULA O FILTRO DE CONTA ---
+            const filtro = document.getElementById("filtro-conta");
+            if (filtro) {
+                contas.forEach(c => {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.nome;
+                    filtro.appendChild(opt);
+                });
+            }
         })
         .catch(exibirErro);
 };
@@ -311,7 +434,7 @@ const carregarDependencias = () => {
 // --- CARREGAMENTO DAS TRANSAÇÕES ---
 const carregar = (pagina) => {
     paginaAtual = pagina;
-    pesquisarTransacoes({ page: pagina, size: 10 })
+    pesquisarTransacoes({ page: pagina, size: 10, ...obterFiltros() })
         .then(renderizarTabela)
         .catch(exibirErro);
 };
@@ -342,7 +465,35 @@ const renderizarTabela = (dados) => {
         const linha = tplLinha.content.cloneNode(true);
         const tr = linha.querySelector("tr");
 
-        tr.querySelector("[data-campo='descricao']").textContent = t.descricao;
+        const tdDescricao = tr.querySelector("[data-campo='descricao']");
+        tdDescricao.textContent = t.descricao;
+        if (t.recorrente) {
+            const selo = document.createElement("span");
+
+            selo.className = "badge badge-info badge-recorrente";
+            selo.innerHTML = '<i class="pi pi-sync"></i> Recorrente';
+            selo.title = t.frequencia === "SEMANAL" ? "Repete semanalmente" : "Repete mensalmente";
+
+            tdDescricao.appendChild(selo);
+        }
+
+        // --- CHIPS DE TAGS ---
+        if (t.tags && t.tags.length > 0) {
+            const wrap = document.createElement("div");
+            wrap.className = "tag-chips";
+            t.tags.forEach(tag => {
+                const chip = document.createElement("span");
+                chip.className = "tag-chip";
+                chip.textContent = tag;
+                chip.title = "Filtrar por esta tag";
+                chip.addEventListener("click", () => {
+                    document.getElementById("filtro-tag").value = tag;
+                    carregar(0);
+                });
+                wrap.appendChild(chip);
+            });
+            tdDescricao.appendChild(wrap);
+        }
 
         // --- VALOR ---
         const tdValor = tr.querySelector("[data-campo='valor']");
@@ -417,6 +568,18 @@ const abrirModal = () => {
     opcoes.querySelector("[data-value='USD']").classList.add("selected");
 
     dpDataSelecionada = null;
+
+    // --- RESET DA RECORRÊNCIA ---
+    document.getElementById("transacao-recorrente").checked = false;
+    document.getElementById("grupo-frequencia").classList.add("hidden");
+
+    // --- RESET DE TAGS E PARCELAMENTO ---
+    document.getElementById("transacao-tags").value = "";
+    document.getElementById("transacao-parcelar").checked = false;
+    document.getElementById("grupo-parcelas").classList.add("hidden");
+    document.getElementById("transacao-parcelas").value = "2";
+    document.getElementById("parcelas-preview").textContent = "";
+
     document.getElementById("modal-transacao").classList.remove("hidden");
 };
 
@@ -431,12 +594,12 @@ const salvar = (e) => {
 
     // --- MONTAGEM DO PAYLOAD ---
     const payload = {
-        descricao:      document.getElementById("transacao-descricao").value,
-        valor:          parseFloat(document.getElementById("transacao-valor").value),
-        tipo:           document.getElementById("transacao-tipo").value,
-        data:           document.getElementById("transacao-data").value,
-        categoriaId:    document.getElementById("transacao-categoria").value || null,
-        contaId:        document.getElementById("transacao-conta").value || null,
+        descricao: document.getElementById("transacao-descricao").value,
+        valor: parseFloat(document.getElementById("transacao-valor").value),
+        tipo: document.getElementById("transacao-tipo").value,
+        data: document.getElementById("transacao-data").value,
+        categoriaId: document.getElementById("transacao-categoria").value || null,
+        contaId: document.getElementById("transacao-conta").value || null,
     };
 
     if (payload.categoriaId !== null) {
@@ -445,6 +608,20 @@ const salvar = (e) => {
 
     if (payload.contaId !== null) {
         payload.contaId = parseInt(payload.contaId);
+    }
+
+    const tagsRaw = document.getElementById("transacao-tags").value;
+    payload.tags = tagsRaw.split(",").map(t => t.trim()).filter(t => t.length > 0);
+
+    if (document.getElementById("transacao-parcelar").checked) {
+        payload.parcelas = parseInt(document.getElementById("transacao-parcelas").value) || 1;
+    }
+
+    // --- RECORRÊNCIA ---
+    const recorrente = document.getElementById("transacao-recorrente").checked;
+    payload.recorrente = recorrente;
+    if (recorrente) {
+        payload.frequencia = document.getElementById("transacao-frequencia").value;
     }
 
     // --- ENVIO AO BACKEND ---
@@ -459,15 +636,20 @@ const salvar = (e) => {
 
 // --- EXCLUSÃO DE TRANSAÇÃO ---
 const excluir = (id) => {
-    if (!confirm("Deseja excluir esta transação?")) {
-        return;
-    }
-    excluirTransacao(id)
-        .then(() => {
-            exibirSucesso("Transação excluída");
-            carregar(paginaAtual);
-        })
-        .catch(exibirErro);
+    confirmar({
+        titulo: "Excluir transação",
+        mensagem: "Deseja realmente excluir esta transação? Esta ação não pode ser desfeita.",
+    }).then((confirmado) => {
+        if (!confirmado) {
+            return;
+        }
+        excluirTransacao(id)
+            .then(() => {
+                exibirSucesso("Transação excluída");
+                carregar(paginaAtual);
+            })
+            .catch(exibirErro);
+    });
 };
 
 export { iniciarTransacoes };

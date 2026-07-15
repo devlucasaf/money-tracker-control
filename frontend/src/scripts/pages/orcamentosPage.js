@@ -1,4 +1,4 @@
-import { formatarMoeda, exibirSucesso, exibirErro } from "../util.js";
+import { formatarMoeda, exibirSucesso, exibirErro, confirmar } from "../util.js";
 import { pesquisarOrcamentos, criarOrcamento, excluirOrcamento } from "../remotes/orcamentos/orcamentosRemote.js";
 import { pesquisarCategorias } from "../remotes/categorias/categoriasRemote.js";
 
@@ -189,7 +189,7 @@ const carregarCategorias = () => {
             categorias.forEach(c => {
                 const opt = document.createElement("option");
                 opt.value = c.id;
-                opt.textContent = c.nome;
+               opt.textContent = c.nome;
                 select.appendChild(opt);
             });
         })
@@ -206,6 +206,8 @@ const carregar = () => {
 // --- RENDERIZAÇÃO DA TABELA DE ORÇAMENTOS ---
 const renderizarTabela = (orcamentos) => {
     const container = document.getElementById("orcamentos-body");
+
+    renderizarAlertas(orcamentos);
 
     if (orcamentos === null || orcamentos === undefined || orcamentos.length === 0) {
         const tplVazio = document.getElementById("tpl-orcamentos-vazio");
@@ -248,7 +250,11 @@ const renderizarTabela = (orcamentos) => {
         tdDisponivel.style.color = disponivel >= 0 ? "var(--success)" : "var(--danger)";
         tdDisponivel.textContent = formatarMoeda(disponivel);
 
-        tr.querySelector("[data-campo='mesAno']").textContent = o.mesAno ?? "-";
+        // --- MÊS/ANO FORMATADO ---
+        const mesAnoTexto = (o.mes && o.ano)
+            ? `${String(o.mes).padStart(2, "0")}/${o.ano}`
+            : "-";
+        tr.querySelector("[data-campo='mesAno']").textContent = mesAnoTexto;
 
         // --- BOTÃO DE EXCLUIR ---
         const tdAcoes = tr.querySelector("[data-campo='acoes']");
@@ -267,6 +273,60 @@ const renderizarTabela = (orcamentos) => {
     container.querySelectorAll(".btn-excluir-orcamento").forEach(btn => {
         btn.addEventListener("click", () => excluir(btn.dataset.id));
     });
+};
+
+// --- RENDERIZAÇÃO DOS ALERTAS DE ORÇAMENTO ---
+const renderizarAlertas = (orcamentos) => {
+    const container = document.getElementById("orcamentos-alertas");
+    if (!container) {
+        return;
+    }
+    container.innerHTML = "";
+
+    if (!orcamentos || orcamentos.length === 0) {
+        return;
+    }
+
+    // --- CLASSIFICA CADA ORÇAMENTO PELO PERCENTUAL GASTO ---
+    const estourados = [];
+    const emAlerta = [];
+
+    orcamentos.forEach(o => {
+        if (!o.valorLimite || o.valorLimite <= 0) {
+            return;
+        }
+        const gasto = o.valorGasto ?? 0;
+        const percentual = (gasto / o.valorLimite) * 100;
+
+        if (percentual >= 100) {
+            estourados.push({ o, percentual });
+        } else if (percentual >= 70) {
+            emAlerta.push({ o, percentual });
+        }
+    });
+
+    // --- MONTA UM ALERTA VISUAL ---
+    const montarAlerta = (item, nivel) => {
+        const div = document.createElement("div");
+        div.className = `alerta alerta-${nivel}`;
+
+        const icone = document.createElement("i");
+        icone.className = nivel === "danger" ? "pi pi-exclamation-triangle" : "pi pi-exclamation-circle";
+
+        const texto = document.createElement("span");
+        const nome = item.o.categoriaNome ?? "Categoria";
+        const pct = item.percentual.toFixed(0);
+        texto.textContent = nivel === "danger"
+            ? `${nome}: orçamento estourado (${pct}% de ${formatarMoeda(item.o.valorLimite)})`
+            : `${nome}: ${pct}% do orçamento utilizado (${formatarMoeda(item.o.valorLimite)})`;
+
+        div.appendChild(icone);
+        div.appendChild(texto);
+        return div;
+    };
+
+    estourados.forEach(item => container.appendChild(montarAlerta(item, "danger")));
+    emAlerta.forEach(item => container.appendChild(montarAlerta(item, "warning")));
 };
 
 // --- ABERTURA DO MODAL ---
@@ -291,11 +351,19 @@ const fecharModal = () => {
 const salvar = (e) => {
     e.preventDefault();
 
+    const mesAno = document.getElementById("orcamento-mesAno").value;
+    if (!mesAno) {
+        exibirErro("Selecione o mês/ano do orçamento");
+        return;
+    }
+    const [ano, mes] = mesAno.split("-").map(Number);
+
     // --- MONTAGEM DO PAYLOAD ---
     const payload = {
         categoriaId: parseInt(document.getElementById("orcamento-categoria").value),
         valorLimite: parseFloat(document.getElementById("orcamento-valorLimite").value),
-        mesAno:      document.getElementById("orcamento-mesAno").value,
+        mes: mes,
+        ano: ano,
     };
 
     // --- ENVIO AO BACKEND ---
@@ -310,12 +378,17 @@ const salvar = (e) => {
 
 // --- EXCLUSÃO DE ORÇAMENTO ---
 const excluir = (id) => {
-    if (!confirm("Deseja excluir este orçamento?")) {
-        return;
-    }
-    excluirOrcamento(id)
-        .then(() => { exibirSucesso("Orçamento excluído"); carregar(); })
-        .catch(exibirErro);
+    confirmar({
+        titulo: "Excluir orçamento",
+        mensagem: "Deseja realmente excluir este orçamento? Esta ação não pode ser desfeita.",
+    }).then((confirmado) => {
+        if (!confirmado) {
+            return;
+        }
+        excluirOrcamento(id)
+            .then(() => { exibirSucesso("Orçamento excluído"); carregar(); })
+            .catch(exibirErro);
+    });
 };
 
 // --- EXPORTAÇÃO ---

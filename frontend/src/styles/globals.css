@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 *, *::before, *::after {
     margin: 0;
@@ -73,7 +73,7 @@ html {
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -85,9 +85,10 @@ a { text-decoration: none; color: inherit; }
 
 /* --- TOPBAR --- */
 .topbar {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     padding: 0 2rem;
     height: 64px;
     background: var(--bg-card);
@@ -105,7 +106,7 @@ a { text-decoration: none; color: inherit; }
     font-weight: 800;
     font-size: 1.1rem;
     color: var(--color-primary);
-    flex-shrink: 0;
+    justify-self: start;
 }
 
 .brand-icon {
@@ -125,7 +126,8 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    flex: 1;
+    justify-self: center;
+    justify-content: center;
 }
 
 .nav-link {
@@ -153,7 +155,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    flex-shrink: 0;
+    justify-self: end;
 }
 
 /* --- USER MENU --- */
@@ -415,6 +417,12 @@ a { text-decoration: none; color: inherit; }
     font-weight: 700;
 }
 
+.card-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* --- BUTTONS --- */
 .btn {
     display: inline-flex;
@@ -622,6 +630,62 @@ a { text-decoration: none; color: inherit; }
     border-top: 1px solid var(--border);
 }
 
+/* --- MODAL DE CONFIRMAÇÃO --- */
+.modal-confirm {
+    max-width: 400px;
+    text-align: center;
+    padding: 2rem 1.75rem 1.75rem;
+    animation: confirm-pop 0.18s ease-out;
+}
+
+@keyframes confirm-pop {
+    from {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+
+    to   {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-confirm-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--danger) 15%, transparent);
+    color: var(--danger);
+    font-size: 1.6rem;
+}
+
+.modal-confirm-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.modal-confirm-message {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.75rem;
+}
+
+.modal-confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.modal-confirm-actions .btn {
+    min-width: 120px;
+}
+
 /* --- TABLES --- */
 .table-container {
     overflow-x: auto;
@@ -807,8 +871,13 @@ table tr:hover {
 }
 
 /* --- DATEPICKER --- */
-.custom-datepicker { position: relative; }
-.datepicker-input { cursor: pointer; }
+.custom-datepicker {
+    position: relative;
+}
+
+.datepicker-input {
+    cursor: pointer;
+}
 
 .datepicker-dropdown {
     position: absolute;
@@ -904,7 +973,7 @@ table tr:hover {
     opacity: 0.3;
 }
 
-/* Grade de meses (seletor mes/ano) */
+/* --- GRADE DE MESES --- */
 .datepicker-months {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -962,7 +1031,7 @@ table tr:hover {
     color: var(--text-muted);
 }
 
-/* Painel de anos */
+/* --- PAINEL DE ANOS --- */
 .datepicker-years {
     display: none;
     grid-template-columns: repeat(3, 1fr);
@@ -1259,7 +1328,9 @@ table tr:hover {
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     .topbar {
+        display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
         height: auto;
         padding: 0.75rem 1rem;
         gap: 0.5rem;
@@ -1298,5 +1369,460 @@ table tr:hover {
 
     .auth-card {
         padding: 2rem 1.5rem;
+    }
+}
+
+/* --- CARDS DE RESUMO --- */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.summary-icon-primary {
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+}
+
+.summary-icon-success {
+    background: var(--color-green-bg);
+    color: var(--color-green);
+}
+
+.summary-icon-danger {
+    background: var(--color-red-bg);
+    color: var(--color-red);
+}
+
+.summary-icon-info {
+    background: var(--color-yellow-bg);
+    color: var(--color-yellow);
+}
+
+.summary-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.summary-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.summary-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* --- GRADE DE GRÁFICOS --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* --- TOPO DO DASHBOARD -- */
+.dash-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.dash-topo .page-title {
+    margin-bottom: 0;
+}
+
+.month-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 0.15rem 0.4rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.month-nav-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 130px;
+    text-align: center;
+}
+
+/* --- EVOLUÇÃO DO SALDO --- */
+.dash-linha-card {
+    margin-top: 1.5rem;
+}
+
+.chart-linha {
+    width: 100%;
+}
+
+.chart-svg-linha {
+    width: 100%;
+    height: 220px;
+    display: block;
+}
+
+.chart-linha-traco {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.chart-linha-area {
+    fill: var(--color-primary);
+    opacity: 0.12;
+}
+
+.chart-linha-ponto {
+    fill: var(--color-primary);
+    stroke: var(--bg-card);
+    stroke-width: 2;
+}
+
+.chart-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.chart-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+/* --- GRÁFICO DE PIZZA --- */
+.chart-pizza {
+    width: 200px;
+    max-width: 100%;
+}
+
+.chart-svg-pizza {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.chart-donut-total {
+    font-size: 15px;
+    font-weight: 700;
+    fill: var(--text);
+}
+
+.chart-donut-label {
+    font-size: 10px;
+    fill: var(--text-muted);
+}
+
+/* --- GRÁFICO DE BARRAS --- */
+.chart-barras {
+    width: 100%;
+}
+
+.chart-svg-barras {
+    width: 100%;
+    height: 200px;
+    display: block;
+}
+
+.chart-base-line {
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.chart-bar-label {
+    font-size: 11px;
+    fill: var(--text-light);
+}
+
+.chart-svg-barras rect {
+    transition: opacity var(--transition);
+}
+
+.chart-svg-barras rect:hover {
+    opacity: 0.8;
+}
+
+/* --- LEGENDA DOS GRÁFICOS --- */
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.chart-legend-inline {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.chart-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+/* --- BARRA DE FILTROS --- */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.filtro-busca {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 220px;
+    min-width: 180px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-card);
+}
+
+.filtro-busca i {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.filtro-busca input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0.55rem 0;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.filtro-select {
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.filtro-datas {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filtro-datas > div {
+    flex: 1;
+    min-width: 130px;
+}
+
+.filtro-datas .datepicker-input {
+    width: 100%;
+}
+
+/* --- RECORRÊNCIA --- */
+label.checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.checkbox-field input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* --- SELO DE TRANSAÇÃO RECORRENTE --- */
+.badge-recorrente {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.badge-recorrente i {
+    font-size: 0.7rem;
+}
+
+/* --- CHIPS DE TAGS --- */
+.tag-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.35rem;
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.55rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-subtle);
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+}
+
+.tag-chip::before {
+    content: "#";
+    opacity: 0.6;
+    margin-right: 1px;
+}
+
+.tag-chip:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.filtro-tag {
+    flex: 0 1 180px;
+    min-width: 150px;
+}
+
+/* --- ALERTAS DE ORÇAMENTO --- */
+.alerta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.88rem;
+    margin-bottom: 0.6rem;
+    border: 1px solid transparent;
+}
+
+.alerta i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.alerta-danger {
+    background: var(--color-red-bg);
+    color: var(--color-red);
+    border-color: var(--color-red);
+}
+
+.alerta-warning {
+    background: var(--color-yellow-bg);
+    color: var(--color-yellow);
+    border-color: var(--color-yellow);
+}
+
+.alerta-ok {
+    background: var(--color-green-bg);
+    color: var(--color-green);
+    border-color: var(--color-green);
+}
+
+/* --- PLANO DE GASTOS --- */
+.plano-ajuda {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.plano-barra-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.plano-restante {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+/* --- DASHBOARD E FILTROS --- */
+@media (max-width: 900px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filtro-select,
+    .filtro-datas {
+        width: 100%;
+    }
+
+    .filtro-datas input {
+        flex: 1;
     }
 }

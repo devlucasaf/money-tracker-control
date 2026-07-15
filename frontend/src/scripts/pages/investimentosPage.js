@@ -1,5 +1,5 @@
 
-import { formatarMoeda, formatarData, exibirSucesso, exibirErro } from "../util.js";
+import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar } from "../util.js";
 import { pesquisarInvestimentos, criarInvestimento, atualizarInvestimento, excluirInvestimento } from "../remotes/investimentos/investimentosRemote.js";
 
 // --- RÓTULOS ---
@@ -389,15 +389,15 @@ const salvar = (e) => {
 
     // --- MONTAGEM DO PAYLOAD ---
     const payload = {
-        nome:           document.getElementById("investimento-nome").value,
-        tipo:           tipo,
-        valorAplicado:  parseFloat(document.getElementById("investimento-valorAplicado").value),
-        valorAtual:     valorAtualStr !== "" ? parseFloat(valorAtualStr) : null,
-        instituicao:    instituicao !== "" ? instituicao : null,
-        taxa:           taxaStr !== "" ? parseFloat(taxaStr) : null,
-        dataAplicacao:  document.getElementById("inv-dataAplicacao").value || null,
+        nome: document.getElementById("investimento-nome").value,
+        tipo: tipo,
+        valorAplicado: parseFloat(document.getElementById("investimento-valorAplicado").value),
+        valorAtual: valorAtualStr !== "" ? parseFloat(valorAtualStr) : null,
+        instituicao: instituicao !== "" ? instituicao : null,
+        taxa: taxaStr !== "" ? parseFloat(taxaStr) : null,
+        dataAplicacao: document.getElementById("inv-dataAplicacao").value || null,
         dataVencimento: document.getElementById("inv-dataVencimento").value || null,
-        status:         ehBet ? null : document.getElementById("investimento-status").value,
+        status: ehBet ? null : document.getElementById("investimento-status").value,
         resultadoAposta: ehBet ? document.getElementById("investimento-resultado").value : null,
     };
 
@@ -415,15 +415,20 @@ const salvar = (e) => {
 
 // --- EXCLUSÃO DE INVESTIMENTO ---
 const excluir = (id) => {
-    if (!confirm("Deseja excluir este investimento?")) {
-        return;
-    }
-    excluirInvestimento(id)
-        .then(() => {
-            exibirSucesso("Investimento excluído");
-            carregar();
-        })
-        .catch(exibirErro);
+    confirmar({
+        titulo: "Excluir investimento",
+        mensagem: "Deseja realmente excluir este investimento? Esta ação não pode ser desfeita.",
+    }).then((confirmado) => {
+        if (!confirmado) {
+            return;
+        }
+        excluirInvestimento(id)
+            .then(() => {
+                exibirSucesso("Investimento excluído");
+                carregar();
+            })
+            .catch(exibirErro);
+    });
 };
 
 // --- EXPORTAÇÃO ---

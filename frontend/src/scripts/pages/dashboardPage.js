@@ -1,132 +1,271 @@
-import { formatarMoeda, exibirErro } from '../util.js';
-import { obterDashboard } from '../remotes/dashboard/getDashboardRemote.js';
+import { formatarMoeda, exibirErro } from "../util.js";
+import { obterDashboard } from "../remotes/dashboard/getDashboardRemote.js";
 
 const CORES_GRAFICO = [
-    '#7c3aed', 
-    '#ec4899', 
-    '#6366f1', 
-    '#f59e0b', 
-    '#10b981',
-    '#3b82f6', 
-    '#f472b6', 
-    '#8b5cf6', 
-    '#ef4444', 
-    '#14b8a6'
+    "#7c3aed", "#ec4899", "#6366f1", "#f59e0b", "#10b981",
+    "#3b82f6", "#f472b6", "#8b5cf6", "#ef4444", "#14b8a6"
 ];
 
+// --- MESES ABREVIADOS ---
+const MESES_ABREV = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+// --- MESES POR EXTENSO ---
+const MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+// --- ESTADO DO MÊS EXIBIDO ---
+let dashMes, dashAno;
+
+// --- INICIALIZAÇÃO DA PÁGINA ---
 const iniciarDashboard = () => {
-    obterDashboard()
-        .then(renderizarDashboard)
+    const hoje = new Date();
+    dashMes = hoje.getMonth() + 1;
+    dashAno = hoje.getFullYear();
+
+    document.getElementById("dash-mes-prev").addEventListener("click", () => mudarMes(-1));
+    document.getElementById("dash-mes-next").addEventListener("click", () => mudarMes(1));
+
+    carregar();
+};
+
+// --- AVANÇA/RETROCEDE O MÊS EXIBIDO ---
+const mudarMes = (delta) => {
+    dashMes += delta;
+    if (dashMes < 1) {
+        dashMes = 12;
+        dashAno--;
+    } else if (dashMes > 12) {
+        dashMes = 1;
+        dashAno++;
+    }
+    carregar();
+};
+
+// --- CARREGA OS DADOS DO MÊS SELECIONADO ---
+const carregar = () => {
+    document.getElementById("dash-mes-label").textContent = `${MESES[dashMes - 1]} ${dashAno}`;
+    obterDashboard({ mes: dashMes, ano: dashAno })
+        .then(renderizar)
         .catch(exibirErro);
 };
 
-const renderizarDashboard = (dados) => {
-    document.getElementById('dash-saldo').textContent = formatarMoeda(dados.saldoTotal);
-    document.getElementById('dash-saldo').className = `value ${dados.saldoTotal >= 0 ? 'positive' : 'negative'}`;
-    document.getElementById('dash-receitas').textContent = formatarMoeda(dados.receitasMes);
-    document.getElementById('dash-despesas').textContent = formatarMoeda(dados.despesasMes);
-    document.getElementById('dash-economia').textContent = formatarMoeda(dados.economiaMes);
-    document.getElementById('dash-economia').className = `value ${dados.economiaMes >= 0 ? 'positive' : 'negative'}`;
+// --- RENDERIZAÇÃO GERAL ---
+const renderizar = (dados) => {
+    definirValor("dash-saldo-contas", dados.saldoContas, false);
+    definirValor("dash-receitas", dados.totalReceitas, false);
+    definirValor("dash-despesas", dados.totalDespesas, false);
+    definirValor("dash-saldo-mes", dados.saldo, true);
 
-    renderizarGraficoPizza(dados.despesasPorCategoria || []);
+    renderizarPizza(dados.despesasPorCategoria || []);
+    renderizarBarras(dados.evolucaoMensal || []);
+    renderizarLinha(dados.evolucaoMensal || []);
+};
 
-    const container = document.getElementById('dash-transacoes-body');
-    const transacoes = dados.ultimasTransacoes;
-
-    if (transacoes === null || transacoes === undefined || transacoes.length === 0) {
-        const tplVazio = document.getElementById('tpl-dash-vazio-transacoes');
-        container.innerHTML = '';
-        container.appendChild(tplVazio.content.cloneNode(true));
+// --- PREENCHE UM CARD DE RESUMO ---
+const definirValor = (id, valor, colorir) => {
+    const el = document.getElementById(id);
+    if (!el) {
         return;
     }
 
-    const tplTabela = document.getElementById('tpl-dash-tabela-transacoes');
-    const tplLinha = document.getElementById('tpl-dash-transacao-linha');
+    el.textContent = formatarMoeda(valor);
+    if (colorir) {
+        el.style.color = valor >= 0 ? "var(--color-green)" : "var(--color-red)";
+    }
+};
 
-    container.innerHTML = '';
-    container.appendChild(tplTabela.content.cloneNode(true));
+// --- CONVERTE ÂNGULO POLAR EM COORDENADAS ---
+const polar = (cx, cy, raio, angulo) => ({
+    x: cx + raio * Math.cos(angulo - Math.PI / 2),
+    y: cy + raio * Math.sin(angulo - Math.PI / 2),
+});
 
-    const tbody = container.querySelector('#dash-transacoes-tbody');
-    transacoes.forEach(t => {
-        const linha = tplLinha.content.cloneNode(true);
-        const tr = linha.querySelector('tr');
+// --- GERA O PATH DE UMA FATIA DE ROSCA ---
+const fatiaDonut = (cx, cy, raio, raioInterno, aIni, aFim, cor) => {
+    const p1 = polar(cx, cy, raio, aIni);
+    const p2 = polar(cx, cy, raio, aFim);
+    const p3 = polar(cx, cy, raioInterno, aFim);
+    const p4 = polar(cx, cy, raioInterno, aIni);
+    const largo = (aFim - aIni) > Math.PI ? 1 : 0;
 
-        tr.querySelector('[data-campo="descricao"]').textContent = t.descricao;
+    const d = `M ${p1.x} ${p1.y} A ${raio} ${raio} 0 ${largo} 1 ${p2.x} ${p2.y} `
+        + `L ${p3.x} ${p3.y} A ${raioInterno} ${raioInterno} 0 ${largo} 0 ${p4.x} ${p4.y} Z`;
+    return `<path d="${d}" fill="${cor}" />`;
+};
 
-        const tdValor = tr.querySelector('[data-campo="valor"]');
-        tdValor.style.fontWeight = '600';
-        tdValor.style.color = t.tipo === 'RECEITA' ? 'var(--success)' : 'var(--danger)';
-        tdValor.textContent = `${t.tipo === 'RECEITA' ? '+' : '-'} ${formatarMoeda(t.valor)}`;
+// --- GRÁFICO DE PIZZA DE DESPESAS POR CATEGORIA ---
+const renderizarPizza = (despesas) => {
+    const container = document.getElementById("dash-pizza");
+    const legenda = document.getElementById("dash-pizza-legend");
+    if (!container || !legenda) {
+        return;
+    }
 
-        const tdTipo = tr.querySelector('[data-campo="tipo"]');
-        const badge = document.createElement('span');
-        badge.className = `badge ${t.tipo === 'RECEITA' ? 'badge-success' : 'badge-danger'}`;
-        badge.textContent = t.tipo;
-        tdTipo.appendChild(badge);
+    legenda.innerHTML = "";
 
-        tr.querySelector('[data-campo="data"]').textContent = t.data ?? '';
+    const total = despesas.reduce((soma, d) => soma + Number(d.valor), 0);
+    if (despesas.length === 0 || total <= 0) {
+        exibirVazio("dash-pizza-area");
+        return;
+    }
 
-        tbody.appendChild(tr);
+    const cx = 100, cy = 100, raio = 80, raioInterno = 50;
+    let svg = `<svg viewBox="0 0 200 200" class="chart-svg-pizza">`;
+
+    // --- CASO DE UMA ÚNICA CATEGORIA: DESENHA ANEL COMPLETO ---
+    if (despesas.length === 1) {
+        const cor = despesas[0].cor || CORES_GRAFICO[0];
+        svg += `<circle cx="${cx}" cy="${cy}" r="${raio}" fill="${cor}" />`;
+        svg += `<circle cx="${cx}" cy="${cy}" r="${raioInterno}" fill="var(--bg-card)" />`;
+    } else {
+        let angulo = 0;
+        despesas.forEach((item, i) => {
+            const fatia = (Number(item.valor) / total) * 2 * Math.PI;
+            const cor = item.cor || CORES_GRAFICO[i % CORES_GRAFICO.length];
+            svg += fatiaDonut(cx, cy, raio, raioInterno, angulo, angulo + fatia, cor);
+            angulo += fatia;
+        });
+    }
+
+    // --- TEXTO CENTRAL COM O TOTAL ---
+    svg += `<text x="100" y="96" text-anchor="middle" class="chart-donut-total">${formatarMoeda(total)}</text>`;
+    svg += `<text x="100" y="114" text-anchor="middle" class="chart-donut-label">Total</text>`;
+    svg += `</svg>`;
+    container.innerHTML = svg;
+
+    // --- LEGENDA ---
+    despesas.forEach((item, i) => {
+        const pct = ((Number(item.valor) / total) * 100).toFixed(1);
+        const cor = item.cor || CORES_GRAFICO[i % CORES_GRAFICO.length];
+        const el = document.createElement("div");
+        el.className = "chart-legend-item";
+        el.innerHTML = `<span class="chart-legend-dot" style="background:${cor}"></span>`
+            + `<span>${item.categoriaNome || "Sem categoria"} — ${formatarMoeda(item.valor)} (${pct}%)</span>`;
+        legenda.appendChild(el);
     });
 };
 
-const renderizarGraficoPizza = (despesas) => {
-    const canvas = document.getElementById('dash-pie-chart');
-    const legenda = document.getElementById('dash-chart-legend');
-
-    if (!canvas || !legenda) {
+// --- GRÁFICO DE BARRAS ---
+const renderizarBarras = (evolucao) => {
+    const container = document.getElementById("dash-barras");
+    if (!container) {
         return;
     }
 
-    if (!despesas || despesas.length === 0) {
-        const container = document.getElementById('dash-chart-container');
-        const tplVazio = document.getElementById('tpl-dash-vazio-grafico');
-        container.innerHTML = '';
-        container.appendChild(tplVazio.content.cloneNode(true));
+    const temDados = evolucao.some(m => Number(m.receitas) > 0 || Number(m.despesas) > 0);
+    if (evolucao.length === 0 || !temDados) {
+        exibirVazio("dash-barras-area");
         return;
     }
 
-    const ctx = canvas.getContext('2d');
-    const total = despesas.reduce((soma, d) => soma + d.valor, 0);
-    const centroX = canvas.width / 2;
-    const centroY = canvas.height / 2;
-    const raio = 90;
-    const raioInterno = 55;
+    // --- GEOMETRIA DO SVG ---
+    const largura = 340, altura = 200;
+    const padTopo = 12, padBase = 26, padLat = 6;
+    const areaAltura = altura - padTopo - padBase;
+    const grupos = evolucao.length;
+    const larguraGrupo = (largura - padLat * 2) / grupos;
+    const larguraBarra = larguraGrupo * 0.28;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const maximo = Math.max(...evolucao.map(m => Math.max(Number(m.receitas), Number(m.despesas))), 1);
 
-    let anguloInicial = -Math.PI / 2;
-    despesas.forEach((item, i) => {
-        const anguloFatia = (item.valor / total) * 2 * Math.PI;
+    let svg = `<svg viewBox="0 0 ${largura} ${altura}" class="chart-svg-barras" preserveAspectRatio="none">`;
 
-        ctx.beginPath();
-        ctx.arc(centroX, centroY, raio, anguloInicial, anguloInicial + anguloFatia);
-        ctx.arc(centroX, centroY, raioInterno, anguloInicial + anguloFatia, anguloInicial, true);
-        ctx.closePath();
-        ctx.fillStyle = CORES_GRAFICO[i % CORES_GRAFICO.length];
-        ctx.fill();
+    // --- LINHA DE BASE ---
+    svg += `<line x1="${padLat}" y1="${padTopo + areaAltura}" x2="${largura - padLat}" y2="${padTopo + areaAltura}" class="chart-base-line" />`;
 
-        anguloInicial += anguloFatia;
+    evolucao.forEach((m, i) => {
+        const centroGrupo = padLat + larguraGrupo * i + larguraGrupo / 2;
+        const alturaRec = (Number(m.receitas) / maximo) * areaAltura;
+        const alturaDes = (Number(m.despesas) / maximo) * areaAltura;
+
+        const xRec = centroGrupo - larguraBarra - 2;
+        const xDes = centroGrupo + 2;
+        const baseY = padTopo + areaAltura;
+
+        // --- BARRA DE RECEITA ---
+        svg += `<rect x="${xRec}" y="${baseY - alturaRec}" width="${larguraBarra}" height="${alturaRec}" rx="2" fill="var(--color-green)">`
+            + `<title>Receitas: ${formatarMoeda(m.receitas)}</title></rect>`;
+
+        // --- BARRA DE DESPESA ---
+        svg += `<rect x="${xDes}" y="${baseY - alturaDes}" width="${larguraBarra}" height="${alturaDes}" rx="2" fill="var(--color-red)">`
+            + `<title>Despesas: ${formatarMoeda(m.despesas)}</title></rect>`;
+
+        // --- RÓTULO DO MÊS ---
+        svg += `<text x="${centroGrupo}" y="${altura - 8}" text-anchor="middle" class="chart-bar-label">${MESES_ABREV[m.mes - 1]}</text>`;
     });
 
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
-    ctx.font = 'bold 16px Inter';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(formatarMoeda(total), centroX, centroY - 8);
-    ctx.font = '11px Inter';
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
-    ctx.fillText('Total', centroX, centroY + 12);
+    svg += `</svg>`;
+    container.innerHTML = svg;
+};
 
-    const tplLegendaItem = document.getElementById('tpl-dash-legenda-item');
-    legenda.innerHTML = '';
-    despesas.forEach((item, i) => {
-        const pct = ((item.valor / total) * 100).toFixed(1);
-        const clone = tplLegendaItem.content.cloneNode(true);
-        clone.querySelector('[data-campo="dot"]').style.background = CORES_GRAFICO[i % CORES_GRAFICO.length];
-        clone.querySelector('[data-campo="texto"]').textContent = `${item.categoriaNome || 'Sem categoria'} (${pct}%)`;
-        legenda.appendChild(clone);
+// --- GRÁFICO DE LINHA: EVOLUÇÃO DO SALDO (FLUXO ACUMULADO) ---
+const renderizarLinha = (evolucao) => {
+    const container = document.getElementById("dash-linha");
+    if (!container) {
+        return;
+    }
+
+    const temDados = evolucao.some(m => Number(m.receitas) > 0 || Number(m.despesas) > 0);
+    if (evolucao.length === 0 || !temDados) {
+        exibirVazio("dash-linha-area");
+        return;
+    }
+
+    // --- ACUMULA O FLUXO (RECEITAS - DESPESAS) MÊS A MÊS ---
+    let acumulado = 0;
+    const pontos = evolucao.map(m => {
+        acumulado += Number(m.receitas) - Number(m.despesas);
+        return { mes: m.mes, valor: acumulado };
     });
+
+    // --- GEOMETRIA ---
+    const largura = 680, altura = 220;
+    const padTopo = 20, padBase = 28, padLat = 12;
+    const areaAltura = altura - padTopo - padBase;
+    const valores = pontos.map(p => p.valor);
+    const maximo = Math.max(...valores, 0);
+    const minimo = Math.min(...valores, 0);
+    const amplitude = (maximo - minimo) || 1;
+    const passoX = (largura - padLat * 2) / (pontos.length - 1 || 1);
+
+    const coordX = (i) => padLat + passoX * i;
+    const coordY = (v) => padTopo + areaAltura - ((v - minimo) / amplitude) * areaAltura;
+
+    let svg = `<svg viewBox="0 0 ${largura} ${altura}" class="chart-svg-linha" preserveAspectRatio="none">`;
+
+    // --- LINHA DO ZERO (SE HOUVER VALORES NEGATIVOS) ---
+    if (minimo < 0 && maximo > 0) {
+        const yZero = coordY(0);
+        svg += `<line x1="${padLat}" y1="${yZero}" x2="${largura - padLat}" y2="${yZero}" class="chart-base-line" stroke-dasharray="4 4" />`;
+    }
+
+    // --- ÁREA SOB A LINHA ---
+    const pontosLinha = pontos.map((p, i) => `${coordX(i)},${coordY(p.valor)}`).join(" ");
+    const baseY = padTopo + areaAltura;
+    svg += `<polygon points="${coordX(0)},${baseY} ${pontosLinha} ${coordX(pontos.length - 1)},${baseY}" class="chart-linha-area" />`;
+
+    // --- LINHA PRINCIPAL ---
+    svg += `<polyline points="${pontosLinha}" class="chart-linha-traco" />`;
+
+    // --- PONTOS E RÓTULOS ---
+    pontos.forEach((p, i) => {
+        svg += `<circle cx="${coordX(i)}" cy="${coordY(p.valor)}" r="3.5" class="chart-linha-ponto">`
+            + `<title>${MESES_ABREV[p.mes - 1]}: ${formatarMoeda(p.valor)}</title></circle>`;
+        svg += `<text x="${coordX(i)}" y="${altura - 8}" text-anchor="middle" class="chart-bar-label">${MESES_ABREV[p.mes - 1]}</text>`;
+    });
+
+    svg += `</svg>`;
+    container.innerHTML = svg;
+};
+
+// --- EXIBE O ESTADO VAZIO DENTRO DE UMA ÁREA DE GRÁFICO ---
+const exibirVazio = (areaId) => {
+    const area = document.getElementById(areaId);
+    const tpl = document.getElementById("tpl-dash-vazio-grafico");
+    if (!area || !tpl) {
+        return;
+    }
+    area.innerHTML = "";
+    area.appendChild(tpl.content.cloneNode(true));
 };
 
 export { iniciarDashboard };

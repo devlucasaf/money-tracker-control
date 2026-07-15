@@ -38,12 +38,12 @@ const iniciarRegistro = () => {
         const senha = document.getElementById("register-senha").value;
         const moeda = document.getElementById("register-moeda").value;
 
-        registrar({ nome, email, senha })
+        registrar({ nome, email, senha, moeda })
             .then(dados => {
                 localStorage.setItem("token", dados.token);
                 localStorage.setItem("userName", dados.nome);
-                localStorage.setItem("userEmail", email);
-                localStorage.setItem("userCurrency", moeda);
+                localStorage.setItem("userEmail", dados.email ?? email);
+                localStorage.setItem("userCurrency", dados.moeda ?? moeda);
                 exibirSucesso("Conta criada com sucesso!");
                 window.location.hash = "#/transacoes";
             })

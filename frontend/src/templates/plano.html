@@ -1,0 +1,135 @@
+<h2 class="page-title">Plano de Gastos</h2>
+
+<div id="plano-resumo"></div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Meu plano mensal</h2>
+    </div>
+    <p class="plano-ajuda">
+        Defina sua renda e como quer dividi-la entre gastar, reservar para emergência e guardar.
+        A tela acompanha quanto você já gastou no mês.
+    </p>
+    <form id="form-plano">
+        <div class="form-group">
+            <label>Renda mensal</label>
+            <input
+                    type="number"
+                    step="0.01"
+                    id="plano-renda"
+                    required
+                    placeholder="Ex: 1520,00"
+            />
+        </div>
+        <div class="form-group">
+            <label>Disponível para gastar</label>
+            <input
+                    type="number"
+                    step="0.01"
+                    id="plano-gastar"
+                    required
+                    placeholder="Ex: 270,00"
+            />
+        </div>
+        <div class="form-group">
+            <label>Reserva de emergência</label>
+            <input
+                    type="number"
+                    step="0.01"
+                    id="plano-emergencia"
+                    required
+                    placeholder="Ex: 270,00"
+            />
+        </div>
+        <div class="form-group">
+            <label>Guardar</label>
+            <input
+                    type="number"
+                    step="0.01"
+                    id="plano-guardar"
+                    required
+                    placeholder="Ex: 1000,00"
+            />
+        </div>
+
+        <div id="plano-alerta-soma"></div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Salvar plano</button>
+        </div>
+    </form>
+</div>
+
+<template id="tpl-plano-sem-plano">
+    <div class="card">
+        <div class="empty-state">
+            <i class="pi pi-sliders-h"></i>
+            <p>Você ainda não definiu um plano de gastos. Preencha abaixo para começar.</p>
+        </div>
+    </div>
+</template>
+
+<template id="tpl-plano-resumo">
+    <div class="card">
+        <div class="card-header">
+            <h2>Resumo do mês</h2>
+        </div>
+        <div class="plano-barra-info">
+            <span>Já gastei este mês</span>
+            <span>
+                <strong data-campo="gasto"></strong>
+                de <span data-campo="limite"></span>
+                (<span data-campo="pct"></span>%)
+            </span>
+        </div>
+
+        <div class="progress-bar" style="height:12px">
+            <div class="fill" data-campo="fill"></div>
+        </div>
+
+        <p class="plano-restante">
+            <span data-campo="restante-texto"></span>
+            <strong data-campo="restante-valor"></strong>
+            <span data-campo="restante-sufixo"></span>
+        </p>
+
+        <div class="summary-grid" style="margin-top:1.5rem;margin-bottom:0">
+            <div class="summary-card">
+                <div class="summary-icon summary-icon-danger">
+                    <i class="pi pi-shopping-cart"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-label" data-campo="label-gastar"></span>
+                    <span class="summary-value" data-campo="valor-gastar"></span>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon summary-icon-info"><i class="pi pi-shield"></i></div>
+                <div class="summary-info">
+                    <span class="summary-label" data-campo="label-emergencia"></span>
+                    <span class="summary-value" data-campo="valor-emergencia"></span>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon summary-icon-success">
+                    <i class="pi pi-piggy-bank"></i>
+                </div>
+                <div class="summary-info">
+                    <span class="summary-label" data-campo="label-guardar"></span>
+                    <span class="summary-value" data-campo="valor-guardar"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="tpl-plano-alerta">
+    <div class="alerta">
+        <i data-campo="icone"></i>
+        <span data-campo="texto"></span>
+    </div>
+</template>
+
+

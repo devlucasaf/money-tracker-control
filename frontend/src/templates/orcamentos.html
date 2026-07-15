@@ -5,6 +5,7 @@
             <i class="pi pi-plus"></i> Novo Orçamento
         </button>
     </div>
+    <div id="orcamentos-alertas"></div>
     <div id="orcamentos-body"></div>
 </div>
 
@@ -25,23 +26,23 @@
             </div>
             <div class="form-group">
                 <label>Valor Limite</label>
-                <input 
-                    type="number" 
-                    step="0.01" 
-                    id="orcamento-valorLimite" 
-                    required 
+                <input
+                        type="number"
+                        step="0.01"
+                        id="orcamento-valorLimite"
+                        required
                 />
             </div>
             <div class="form-group">
                 <label>Mês/Ano</label>
                 <div class="custom-datepicker" id="orcamento-datepicker-wrapper">
                     <input
-                        type="text"
-                        id="orcamento-mesAno-display"
-                        class="datepicker-input"
-                        placeholder="Selecione o mês"
-                        readonly
-                        required
+                            type="text"
+                            id="orcamento-mesAno-display"
+                            class="datepicker-input"
+                            placeholder="Selecione o mês"
+                            readonly
+                            required
                     />
                     <input
                             type="hidden"

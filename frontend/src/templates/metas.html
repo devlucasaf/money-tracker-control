@@ -51,15 +51,15 @@
                 <label>Data Limite</label>
                 <div class="custom-datepicker" id="meta-datepicker-wrapper">
                     <input
-                        type="text"
-                        id="meta-dataLimite-display"
-                        class="datepicker-input"
-                        placeholder="Selecione a data"
-                        readonly
+                            type="text"
+                            id="meta-dataLimite-display"
+                            class="datepicker-input"
+                            placeholder="Selecione a data"
+                            readonly
                     />
                     <input
-                            type="hidden"
-                            id="meta-dataLimite"
+                             type="hidden"
+                             id="meta-dataLimite"
                     />
                     <div class="datepicker-dropdown" id="meta-datepicker-dropdown">
                         <div class="datepicker-header">
@@ -90,6 +90,13 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <label>Conta vinculada (opcional)</label>
+                <select id="meta-contaVinculada">
+                    <option value="">Nenhuma</option>
+                </select>
+                <small class="campo-ajuda">Conta padrão usada ao registrar aportes/resgates.</small>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" id="modal-meta-cancel">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Salvar</button>
@@ -97,6 +104,100 @@
         </form>
     </div>
 </div>
+
+<div class="modal-overlay hidden" id="modal-movimentacao">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-movimentacao-title">Movimentar Meta</h3>
+            <button class="btn btn-outline" id="modal-movimentacao-close">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
+        <form id="form-movimentacao">
+            <input type="hidden" id="movimentacao-metaId" />
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="movimentacao-tipo">
+                    <option value="APORTE">Aporte (guardar)</option>
+                    <option value="RESGATE">Resgate (retirar)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Valor</label>
+                <input
+                        type="number"
+                        step="0.01"
+                        id="movimentacao-valor"
+                        required
+                />
+            </div>
+            <div class="form-group">
+                <label>Data</label>
+                <div id="movimentacao-data-container"></div>
+            </div>
+            <div class="form-group">
+                <label>Conta (opcional)</label>
+                <select id="movimentacao-conta">
+                    <option value="">Nenhuma (apenas registro)</option>
+                </select>
+                <small class="campo-ajuda">Se escolher uma conta, o valor sai/entra no saldo dela.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="modal-movimentacao-cancel">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-historico">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-historico-title">Evolução da meta</h3>
+            <button class="btn btn-outline" id="modal-historico-close">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
+        <div class="chart-area" id="historico-grafico-area">
+            <div class="chart-linha" id="historico-grafico"></div>
+        </div>
+        <div id="historico-body"></div>
+    </div>
+</div>
+
+<template id="tpl-historico-vazio">
+    <div class="empty-state">
+        <i class="pi pi-chart-line"></i>
+        <p>Nenhuma movimentação registrada</p>
+    </div>
+</template>
+
+<template id="tpl-historico-tabela">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Conta</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="historico-tbody"></tbody>
+        </table>
+    </div>
+</template>
+
+<template id="tpl-historico-linha">
+    <tr>
+        <td data-campo="data"></td>
+        <td data-campo="tipo"></td>
+        <td data-campo="valor"></td>
+        <td data-campo="conta"></td>
+        <td data-campo="acoes"></td>
+    </tr>
+</template>
 
 <template id="tpl-metas-vazio">
     <div class="empty-state">
