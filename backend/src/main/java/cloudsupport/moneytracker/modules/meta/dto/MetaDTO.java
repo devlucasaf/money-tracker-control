@@ -26,4 +26,6 @@ public class MetaDTO {
     private Boolean     concluida;
     private Long        contaVinculadaId;
     private String      contaVinculadaNome;
+    private BigDecimal  ritmoMensal;
+    private LocalDate   dataPrevisao;
 }

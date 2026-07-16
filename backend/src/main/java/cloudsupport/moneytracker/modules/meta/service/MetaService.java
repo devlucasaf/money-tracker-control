@@ -3,15 +3,21 @@ package cloudsupport.moneytracker.modules.meta.service;
 import cloudsupport.moneytracker.modules.conta.model.Conta;
 import cloudsupport.moneytracker.modules.conta.service.ContaService;
 import cloudsupport.moneytracker.modules.meta.model.Meta;
+import cloudsupport.moneytracker.modules.meta.model.TipoMovimentacaoMeta;
 import cloudsupport.moneytracker.modules.usuario.model.Usuario;
 import cloudsupport.moneytracker.modules.meta.dto.MetaDTO;
 import cloudsupport.moneytracker.modules.meta.repository.MetaRepository;
+import cloudsupport.moneytracker.modules.meta.repository.MovimentacaoMetaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -19,6 +25,7 @@ import java.util.List;
 public class MetaService {
 
     private final MetaRepository metaRepository;
+    private final MovimentacaoMetaRepository movimentacaoRepository;
     private final ContaService contaService;
 
     // --- LISTAR METAS DO USUÁRIO ---
@@ -81,7 +88,8 @@ public class MetaService {
     // --- CONVERSÃO DE ENTIDADE PARA DTO ---
     private MetaDTO toDTO(Meta m) {
         var conta = m.getContaVinculada();
-        return new MetaDTO(
+
+        var dto = new MetaDTO(
                 m.getId(),
                 m.getTitulo(),
                 m.getDescricao(),
@@ -90,8 +98,53 @@ public class MetaService {
                 m.getDataLimite(),
                 m.getConcluida(),
                 conta != null ? conta.getId() : null,
-                conta != null ? conta.getNome() : null
+                conta != null ? conta.getNome() : null,
+                null,
+                null
         );
+
+        aplicarPrevisao(m, dto);
+        return dto;
+    }
+
+    // --- ESTIMA O RITMO DE APORTES E A DATA PREVISTA DE CONCLUSÃO ---
+    private void aplicarPrevisao(Meta m, MetaDTO dto) {
+        var valorAtual = m.getValorAtual() != null ? m.getValorAtual() : BigDecimal.ZERO;
+        var restante = m.getValorAlvo().subtract(valorAtual);
+
+        if (Boolean.TRUE.equals(m.getConcluida()) || restante.compareTo(BigDecimal.ZERO) <= 0) {
+            return;
+        }
+
+        var movs = movimentacaoRepository.findByMetaIdOrderByDataAscIdAsc(m.getId());
+        if (movs.isEmpty()) {
+            return;
+        }
+
+        var aportadoLiquido = BigDecimal.ZERO;
+        for (var mov : movs) {
+            aportadoLiquido = mov.getTipo() == TipoMovimentacaoMeta.APORTE
+                    ? aportadoLiquido.add(mov.getValor())
+                    : aportadoLiquido.subtract(mov.getValor());
+        }
+
+        if (aportadoLiquido.compareTo(BigDecimal.ZERO) <= 0) {
+            return;
+        }
+
+        var hoje = LocalDate.now();
+        var dias = ChronoUnit.DAYS.between(movs.get(0).getData(), hoje);
+        if (dias < 1) {
+            dias = 1;
+        }
+
+        var ritmoDiario = aportadoLiquido.divide(BigDecimal.valueOf(dias), 6, RoundingMode.HALF_UP);
+        dto.setRitmoMensal(ritmoDiario.multiply(BigDecimal.valueOf(30)).setScale(2, RoundingMode.HALF_UP));
+
+        var diasRestantes = restante.divide(ritmoDiario, 0, RoundingMode.CEILING).longValueExact();
+        if (diasRestantes > 0 && diasRestantes < 36_500) {
+            dto.setDataPrevisao(hoje.plusDays(diasRestantes));
+        }
     }
 }
 

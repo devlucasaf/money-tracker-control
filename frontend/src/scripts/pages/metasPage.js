@@ -235,6 +235,61 @@ const carregar = () => {
         .catch(exibirErro);
 };
 
+// --- PREENCHE A CÉLULA DE PREVISÃO DE CONCLUSÃO DA META ---
+const preencherPrevisao = (celula, m) => {
+    if (!celula) {
+        return;
+    }
+    celula.innerHTML = "";
+
+    const atingida = m.concluida || (m.valorAlvo > 0 && m.valorAtual >= m.valorAlvo);
+
+    if (atingida) {
+        const badge = document.createElement("span");
+        badge.className = "badge badge-success";
+        badge.textContent = "Concluída";
+        celula.appendChild(badge);
+        return;
+    }
+
+    if (!m.dataPrevisao) {
+        const vazio = document.createElement("span");
+        vazio.style.color = "var(--text-muted)";
+        vazio.textContent = "—";
+        vazio.title = "Registre aportes para estimar a previsão";
+        celula.appendChild(vazio);
+        return;
+    }
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const prevista = new Date(`${m.dataPrevisao}T00:00:00`);
+    const meses = Math.max(1, Math.round((prevista - hoje) / (1000 * 60 * 60 * 24 * 30)));
+
+    const data = document.createElement("span");
+    data.textContent = formatarData(m.dataPrevisao);
+    data.style.fontWeight = "600";
+
+    const nota = document.createElement("small");
+    nota.style.display = "block";
+    nota.style.color = "var(--text-muted)";
+    const ritmo = m.ritmoMensal ? ` · ${formatarMoeda(m.ritmoMensal)}/mês` : "";
+    nota.textContent = `~${meses} ${meses === 1 ? "mês" : "meses"}${ritmo}`;
+
+    if (m.dataLimite) {
+        const limite = new Date(`${m.dataLimite}T00:00:00`);
+        if (prevista > limite) {
+            data.style.color = "var(--color-red)";
+            data.title = "No ritmo atual, a meta passa da data limite";
+        } else {
+            data.style.color = "var(--color-green)";
+        }
+    }
+
+    celula.appendChild(data);
+    celula.appendChild(nota);
+};
+
 const renderizarTabela = (metas) => {
     const container = document.getElementById("metas-body");
 
@@ -254,7 +309,7 @@ const renderizarTabela = (metas) => {
     const tbody = container.querySelector("#metas-tbody");
     metas.forEach(m => {
         const percentual = m.valorAlvo > 0 ? Math.min((m.valorAtual / m.valorAlvo) * 100, 100) : 0;
-        const cor = percentual >= 100 ? "var(--success)" : "var(--primary)";
+        const cor = "var(--color-green)";
 
         const linha = tplLinha.content.cloneNode(true);
         const tr = linha.querySelector("tr");
@@ -271,6 +326,9 @@ const renderizarTabela = (metas) => {
 
         tr.querySelector("[data-campo='valorAlvo']").textContent = formatarMoeda(m.valorAlvo);
         tr.querySelector("[data-campo='dataLimite']").textContent = m.dataLimite ? formatarData(m.dataLimite) : "-";
+
+        // --- PREVISÃO DE CONCLUSÃO ---
+        preencherPrevisao(tr.querySelector("[data-campo='previsao']"), m);
 
         const tdAcoes = tr.querySelector("[data-campo='acoes']");
 
