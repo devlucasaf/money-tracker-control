@@ -2,6 +2,7 @@ package cloudsupport.moneytracker.modules.usuario.rest;
 
 import cloudsupport.moneytracker.modules.usuario.dto.AtualizarPerfilDTO;
 import cloudsupport.moneytracker.modules.usuario.dto.PerfilDTO;
+import cloudsupport.moneytracker.modules.usuario.dto.VerificarSenhaDTO;
 import cloudsupport.moneytracker.modules.usuario.model.Usuario;
 import cloudsupport.moneytracker.modules.usuario.service.UsuarioService;
 
@@ -30,6 +31,14 @@ public class UsuarioController {
     public ResponseEntity<PerfilDTO> atualizarPerfil(@AuthenticationPrincipal Usuario usuario,
                                                      @RequestBody @Valid AtualizarPerfilDTO dto) {
         return ResponseEntity.ok(usuarioService.atualizarPerfil(usuario.getId(), dto));
+    }
+
+    // --- VERIFICAR A SENHA ATUAL ---
+    @PostMapping("/verificar-senha")
+    public ResponseEntity<Void> verificarSenha(@AuthenticationPrincipal Usuario usuario,
+                                               @RequestBody @Valid VerificarSenhaDTO dto) {
+        usuarioService.verificarSenha(usuario.getId(), dto.getSenha());
+        return ResponseEntity.noContent().build();
     }
 }
 

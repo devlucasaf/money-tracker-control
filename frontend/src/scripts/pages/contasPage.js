@@ -2,6 +2,7 @@ import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar }    
 import { pesquisarContas, criarConta, atualizarConta, excluirConta }            from "../remotes/contas/contasRemote.js";
 import { pesquisarTransferencias, criarTransferencia, excluirTransferencia }    from "../remotes/transferencias/transferenciasRemote.js";
 import { criarDatepicker }                                                      from "../datepicker.js";
+import { confirmarComSenha }                                                    from "../confirmacaoSenha.js";
 
 let dpTransferencia;
 
@@ -157,9 +158,20 @@ const excluir = (id) => {
         if (!confirmado) {
             return;
         }
-        excluirConta(id)
-            .then(() => { exibirSucesso("Conta excluída"); carregar(); })
-            .catch(exibirErro);
+
+        // --- EXIGE CONFIRMAÇÃO POR SENHA ---
+        confirmarComSenha({
+            titulo: "Confirme sua senha",
+            mensagem: "Para excluir a conta, digite sua senha.",
+            textoConfirmar: "Excluir conta",
+        }).then((senhaOk) => {
+            if (!senhaOk) {
+                return;
+            }
+            excluirConta(id)
+                .then(() => { exibirSucesso("Conta excluída"); carregar(); })
+                .catch(exibirErro);
+        });
     });
 };
 

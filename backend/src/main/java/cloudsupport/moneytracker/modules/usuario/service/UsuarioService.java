@@ -35,12 +35,19 @@ public class UsuarioService {
         return new PerfilDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getMoeda());
     }
 
+    // --- VALIDA A SENHA ATUAL DO USUÁRIO ---
+    public void verificarSenha(Long usuarioId, String senha) {
+        var usuario = buscarPorId(usuarioId);
+        if (senha == null || !passwordEncoder.matches(senha, usuario.getSenha())) {
+            throw new IllegalArgumentException("Senha incorreta");
+        }
+    }
+
     // --- ATUALIZAR OS DADOS PESSOAIS DO USUÁRIO ---
     @Transactional
     public PerfilDTO atualizarPerfil(Long usuarioId, AtualizarPerfilDTO dto) {
         var usuario = buscarPorId(usuarioId);
 
-        // --- VALIDA E-MAIL DUPLICADO EM OUTRO USUÁRIO ---
         if (!usuario.getEmail().equalsIgnoreCase(dto.getEmail())
                 && usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("E-mail já cadastrado");
@@ -50,7 +57,6 @@ public class UsuarioService {
         usuario.setEmail(dto.getEmail());
         usuario.setMoeda(dto.getMoeda());
 
-        // --- ATUALIZA A SENHA APENAS SE INFORMADA ---
         if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
             usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         }

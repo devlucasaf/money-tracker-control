@@ -13,5 +13,18 @@ const atualizarPerfil = (params = {}) => {
         .then(resposta => resposta.json());
 };
 
-export { atualizarPerfil };
+// --- VERIFICAR A SENHA ATUAL ---
+const verificarSenha = (senha) => {
+    const url = `${URL_BASE_API}/usuarios/verificar-senha`;
+    const opcoes = {
+        method: "POST",
+        body: JSON.stringify({ senha }),
+        headers: obterCabecalhosAuth(),
+    };
+    return fetch(url, opcoes)
+        .then(validarResposta)
+        .then(() => {});
+};
+
+export { atualizarPerfil, verificarSenha };
 

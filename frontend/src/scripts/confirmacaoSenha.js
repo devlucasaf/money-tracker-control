@@ -1,7 +1,6 @@
 import { verificarSenha } from "./remotes/usuario/usuarioRemote.js";
 
 // --- MODAL DE CONFIRMAÇÃO POR SENHA PARA AÇÕES CRÍTICAS ---
-// Resolve true se a senha for validada no backend; false se cancelado.
 const confirmarComSenha = (opcoes = {}) => {
     const {
         titulo = "Confirme sua senha",
@@ -12,7 +11,6 @@ const confirmarComSenha = (opcoes = {}) => {
     return new Promise((resolve) => {
         const overlay = document.getElementById("modal-senha");
 
-        // --- FALLBACK: SE O MODAL NÃO EXISTIR, NÃO BLOQUEIA A AÇÃO ---
         if (!overlay) {
             resolve(true);
             return;
