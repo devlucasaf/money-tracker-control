@@ -19,7 +19,7 @@ public class ContaService {
 
     // --- LISTAR CONTAS DO USUÁRIO ---
     public List<ContaDTO> listarPorUsuario(Long usuarioId) {
-        return contaRepository.findByUsuarioId(usuarioId).stream().map(this::toDTO).toList();
+        return contaRepository.findByUsuarioIdAndAtivoTrue(usuarioId).stream().map(this::toDTO).toList();
     }
 
     // --- CRIAR NOVA CONTA ---
@@ -34,7 +34,6 @@ public class ContaService {
     public ContaDTO atualizar(Long id, ContaDTO dto, Long usuarioId) {
         var conta = buscarPorIdEUsuario(id, usuarioId);
 
-        // --- ATUALIZA OS CAMPOS ---
         conta.setNome(dto.getNome());
         conta.setTipo(dto.getTipo());
         conta.setCor(dto.getCor());
