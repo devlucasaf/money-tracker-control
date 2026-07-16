@@ -85,6 +85,9 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 │   │   │   ├── 📄 util.js               # Utilitários (tema, helpers)
 │   │   │   ├── 📄 customSelect.js       # Componente de select customizado
 │   │   │   ├── 📄 datepicker.js         # Componente de seleção de datas
+│   │   │   ├── 📄 notificacoes.js       # Central de notificações (sininho)
+│   │   │   ├── 📄 buscaGlobal.js        # Busca global no topbar
+│   │   │   ├── 📄 confirmacaoSenha.js   # Confirmação por senha em ações críticas
 │   │   │   ├── 📂 pages                 # Lógica de cada página
 │   │   │   └── 📂 remotes               # Chamadas à API (fetch)
 │   │   │       ├── 📂 auth              # Login e Registro
@@ -112,16 +115,23 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 ## ✨ Funcionalidades
 
 - 🔐 **Autenticação** — Registro e login com JWT
-- 💰 **Transações** — Cadastro de receitas e despesas com categoria, conta e recorrência
+- 💰 **Transações** — Receitas e despesas com categoria, conta, tags, recorrência e parcelamento
+- 🔍 **Filtros e Busca** — Filtragem de transações por período, categoria, conta, tipo e tag
 - 🏦 **Contas** — Gerenciamento de contas bancárias, carteiras e poupanças
 - 🔄 **Transferências** — Movimentação de valores entre contas
-- 🏷️ **Categorias** — Organização por tipo (receita/despesa) com ícone e cor
-- 📄 **Contas a Pagar** — Controle de contas e boletos a vencer
-- 📈 **Investimentos** — Acompanhamento de investimentos e resultados
-- 📊 **Dashboard** — Resumo mensal com receitas, despesas, saldo e evolução
-- 🎯 **Metas** — Definição de objetivos financeiros com acompanhamento de progresso
-- 📋 **Orçamentos** — Limite de gastos mensal por categoria com controle automático
-- 🗓️ **Plano de Gastos** — Planejamento financeiro personalizado
+- 🏷️ **Categorias** — Organização por tipo (receita/despesa) com cor
+- 📄 **Contas a Pagar/Receber** — Controle de compromissos a vencer com baixa automática no saldo
+- 📈 **Investimentos** — Acompanhamento de investimentos, rendimento e gráfico de rentabilidade
+- 📊 **Dashboard** — Resumo mensal com receitas, despesas, saldo, gráficos e navegação por mês
+- 📉 **Comparativo Mês a Mês** — Variação percentual de receitas e despesas frente ao mês anterior
+- 🔮 **Saldo Projetado** — Previsão do saldo de fim de mês com base em pendências e recorrências
+- 🎯 **Metas** — Objetivos financeiros com aportes/resgates, gráfico de evolução e **previsão de conclusão**
+- 📋 **Orçamentos** — Limite mensal por categoria com alertas e **rollover** (acúmulo de sobra)
+- 🗓️ **Plano de Gastos** — Divisão da renda em gastar / emergência / guardar
+- 🔔 **Central de Notificações** — Alertas de contas vencendo, orçamentos estourados e metas atingidas
+- 🔎 **Busca Global** — Pesquisa unificada em transações, contas, metas e categorias
+- 🔒 **Confirmação por Senha** — Validação da senha em ações críticas (ex.: excluir conta)
+- 👤 **Perfil** — Edição de dados pessoais, moeda preferida e senha
 - 🌙 **Tema** — Alternância entre tema claro e escuro
 
 ---
