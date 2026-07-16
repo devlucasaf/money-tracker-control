@@ -1,5 +1,5 @@
-import { exibirSucesso, exibirErro, confirmar } from "../util.js";
-import { pesquisarCategorias, criarCategoria, atualizarCategoria, excluirCategoria } from "../remotes/categorias/categoriasRemote.js";
+import { exibirSucesso, exibirErro, confirmar }                                         from "../util.js";
+import { pesquisarCategorias, criarCategoria, atualizarCategoria, excluirCategoria }    from "../remotes/categorias/categoriasRemote.js";
 
 const iniciarCategorias = () => {
     carregar();
@@ -38,6 +38,7 @@ const renderizarTabela = (categorias) => {
 
         const tdCor = tr.querySelector("[data-campo='cor']");
         const dot = document.createElement("span");
+
         dot.className = "color-dot";
         dot.style.background = c.cor ?? "#6366f1";
         tdCor.appendChild(dot);

@@ -643,8 +643,7 @@ const excluir = (id) => {
         if (!confirmado) {
             return;
         }
-        excluirTransacao(id)
-            .then(() => {
+        excluirTransacao(id).then(() => {
                 exibirSucesso("Transação excluída");
                 carregar(paginaAtual);
             })

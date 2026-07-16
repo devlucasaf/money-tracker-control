@@ -1,7 +1,7 @@
-import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar } from "../util.js";
-import { pesquisarContas, criarConta, atualizarConta, excluirConta } from "../remotes/contas/contasRemote.js";
-import { pesquisarTransferencias, criarTransferencia, excluirTransferencia } from "../remotes/transferencias/transferenciasRemote.js";
-import { criarDatepicker } from "../datepicker.js";
+import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar }    from "../util.js";
+import { pesquisarContas, criarConta, atualizarConta, excluirConta }            from "../remotes/contas/contasRemote.js";
+import { pesquisarTransferencias, criarTransferencia, excluirTransferencia }    from "../remotes/transferencias/transferenciasRemote.js";
+import { criarDatepicker }                                                      from "../datepicker.js";
 
 let dpTransferencia;
 
@@ -13,13 +13,11 @@ const iniciarContas = () => {
     document.getElementById("modal-conta-cancel").addEventListener("click", fecharModal);
     document.getElementById("form-conta").addEventListener("submit", salvar);
 
-    // --- TRANSFERÊNCIA ---
     document.getElementById("btn-transferir").addEventListener("click", abrirModalTransferencia);
     document.getElementById("modal-transferencia-close").addEventListener("click", fecharModalTransferencia);
     document.getElementById("modal-transferencia-cancel").addEventListener("click", fecharModalTransferencia);
     document.getElementById("form-transferencia").addEventListener("submit", salvarTransferencia);
 
-    // --- DATEPICKER DA TRANSFERÊNCIA ---
     dpTransferencia = criarDatepicker({ placeholder: "Selecione a data" });
     document.getElementById("transferencia-data-container").appendChild(dpTransferencia.element);
 };
@@ -60,28 +58,34 @@ const renderizarTabela = (contas) => {
         tdTipo.appendChild(badge);
 
         const tdSaldo = tr.querySelector("[data-campo='saldo']");
+
         tdSaldo.style.fontWeight = "600";
         tdSaldo.style.color = c.saldo >= 0 ? "var(--success)" : "var(--danger)";
         tdSaldo.textContent = formatarMoeda(c.saldo);
 
         const tdAcoes = tr.querySelector("[data-campo='acoes']");
-
         const btnEditar = document.createElement("button");
+
         btnEditar.className = "btn btn-outline btn-editar-conta";
         btnEditar.style.marginRight = "0.5rem";
         btnEditar.dataset.id = c.id;
         btnEditar.dataset.nome = c.nome;
         btnEditar.dataset.tipo = c.tipo;
         btnEditar.dataset.saldo = c.saldo;
+
         const iconeEditar = document.createElement("i");
+
         iconeEditar.className = "pi pi-pencil";
         btnEditar.appendChild(iconeEditar);
         tdAcoes.appendChild(btnEditar);
 
         const btnExcluir = document.createElement("button");
+
         btnExcluir.className = "btn btn-danger btn-excluir-conta";
         btnExcluir.dataset.id = c.id;
+
         const iconeExcluir = document.createElement("i");
+
         iconeExcluir.className = "pi pi-trash";
         btnExcluir.appendChild(iconeExcluir);
         tdAcoes.appendChild(btnExcluir);
@@ -129,8 +133,8 @@ const salvar = (e) => {
     e.preventDefault();
     const id = document.getElementById("conta-id").value;
     const payload = {
-        nome:  document.getElementById("conta-nome").value,
-        tipo:  document.getElementById("conta-tipo").value,
+        nome: document.getElementById("conta-nome").value,
+        tipo: document.getElementById("conta-tipo").value,
         saldo: parseFloat(document.getElementById("conta-saldo").value),
     };
 
@@ -221,8 +225,7 @@ const abrirModalTransferencia = () => {
     dpTransferencia.limpar();
 
     // --- POPULA OS SELECTS DE ORIGEM E DESTINO COM AS CONTAS ATUAIS ---
-    pesquisarContas()
-        .then(contas => {
+    pesquisarContas().then(contas => {
             ["transferencia-origem", "transferencia-destino"].forEach(id => {
                 const select = document.getElementById(id);
                 select.innerHTML = "";
@@ -261,10 +264,12 @@ const salvarTransferencia = (e) => {
         exibirErro("Selecione as contas de origem e destino");
         return;
     }
+
     if (origemId === destinoId) {
         exibirErro("A conta de origem e destino devem ser diferentes");
         return;
     }
+
     if (!data) {
         exibirErro("Selecione a data da transferência");
         return;

@@ -1,6 +1,6 @@
-import { formatarMoeda, exibirSucesso, exibirErro, confirmar } from "../util.js";
-import { pesquisarOrcamentos, criarOrcamento, excluirOrcamento } from "../remotes/orcamentos/orcamentosRemote.js";
-import { pesquisarCategorias } from "../remotes/categorias/categoriasRemote.js";
+import { formatarMoeda, exibirSucesso, exibirErro, confirmar }      from "../util.js";
+import { pesquisarOrcamentos, criarOrcamento, excluirOrcamento }    from "../remotes/orcamentos/orcamentosRemote.js";
+import { pesquisarCategorias }                                      from "../remotes/categorias/categoriasRemote.js";
 
 // --- MESES ---
 const MESES = [

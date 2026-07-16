@@ -245,7 +245,6 @@ const renderizarTabela = (investimentos) => {
         return;
     }
 
-    // --- MONTAGEM DA TABELA ---
     const tplTabela = document.getElementById("tpl-investimentos-tabela");
     const tplLinha = document.getElementById("tpl-investimentos-linha");
 
@@ -431,6 +430,4 @@ const excluir = (id) => {
     });
 };
 
-// --- EXPORTAÇÃO ---
 export { iniciarInvestimentos };
-

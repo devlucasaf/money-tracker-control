@@ -2,9 +2,9 @@ import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar } fro
 import {
     pesquisarContasPagar, criarContaPagar, atualizarContaPagar,
     marcarPago, desmarcarPago, excluirContaPagar
-} from "../remotes/contaspagar/contasPagarRemote.js";
-import { pesquisarContas } from "../remotes/contas/contasRemote.js";
-import { criarDatepicker } from "../datepicker.js";
+}                           from "../remotes/contaspagar/contasPagarRemote.js";
+import { pesquisarContas }  from "../remotes/contas/contasRemote.js";
+import { criarDatepicker }  from "../datepicker.js";
 
 let dpVencimento;
 let contasCache = [];
@@ -81,6 +81,7 @@ const renderizarResumo = (lista) => {
     });
 
     const fragmento = document.getElementById("tpl-cp-resumo").content.cloneNode(true);
+    
     fragmento.querySelector("[data-campo='total-pagar']").textContent = formatarMoeda(totalPagar);
     fragmento.querySelector("[data-campo='total-receber']").textContent = formatarMoeda(totalReceber);
     fragmento.querySelector("[data-campo='total-vencidas']").textContent = vencidas;

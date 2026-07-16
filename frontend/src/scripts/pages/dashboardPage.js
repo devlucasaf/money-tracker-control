@@ -1,9 +1,17 @@
-import { formatarMoeda, exibirErro } from "../util.js";
-import { obterDashboard } from "../remotes/dashboard/getDashboardRemote.js";
+import { formatarMoeda, exibirErro }    from "../util.js";
+import { obterDashboard }               from "../remotes/dashboard/getDashboardRemote.js";
 
 const CORES_GRAFICO = [
-    "#7c3aed", "#ec4899", "#6366f1", "#f59e0b", "#10b981",
-    "#3b82f6", "#f472b6", "#8b5cf6", "#ef4444", "#14b8a6"
+    "#7c3aed", 
+    "#ec4899", 
+    "#6366f1", 
+    "#f59e0b", 
+    "#10b981",
+    "#3b82f6", 
+    "#f472b6", 
+    "#8b5cf6", 
+    "#ef4444", 
+    "#14b8a6"
 ];
 
 // --- MESES ABREVIADOS ---
@@ -111,7 +119,6 @@ const renderizarPizza = (despesas) => {
     const cx = 100, cy = 100, raio = 80, raioInterno = 50;
     let svg = `<svg viewBox="0 0 200 200" class="chart-svg-pizza">`;
 
-    // --- CASO DE UMA ÚNICA CATEGORIA: DESENHA ANEL COMPLETO ---
     if (despesas.length === 1) {
         const cor = despesas[0].cor || CORES_GRAFICO[0];
         svg += `<circle cx="${cx}" cy="${cy}" r="${raio}" fill="${cor}" />`;
@@ -197,7 +204,7 @@ const renderizarBarras = (evolucao) => {
     container.innerHTML = svg;
 };
 
-// --- GRÁFICO DE LINHA: EVOLUÇÃO DO SALDO (FLUXO ACUMULADO) ---
+// --- EVOLUÇÃO DO SALDO EM GRÁFICO DE LINHA ---
 const renderizarLinha = (evolucao) => {
     const container = document.getElementById("dash-linha");
     if (!container) {
@@ -210,7 +217,7 @@ const renderizarLinha = (evolucao) => {
         return;
     }
 
-    // --- ACUMULA O FLUXO (RECEITAS - DESPESAS) MÊS A MÊS ---
+    // --- ACUMULA O FLUXO MÊS A MÊS ---
     let acumulado = 0;
     const pontos = evolucao.map(m => {
         acumulado += Number(m.receitas) - Number(m.despesas);
@@ -232,7 +239,7 @@ const renderizarLinha = (evolucao) => {
 
     let svg = `<svg viewBox="0 0 ${largura} ${altura}" class="chart-svg-linha" preserveAspectRatio="none">`;
 
-    // --- LINHA DO ZERO (SE HOUVER VALORES NEGATIVOS) ---
+    // --- LINHA DO ZERO ---
     if (minimo < 0 && maximo > 0) {
         const yZero = coordY(0);
         svg += `<line x1="${padLat}" y1="${yZero}" x2="${largura - padLat}" y2="${yZero}" class="chart-base-line" stroke-dasharray="4 4" />`;

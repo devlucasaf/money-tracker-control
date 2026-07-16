@@ -4,7 +4,6 @@ import { registrar } from "../remotes/auth/registerRemote.js";
 const iniciarRegistro = () => {
     configurarToggleSenha();
 
-    // Custom select para moeda
     const wrapperMoeda = document.getElementById("register-moeda-wrapper");
     const toggleMoeda = document.getElementById("register-moeda-toggle");
     const opcoesMoeda = document.getElementById("register-moeda-options");
@@ -29,7 +28,6 @@ const iniciarRegistro = () => {
         });
     });
 
-    // Form submit
     const formulario = document.getElementById("register-form");
     formulario.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -38,8 +36,7 @@ const iniciarRegistro = () => {
         const senha = document.getElementById("register-senha").value;
         const moeda = document.getElementById("register-moeda").value;
 
-        registrar({ nome, email, senha, moeda })
-            .then(dados => {
+        registrar({ nome, email, senha, moeda }).then(dados => {
                 localStorage.setItem("token", dados.token);
                 localStorage.setItem("userName", dados.nome);
                 localStorage.setItem("userEmail", dados.email ?? email);
