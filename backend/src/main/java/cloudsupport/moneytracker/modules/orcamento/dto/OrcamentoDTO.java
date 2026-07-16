@@ -24,4 +24,7 @@ public class OrcamentoDTO {
     private Long            categoriaId;
     private String          categoriaNome;
     private BigDecimal      valorGasto;
+    private Boolean         rollover;
+    private BigDecimal      valorAcumulado;
+    private BigDecimal      limiteEfetivo;
 }

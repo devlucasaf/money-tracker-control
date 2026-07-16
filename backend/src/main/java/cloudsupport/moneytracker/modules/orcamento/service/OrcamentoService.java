@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class OrcamentoService {
         var categoria = categoriaService.buscarPorIdEUsuario(dto.getCategoriaId(), usuario.getId());
         var orcamento = Orcamento.builder()
                 .valorLimite(dto.getValorLimite()).mes(dto.getMes()).ano(dto.getAno())
+                .rollover(Boolean.TRUE.equals(dto.getRollover()))
                 .usuario(usuario).categoria(categoria).build();
         return toDTO(orcamentoRepository.save(orcamento), usuario.getId());
     }
@@ -49,7 +51,10 @@ public class OrcamentoService {
     // --- ATUALIZAR ORÇAMENTO EXISTENTE ---
     public OrcamentoDTO atualizar(Long id, OrcamentoDTO dto, Long usuarioId) {
         var orcamento = buscarPorIdEUsuario(id, usuarioId);
+
         orcamento.setValorLimite(dto.getValorLimite());
+        orcamento.setRollover(Boolean.TRUE.equals(dto.getRollover()));
+
         return toDTO(orcamentoRepository.save(orcamento), usuarioId);
     }
 
@@ -72,6 +77,12 @@ public class OrcamentoService {
         var fim = inicio.withDayOfMonth(inicio.lengthOfMonth());
         var gasto = transacaoRepository.somarDespesaPorCategoriaEPeriodo(usuarioId, o.getCategoria().getId(), inicio, fim);
 
+        var rollover = Boolean.TRUE.equals(o.getRollover());
+        var acumulado = rollover
+                ? calcularSobraAnterior(usuarioId, o.getCategoria().getId(), o.getMes(), o.getAno())
+                : BigDecimal.ZERO;
+        var limiteEfetivo = o.getValorLimite().add(acumulado);
+
         // --- MONTA E RETORNA O DTO ---
         return new OrcamentoDTO(
                 o.getId(),
@@ -80,8 +91,29 @@ public class OrcamentoService {
                 o.getAno(),
                 o.getCategoria().getId(),
                 o.getCategoria().getNome(),
-                gasto
+                gasto,
+                rollover,
+                acumulado,
+                limiteEfetivo
         );
+    }
+
+    // --- CALCULA A SOBRA POSITIVA DO ORÇAMENTO DA CATEGORIA NO MÊS ANTERIOR ---
+    private BigDecimal calcularSobraAnterior(Long usuarioId, Long categoriaId, Integer mes, Integer ano) {
+        var mesRef = LocalDate.of(ano, mes, 1).minusMonths(1);
+        var anterior = orcamentoRepository.findByUsuarioIdAndCategoriaIdAndMesAndAno(
+                usuarioId, categoriaId, mesRef.getMonthValue(), mesRef.getYear());
+
+        if (anterior.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        var inicioAnt = mesRef.withDayOfMonth(1);
+        var fimAnt = mesRef.withDayOfMonth(mesRef.lengthOfMonth());
+        var gastoAnt = transacaoRepository.somarDespesaPorCategoriaEPeriodo(usuarioId, categoriaId, inicioAnt, fimAnt);
+        var sobra = anterior.get().getValorLimite().subtract(gastoAnt);
+
+        return sobra.compareTo(BigDecimal.ZERO) > 0 ? sobra : BigDecimal.ZERO;
     }
 }
 

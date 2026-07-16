@@ -227,15 +227,28 @@ const renderizarTabela = (orcamentos) => {
     const tbody = container.querySelector("#orcamentos-tbody");
     orcamentos.forEach(o => {
         const gasto = o.valorGasto ?? 0;
-        const disponivel = o.valorLimite - gasto;
-        const percentual = o.valorLimite > 0 ? Math.min((gasto / o.valorLimite) * 100, 100) : 0;
-        const cor = percentual >= 90 ? "var(--danger)" : percentual >= 70 ? "var(--warning)" : "var(--success)";
+        const limiteBase = Number(o.valorLimite) || 0;
+        const acumulado = o.rollover ? (Number(o.valorAcumulado) || 0) : 0;
+        const limiteEfetivo = (o.rollover && o.limiteEfetivo != null) ? Number(o.limiteEfetivo) : limiteBase;
+        const disponivel = limiteEfetivo - gasto;
+        const percentual = limiteEfetivo > 0 ? Math.min((gasto / limiteEfetivo) * 100, 100) : 0;
+        const cor = percentual >= 90 ? "var(--color-red)" : percentual >= 70 ? "var(--color-yellow)" : "var(--color-green)";
 
         const linha = tplLinha.content.cloneNode(true);
         const tr = linha.querySelector("tr");
 
         tr.querySelector("[data-campo='categoria']").textContent = o.categoriaNome ?? "-";
-        tr.querySelector("[data-campo='limite']").textContent = formatarMoeda(o.valorLimite);
+
+        // --- LIMITE COM INDICAÇÃO DE ROLLOVER QUANDO HOUVER SALDO HERDADO ---
+        const tdLimite = tr.querySelector("[data-campo='limite']");
+        tdLimite.textContent = formatarMoeda(limiteEfetivo);
+        if (acumulado > 0) {
+            const nota = document.createElement("small");
+            nota.className = "campo-ajuda";
+            nota.textContent = `${formatarMoeda(limiteBase)} + ${formatarMoeda(acumulado)} acumulado`;
+            tdLimite.appendChild(document.createElement("br"));
+            tdLimite.appendChild(nota);
+        }
 
         // --- BARRA DE PROGRESSO ---
         const fill = tr.querySelector("[data-campo='fill']");
@@ -247,7 +260,7 @@ const renderizarTabela = (orcamentos) => {
         // --- VALOR DISPONÍVEL ---
         const tdDisponivel = tr.querySelector("[data-campo='disponivel']");
         tdDisponivel.style.fontWeight = "600";
-        tdDisponivel.style.color = disponivel >= 0 ? "var(--success)" : "var(--danger)";
+        tdDisponivel.style.color = disponivel >= 0 ? "var(--color-green)" : "var(--color-red)";
         tdDisponivel.textContent = formatarMoeda(disponivel);
 
         // --- MÊS/ANO FORMATADO ---
@@ -292,16 +305,17 @@ const renderizarAlertas = (orcamentos) => {
     const emAlerta = [];
 
     orcamentos.forEach(o => {
-        if (!o.valorLimite || o.valorLimite <= 0) {
+        const limite = (o.rollover && o.limiteEfetivo != null) ? Number(o.limiteEfetivo) : Number(o.valorLimite);
+        if (!limite || limite <= 0) {
             return;
         }
         const gasto = o.valorGasto ?? 0;
-        const percentual = (gasto / o.valorLimite) * 100;
+        const percentual = (gasto / limite) * 100;
 
         if (percentual >= 100) {
-            estourados.push({ o, percentual });
+            estourados.push({ o, percentual, limite });
         } else if (percentual >= 70) {
-            emAlerta.push({ o, percentual });
+            emAlerta.push({ o, percentual, limite });
         }
     });
 
@@ -317,8 +331,8 @@ const renderizarAlertas = (orcamentos) => {
         const nome = item.o.categoriaNome ?? "Categoria";
         const pct = item.percentual.toFixed(0);
         texto.textContent = nivel === "danger"
-            ? `${nome}: orçamento estourado (${pct}% de ${formatarMoeda(item.o.valorLimite)})`
-            : `${nome}: ${pct}% do orçamento utilizado (${formatarMoeda(item.o.valorLimite)})`;
+            ? `${nome}: orçamento estourado (${pct}% de ${formatarMoeda(item.limite)})`
+            : `${nome}: ${pct}% do orçamento utilizado (${formatarMoeda(item.limite)})`;
 
         div.appendChild(icone);
         div.appendChild(texto);
@@ -334,6 +348,7 @@ const abrirModal = () => {
     document.getElementById("form-orcamento").reset();
     document.getElementById("orcamento-mesAno").value = "";
     document.getElementById("orcamento-mesAno-display").value = "";
+    document.getElementById("orcamento-rollover").checked = false;
 
     // --- RESET DO SELETOR DE MÊS/ANO ---
     mpAno = new Date().getFullYear();
@@ -364,6 +379,7 @@ const salvar = (e) => {
         valorLimite: parseFloat(document.getElementById("orcamento-valorLimite").value),
         mes: mes,
         ano: ano,
+        rollover: document.getElementById("orcamento-rollover").checked,
     };
 
     // --- ENVIO AO BACKEND ---

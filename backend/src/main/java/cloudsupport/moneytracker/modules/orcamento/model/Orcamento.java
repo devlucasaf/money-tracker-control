@@ -18,6 +18,9 @@ public class Orcamento {
     @Column(name = "valor_limite")
     private BigDecimal valorLimite;
 
+    @Column(name = "rollover")
+    private Boolean rollover;
+
     private Integer mes;
     private Integer ano;
 
