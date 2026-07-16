@@ -5,6 +5,9 @@ frontend/node_modules/
 # Maven
 backend/target/
 
+# Build output
+frontend/dist/
+
 # IDE
 .idea/
 *.iml
