@@ -4,15 +4,13 @@ import { pesquisarContas }            from "./remotes/contas/contasRemote.js";
 import { pesquisarMetas }             from "./remotes/metas/metasRemote.js";
 import { pesquisarCategorias }        from "./remotes/categorias/categoriasRemote.js";
 
-// --- CACHE DAS LISTAS PEQUENAS (CARREGADAS UMA VEZ POR SESSÃO DE LAYOUT) ---
 let cacheContas = [];
 let cacheMetas = [];
 let cacheCategorias = [];
 
-// --- CONTROLE DE DEBOUNCE ---
 let temporizador;
 
-// --- NORMALIZA TEXTO PARA COMPARAÇÃO (MINÚSCULO E SEM ACENTOS) ---
+// --- NORMALIZA TEXTO PARA COMPARAÇÃO ---
 const normalizar = (texto) => (texto ?? "")
     .toString()
     .toLowerCase()
@@ -33,7 +31,6 @@ const inicializarBuscaGlobal = () => {
     pesquisarMetas().then(l => { cacheMetas = l || []; }).catch(() => {});
     pesquisarCategorias().then(l => { cacheCategorias = l || []; }).catch(() => {});
 
-    // --- ABRE/FECHA O PAINEL ---
     btn.addEventListener("click", (e) => {
         e.stopPropagation();
         const aberto = dropdown.classList.toggle("open");
@@ -42,14 +39,12 @@ const inicializarBuscaGlobal = () => {
         }
     });
 
-    // --- FECHA AO CLICAR FORA ---
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".busca-menu")) {
             dropdown.classList.remove("open");
         }
     });
 
-    // --- ESCAPE FECHA ---
     input.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             dropdown.classList.remove("open");
@@ -57,7 +52,6 @@ const inicializarBuscaGlobal = () => {
         }
     });
 
-    // --- BUSCA COM DEBOUNCE ---
     input.addEventListener("input", () => {
         clearTimeout(temporizador);
         temporizador = setTimeout(() => executarBusca(input.value.trim()), 300);
@@ -82,7 +76,6 @@ const executarBusca = (termo) => {
 
     const alvo = normalizar(termo);
 
-    // --- FONTES LOCAIS (CACHE) ---
     const contas = cacheContas
         .filter(c => normalizar(c.nome).includes(alvo))
         .slice(0, 5);
@@ -95,7 +88,6 @@ const executarBusca = (termo) => {
         .filter(c => normalizar(c.nome).includes(alvo))
         .slice(0, 5);
 
-    // --- TRANSAÇÕES: BUSCA NO SERVIDOR ---
     pesquisarTransacoes({ busca: termo, page: 0, size: 5 })
         .then(pagina => (pagina && pagina.content) ? pagina.content : [])
         .catch(() => [])
