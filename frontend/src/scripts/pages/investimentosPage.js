@@ -237,6 +237,7 @@ const renderizarTabela = (investimentos) => {
     const container = document.getElementById("investimentos-body");
 
     atualizarResumo(investimentos);
+    renderizarGrafico(investimentos);
 
     if (investimentos === null || investimentos === undefined || investimentos.length === 0) {
         const tplVazio = document.getElementById("tpl-investimentos-vazio");
@@ -312,6 +313,63 @@ const renderizarTabela = (investimentos) => {
     container.querySelectorAll(".btn-excluir-investimento").forEach(btn => {
         btn.addEventListener("click", () => excluir(btn.dataset.id));
     });
+};
+
+// --- GRÁFICO DE RENTABILIDADE POR INVESTIMENTO ---
+const renderizarGrafico = (investimentos) => {
+    const card = document.getElementById("investimentos-grafico-card");
+    const container = document.getElementById("investimentos-grafico");
+    if (!card || !container) {
+        return;
+    }
+
+    const lista = (investimentos || []).filter(i => Number(i.valorAplicado) > 0);
+    if (lista.length === 0) {
+        card.classList.add("hidden");
+        container.innerHTML = "";
+        return;
+    }
+    card.classList.remove("hidden");
+
+    const maxPct = Math.max(...lista.map(i => Math.abs(Number(i.percentualRendimento) || 0)), 1);
+
+    container.innerHTML = "";
+    const wrap = document.createElement("div");
+    wrap.className = "rentab-list";
+
+    lista.forEach(i => {
+        const pct = Number(i.percentualRendimento) || 0;
+        const rendimento = Number(i.rendimento) || 0;
+        const positivo = rendimento >= 0;
+        const largura = (Math.abs(pct) / maxPct) * 100;
+
+        const item = document.createElement("div");
+        item.className = "rentab-item";
+
+        const nome = document.createElement("span");
+        nome.className = "rentab-nome";
+        nome.textContent = i.nome;
+        nome.title = i.nome;
+
+        const trilho = document.createElement("div");
+        trilho.className = "rentab-trilho";
+        const barra = document.createElement("div");
+        barra.className = `rentab-barra ${positivo ? "rentab-pos" : "rentab-neg"}`;
+        barra.style.width = `${largura}%`;
+        trilho.appendChild(barra);
+
+        const valor = document.createElement("span");
+        valor.className = `rentab-valor ${positivo ? "rentab-pos-txt" : "rentab-neg-txt"}`;
+        const sinal = positivo ? "+" : "";
+        valor.textContent = `${sinal}${formatarMoeda(rendimento)} (${pct}%)`;
+
+        item.appendChild(nome);
+        item.appendChild(trilho);
+        item.appendChild(valor);
+        wrap.appendChild(item);
+    });
+
+    container.appendChild(wrap);
 };
 
 // --- ATUALIZAÇÃO DOS CARTÕES DE RESUMO ---
