@@ -1,17 +1,19 @@
-import { iniciarLogin }                     from "./pages/loginPage.js";
-import { iniciarRegistro }                  from "./pages/registerPage.js";
-import { iniciarDashboard }                 from "./pages/dashboardPage.js";
-import { iniciarTransacoes }                from "./pages/transacoesPage.js";
-import { iniciarContas }                    from "./pages/contasPage.js";
-import { iniciarCategorias }                from "./pages/categoriasPage.js";
-import { iniciarMetas }                     from "./pages/metasPage.js";
-import { iniciarOrcamentos }                from "./pages/orcamentosPage.js";
-import { iniciarInvestimentos }             from "./pages/investimentosPage.js";
-import { iniciarPlano }                      from "./pages/planoPage.js";
-import { iniciarContasPagar }                from "./pages/contasPagarPage.js";
-import { alternarTema, atualizarBotaoTema, exibirSucesso, exibirErro } from "./util.js";
-import { aprimorarSelects } from "./customSelect.js";
-import { atualizarPerfil } from "./remotes/usuario/usuarioRemote.js";
+import { iniciarLogin }                                                 from "./pages/loginPage.js";
+import { iniciarRegistro }                                              from "./pages/registerPage.js";
+import { iniciarDashboard }                                             from "./pages/dashboardPage.js";
+import { iniciarTransacoes }                                            from "./pages/transacoesPage.js";
+import { iniciarContas }                                                from "./pages/contasPage.js";
+import { iniciarCategorias }                                            from "./pages/categoriasPage.js";
+import { iniciarMetas }                                                 from "./pages/metasPage.js";
+import { iniciarOrcamentos }                                            from "./pages/orcamentosPage.js";
+import { iniciarInvestimentos }                                         from "./pages/investimentosPage.js";
+import { iniciarPlano }                                                 from "./pages/planoPage.js";
+import { iniciarContasPagar }                                           from "./pages/contasPagarPage.js";
+import { alternarTema, atualizarBotaoTema, exibirSucesso, exibirErro }  from "./util.js";
+import { aprimorarSelects }                                             from "./customSelect.js";
+import { atualizarPerfil }                                              from "./remotes/usuario/usuarioRemote.js";
+import { inicializarNotificacoes }                                      from "./notificacoes.js";
+import { inicializarBuscaGlobal }                                       from "./buscaGlobal.js";
 
 const templates = {};
 
@@ -186,6 +188,10 @@ const navegar = () => {
 
             document.getElementById("btn-theme-toggle").addEventListener("click", alternarTema);
             atualizarBotaoTema();
+
+            inicializarNotificacoes();
+
+            inicializarBuscaGlobal();
 
             // --- DESTAQUE DO ITEM DE MENU ATIVO ---
             document.querySelectorAll(".nav-link").forEach(item => {

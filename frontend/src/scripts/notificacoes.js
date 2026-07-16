@@ -3,20 +3,22 @@ import { pesquisarContasPagar }       from "./remotes/contaspagar/contasPagarRem
 import { pesquisarOrcamentos }        from "./remotes/orcamentos/orcamentosRemote.js";
 import { pesquisarMetas }             from "./remotes/metas/metasRemote.js";
 
-// --- QUANTOS DIAS ANTES DO VENCIMENTO JÁ GERAM ALERTA ---
 const DIAS_ALERTA = 5;
 
-// --- ORDEM DE EXIBIÇÃO POR NÍVEL ---
-const ORDEM_NIVEL = { danger: 0, warning: 1, ok: 2 };
+const ORDEM_NIVEL = {
+    danger: 0,
+    warning: 1,
+    ok: 2
+};
 
-// --- DATA DE HOJE ZERADA (SEM HORAS) ---
+// --- DATA DE HOJE ZERADA ---
 const hojeZerado = () => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     return d;
 };
 
-// --- CONVERTE UMA DATA ISO (YYYY-MM-DD) EM DATE ZERADO ---
+// --- CONVERTE UMA DATA ISO EM DATE ZERADO ---
 const dataVencimento = (iso) => {
     const d = new Date(`${iso}T00:00:00`);
     d.setHours(0, 0, 0, 0);
@@ -31,13 +33,11 @@ const inicializarNotificacoes = () => {
         return;
     }
 
-    // --- ABRE/FECHA O PAINEL ---
     btn.addEventListener("click", (e) => {
         e.stopPropagation();
         dropdown.classList.toggle("open");
     });
 
-    // --- FECHA AO CLICAR FORA ---
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".notif-menu")) {
             dropdown.classList.remove("open");
@@ -47,7 +47,7 @@ const inicializarNotificacoes = () => {
     carregar();
 };
 
-// --- BUSCA AS FONTES E MONTA A LISTA (TOLERANTE A FALHAS) ---
+// --- BUSCA AS FONTES E MONTA A LISTA ---
 const carregar = () => {
     Promise.allSettled([
         pesquisarContasPagar(),
@@ -59,9 +59,11 @@ const carregar = () => {
         if (contas.status === "fulfilled") {
             itens.push(...montarContasPagar(contas.value));
         }
+
         if (orcamentos.status === "fulfilled") {
             itens.push(...montarOrcamentos(orcamentos.value));
         }
+
         if (metas.status === "fulfilled") {
             itens.push(...montarMetas(metas.value));
         }
@@ -122,7 +124,6 @@ const montarOrcamentos = (lista) => {
     const itens = [];
 
     (lista || []).forEach((o) => {
-        // --- USA O LIMITE EFETIVO (COM ROLLOVER) QUANDO DISPONÍVEL ---
         const limite = o.rollover && o.limiteEfetivo != null ? o.limiteEfetivo : o.valorLimite;
         if (!limite || limite <= 0) {
             return;
@@ -156,7 +157,7 @@ const montarOrcamentos = (lista) => {
     return itens;
 };
 
-// --- NOTIFICAÇÕES DE METAS ATINGIDAS (POSITIVAS) ---
+// --- NOTIFICAÇÕES DE METAS ATINGIDAS ---
 const montarMetas = (lista) => {
     const itens = [];
 
@@ -186,7 +187,6 @@ const renderizar = (itens) => {
 
     lista.innerHTML = "";
 
-    // --- ORDENA POR SEVERIDADE ---
     itens.sort((a, b) => ORDEM_NIVEL[a.nivel] - ORDEM_NIVEL[b.nivel]);
 
     // --- BADGE CONTA APENAS ITENS QUE PEDEM ATENÇÃO ---

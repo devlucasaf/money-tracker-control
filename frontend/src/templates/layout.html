@@ -17,6 +17,38 @@
     </nav>
 
     <div class="topbar-actions">
+        <div class="busca-menu">
+            <button class="btn-icon" id="btn-busca" title="Buscar">
+                <i class="pi pi-search"></i>
+            </button>
+            <div class="busca-dropdown" id="busca-dropdown">
+                <div class="busca-input-wrap">
+                    <i class="pi pi-search"></i>
+                    <input
+                            type="text"
+                            id="busca-input"
+                            placeholder="Buscar transações, contas, metas..."
+                            autocomplete="off"
+                    />
+                </div>
+                <div class="busca-resultados" id="busca-resultados"></div>
+            </div>
+        </div>
+
+        <div class="notif-menu">
+            <button class="btn-icon notif-toggle" id="btn-notif" title="Notificações">
+                <i class="pi pi-bell"></i>
+                <span class="notif-badge hidden" id="notif-badge">0</span>
+            </button>
+            <div class="notif-dropdown" id="notif-dropdown">
+                <div class="notif-header">
+                    <i class="pi pi-bell"></i>
+                    <span>Notificações</span>
+                </div>
+                <div class="notif-list" id="notif-list"></div>
+            </div>
+        </div>
+
         <button class="btn-icon" id="btn-theme-toggle" title="Alternar tema">
             <i class="pi pi-moon"></i>
         </button>
@@ -143,6 +175,29 @@
         <div class="modal-confirm-actions">
             <button type="button" class="btn btn-outline" id="confirmacao-cancelar">Cancelar</button>
             <button type="button" class="btn btn-danger" id="confirmacao-confirmar">Excluir</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-senha">
+    <div class="modal modal-confirm">
+        <div class="modal-confirm-icon">
+            <i class="pi pi-lock"></i>
+        </div>
+        <h3 class="modal-confirm-title" id="senha-titulo">Confirme sua senha</h3>
+        <p class="modal-confirm-message" id="senha-mensagem">Digite sua senha para continuar.</p>
+        <div class="form-group" style="text-align:left; margin-bottom:0.5rem">
+            <input
+                    type="password"
+                    id="senha-input"
+                    placeholder="Sua senha"
+                    autocomplete="current-password"
+            />
+        </div>
+        <small id="senha-erro" style="display:block; text-align:left; color:var(--color-red); min-height:1rem; margin-bottom:0.75rem"></small>
+        <div class="modal-confirm-actions">
+            <button type="button" class="btn btn-outline" id="senha-cancelar">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="senha-confirmar">Confirmar</button>
         </div>
     </div>
 </div>

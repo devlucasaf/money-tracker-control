@@ -1,2 +1,377 @@
-/* Components - complementos ao globals.css */
-/* Todos os estilos base estão em globals.css */
+/* --- CENTRAL DE NOTIFICAÇÕES --- */
+.notif-menu {
+    position: relative;
+}
+
+.notif-toggle {
+    position: relative;
+}
+
+.notif-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-red);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--bg-card);
+    box-sizing: content-box;
+}
+
+.notif-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 340px;
+    max-width: 90vw;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.notif-dropdown.open {
+    display: block;
+}
+
+.notif-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+}
+
+.notif-header i {
+    color: var(--color-primary);
+}
+
+.notif-list {
+    max-height: 380px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-muted) transparent;
+}
+
+.notif-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.notif-list::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--bg-card);
+}
+
+.notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    background: none;
+    color: var(--text);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+.notif-item:hover {
+    background: var(--bg);
+}
+
+.notif-item i {
+    font-size: 1rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.notif-item-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.notif-item-titulo {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.notif-item-detalhe {
+    font-size: 0.78rem;
+    color: var(--text-light);
+}
+
+.notif-item.notif-danger {
+    border-left-color: var(--color-red);
+}
+
+.notif-item.notif-danger i {
+    color: var(--color-red);
+}
+
+.notif-item.notif-warning {
+    border-left-color: var(--color-yellow);
+}
+
+.notif-item.notif-warning i {
+    color: var(--color-yellow);
+}
+
+.notif-item.notif-ok {
+    border-left-color: var(--color-green);
+}
+
+.notif-item.notif-ok i {
+    color: var(--color-green);
+}
+
+.notif-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.notif-empty i {
+    font-size: 1.75rem;
+    color: var(--color-green);
+    opacity: 0.7;
+}
+
+/* --- COMPARATIVO MÊS A MÊS --- */
+.summary-variacao {
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-top: 2px;
+    color: var(--text-muted);
+}
+
+/* --- GRÁFICO DE RENTABILIDADE --- */
+.rentab-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.rentab-item {
+    display: grid;
+    grid-template-columns: 140px 1fr 150px;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rentab-nome {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rentab-trilho {
+    height: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.rentab-barra {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    transition: width 0.4s ease;
+    min-width: 2px;
+}
+
+.rentab-barra.rentab-pos {
+    background: var(--color-green);
+}
+
+.rentab-barra.rentab-neg {
+    background: var(--color-red);
+}
+
+.rentab-valor {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.rentab-valor.rentab-pos-txt {
+    color: var(--color-green);
+}
+
+.rentab-valor.rentab-neg-txt {
+    color: var(--color-red);
+}
+
+@media (max-width: 560px) {
+    .rentab-item {
+        grid-template-columns: 90px 1fr 110px;
+        gap: 0.4rem;
+    }
+
+    .rentab-nome,
+    .rentab-valor {
+        font-size: 0.75rem;
+    }
+}
+
+/* --- BUSCA GLOBAL --- */
+.busca-menu {
+    position: relative;
+}
+
+.busca-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 360px;
+    max-width: 90vw;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.busca-dropdown.open {
+    display: block;
+}
+
+.busca-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.busca-input-wrap i {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.busca-input-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.busca-resultados {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-muted) transparent;
+}
+
+.busca-resultados::-webkit-scrollbar {
+    width: 8px;
+}
+
+.busca-resultados::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--bg-card);
+}
+
+.busca-dica {
+    padding: 1.25rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.busca-grupo-titulo {
+    padding: 0.5rem 1rem 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: var(--bg);
+}
+
+.busca-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: none;
+    background: none;
+    color: var(--text);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.busca-item:hover {
+    background: var(--color-primary-subtle);
+}
+
+.busca-item i {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.busca-item-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.busca-item-titulo {
+    font-size: 0.85rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.busca-item-detalhe {
+    font-size: 0.78rem;
+    color: var(--text-light);
+}
+
+
