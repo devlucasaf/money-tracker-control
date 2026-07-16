@@ -15,6 +15,9 @@ public class DashboardDTO {
     private BigDecimal              totalDespesas;
     private BigDecimal              saldo;
     private BigDecimal              saldoContas;
+    private BigDecimal              saldoProjetado;
+    private BigDecimal              totalReceitasAnterior;
+    private BigDecimal              totalDespesasAnterior;
     private List<CategoriaValorDTO> despesasPorCategoria;
     private List<EvolucaoMensalDTO> evolucaoMensal;
 }

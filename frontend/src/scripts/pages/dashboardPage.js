@@ -63,6 +63,11 @@ const renderizar = (dados) => {
     definirValor("dash-despesas", dados.totalDespesas, false);
     definirValor("dash-saldo-mes", dados.saldo, true);
 
+    definirVariacao("dash-receitas-var", dados.totalReceitas, dados.totalReceitasAnterior, true);
+    definirVariacao("dash-despesas-var", dados.totalDespesas, dados.totalDespesasAnterior, false);
+
+    definirProjecao("dash-saldo-projetado", dados.saldoProjetado, dados.saldoContas);
+
     renderizarPizza(dados.despesasPorCategoria || []);
     renderizarBarras(dados.evolucaoMensal || []);
     renderizarLinha(dados.evolucaoMensal || []);
@@ -79,6 +84,53 @@ const definirValor = (id, valor, colorir) => {
     if (colorir) {
         el.style.color = valor >= 0 ? "var(--color-green)" : "var(--color-red)";
     }
+};
+
+// --- EXIBE A VARIAÇÃO PERCENTUAL EM RELAÇÃO AO MÊS ANTERIOR ---
+const definirVariacao = (id, atual, anterior, positivoBom) => {
+    const el = document.getElementById(id);
+    if (!el) {
+        return;
+    }
+
+    const valorAtual = Number(atual) || 0;
+    const valorAnterior = Number(anterior) || 0;
+
+    if (valorAnterior === 0) {
+        el.textContent = valorAtual > 0 ? "novo neste mês" : "sem dados no mês anterior";
+        el.style.color = "var(--text-muted)";
+        return;
+    }
+
+    const pct = ((valorAtual - valorAnterior) / valorAnterior) * 100;
+    const subiu = pct >= 0;
+    const ehBom = subiu === positivoBom;
+    const seta = subiu ? "▲" : "▼";
+
+    el.textContent = `${seta} ${Math.abs(pct).toFixed(0)}% vs mês anterior`;
+    el.style.color = Math.abs(pct) < 0.5
+        ? "var(--text-muted)"
+        : (ehBom ? "var(--color-green)" : "var(--color-red)");
+};
+
+// --- EXIBE O SALDO PREVISTO PARA O FIM DO MÊS ---
+const definirProjecao = (id, projetado, saldoAtual) => {
+    const el = document.getElementById(id);
+    if (!el) {
+        return;
+    }
+
+    if (projetado === null || projetado === undefined) {
+        el.textContent = "";
+        return;
+    }
+
+    const valorProjetado = Number(projetado);
+    const valorAtual = Number(saldoAtual) || 0;
+
+    el.textContent = `≈ ${formatarMoeda(valorProjetado)} previsto p/ fim do mês`;
+    el.title = "Considera contas a pagar/receber pendentes e transações recorrentes";
+    el.style.color = valorProjetado >= valorAtual ? "var(--color-green)" : "var(--color-red)";
 };
 
 // --- CONVERTE ÂNGULO POLAR EM COORDENADAS ---

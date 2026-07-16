@@ -21,6 +21,9 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
     List<Transacao> findByRecorrenteTrueAndProximaDataLessThanEqual(LocalDate data);
 
+    // --- RECORRENTES DO USUÁRIO COM PRÓXIMA OCORRÊNCIA NUM INTERVALO ---
+    List<Transacao> findByUsuarioIdAndRecorrenteTrueAndProximaDataBetween(Long usuarioId, LocalDate inicio, LocalDate fim);
+
     // --- LISTAGEM COM FILTROS OPCIONAIS ---
     @Query("SELECT t FROM Transacao t WHERE t.usuario.id = :uid " +
             "AND (:busca IS NULL OR LOWER(t.descricao) LIKE LOWER(CONCAT('%', :busca, '%'))) " +
