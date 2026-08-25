@@ -15,7 +15,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "transacoes")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Transacao {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

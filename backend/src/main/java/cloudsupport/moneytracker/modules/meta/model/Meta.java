@@ -2,15 +2,21 @@ package cloudsupport.moneytracker.modules.meta.model;
 
 import cloudsupport.moneytracker.modules.conta.model.Conta;
 import cloudsupport.moneytracker.modules.usuario.model.Usuario;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "metas")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Meta {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

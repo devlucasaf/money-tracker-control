@@ -28,9 +28,8 @@ public class ContaPagarController {
 
     // --- CRIAR ---
     @PostMapping
-    public ResponseEntity<ContaPagarDTO> criar(@RequestBody @Valid ContaPagarDTO dto,
-                                               @AuthenticationPrincipal Usuario usuario) {
-        return ResponseEntity.ok(contaPagarService.criar(dto, usuario));
+    public ResponseEntity<ContaPagarDTO> criar(@RequestBody @Valid ContaPagarDTO dto, @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(contaPagarService.criarCompromisso(dto, usuario));
     }
 
     // --- ATUALIZAR ---

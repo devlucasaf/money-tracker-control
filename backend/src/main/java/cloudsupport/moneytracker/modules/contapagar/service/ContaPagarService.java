@@ -10,6 +10,7 @@ import cloudsupport.moneytracker.modules.usuario.model.Usuario;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class ContaPagarService {
 
     // --- CRIAR NOVO COMPROMISSO ---
     @Transactional
-    public ContaPagarDTO criar(ContaPagarDTO dto, Usuario usuario) {
+    public ContaPagarDTO criarCompromisso(ContaPagarDTO dto, Usuario usuario) {
         var conta = resolverConta(dto.getContaId(), usuario.getId());
 
         var item = ContaPagar.builder()

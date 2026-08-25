@@ -62,21 +62,21 @@ public class TransacaoController {
 
     // --- CRIAR NOVA TRANSAÇÃO ---
     @PostMapping
-    public ResponseEntity<TransacaoDTO> criar(@RequestBody @Valid TransacaoDTO dto,
-                                              @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<TransacaoDTO> criarTransacao(@RequestBody @Valid TransacaoDTO dto,
+                                                       @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(transacaoService.criar(dto, usuario));
     }
 
     // --- ATUALIZAR TRANSAÇÃO EXISTENTE ---
     @PutMapping("/{id}")
-    public ResponseEntity<TransacaoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid TransacaoDTO dto,
-                                                  @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<TransacaoDTO> atualizarTransacaoExistente(@PathVariable Long id, @RequestBody @Valid TransacaoDTO dto,
+                                                                    @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(transacaoService.atualizar(id, dto, usuario.getId()));
     }
 
     // --- DELETAR TRANSAÇÃO ---
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Void> deletarTransacao(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
         transacaoService.deletar(id, usuario.getId());
         return ResponseEntity.noContent().build();
     }

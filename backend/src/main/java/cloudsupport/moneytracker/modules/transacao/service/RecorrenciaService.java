@@ -16,14 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-// --- GERAÇÃO AUTOMÁTICA DE TRANSAÇÕES RECORRENTES ---
 @Service
 @RequiredArgsConstructor
 public class RecorrenciaService {
 
     private static final Logger log = LoggerFactory.getLogger(RecorrenciaService.class);
 
-    // --- LIMITE DE SEGURANÇA PARA EVITAR LOOPS EXCESSIVOS ---
     private static final int MAX_OCORRENCIAS = 60;
 
     private final TransacaoRepository transacaoRepository;

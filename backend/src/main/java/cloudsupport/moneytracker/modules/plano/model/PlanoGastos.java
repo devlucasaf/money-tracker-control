@@ -1,6 +1,7 @@
 package cloudsupport.moneytracker.modules.plano.model;
 
 import cloudsupport.moneytracker.modules.usuario.model.Usuario;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "planos_gastos")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PlanoGastos {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

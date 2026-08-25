@@ -22,8 +22,7 @@ public class OrcamentoController {
 
     // --- LISTAR ORÇAMENTOS DO USUÁRIO ---
     @GetMapping
-    public ResponseEntity<List<OrcamentoDTO>> listar(@AuthenticationPrincipal Usuario usuario,
-                                                     @RequestParam(required = false) Integer mes,
+    public ResponseEntity<List<OrcamentoDTO>> listar(@AuthenticationPrincipal Usuario usuario, @RequestParam(required = false) Integer mes,
                                                      @RequestParam(required = false) Integer ano) {
         if (mes != null && ano != null) {
             return ResponseEntity.ok(orcamentoService.listarPorMes(usuario.getId(), mes, ano));
@@ -33,8 +32,7 @@ public class OrcamentoController {
 
     // --- CRIAR NOVO ORÇAMENTO ---
     @PostMapping
-    public ResponseEntity<OrcamentoDTO> criar(@RequestBody @Valid OrcamentoDTO dto,
-                                              @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<OrcamentoDTO> criar(@RequestBody @Valid OrcamentoDTO dto, @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(orcamentoService.criar(dto, usuario));
     }
 

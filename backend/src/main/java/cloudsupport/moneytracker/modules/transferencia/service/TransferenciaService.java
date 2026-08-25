@@ -8,6 +8,7 @@ import cloudsupport.moneytracker.modules.usuario.model.Usuario;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +23,14 @@ public class TransferenciaService {
 
     // --- LISTAR TRANSFERÊNCIAS DO USUÁRIO ---
     @Transactional(readOnly = true)
-    public List<TransferenciaDTO> listarPorUsuario(Long usuarioId) {
+    public List<TransferenciaDTO> listarTransferenciPorUsuario(Long usuarioId) {
         return transferenciaRepository.findByUsuarioIdOrderByDataDescIdDesc(usuarioId)
                 .stream().map(this::toDTO).toList();
     }
 
     // --- CRIAR NOVA TRANSFERÊNCIA ---
     @Transactional
-    public TransferenciaDTO criar(TransferenciaDTO dto, Usuario usuario) {
+    public TransferenciaDTO criarTransferencia(TransferenciaDTO dto, Usuario usuario) {
         if (dto.getContaOrigemId().equals(dto.getContaDestinoId())) {
             throw new IllegalArgumentException("A conta de origem e destino devem ser diferentes");
         }
@@ -55,15 +56,22 @@ public class TransferenciaService {
 
     // --- DELETAR TRANSFERÊNCIA ---
     @Transactional
-    public void deletar(Long id, Long usuarioId) {
+    public void deletarTransferencia(Long id, Long usuarioId) {
         var transferencia = transferenciaRepository.findById(id)
                 .filter(t -> t.getUsuario().getId().equals(usuarioId))
                 .orElseThrow(() -> new EntityNotFoundException("Transferência não encontrada"));
 
-        transferencia.getContaOrigem().setSaldo(
-                transferencia.getContaOrigem().getSaldo().add(transferencia.getValor()));
-        transferencia.getContaDestino().setSaldo(
-                transferencia.getContaDestino().getSaldo().subtract(transferencia.getValor()));
+        transferencia.getContaOrigem().setSaldo(transferencia
+                .getContaOrigem()
+                .getSaldo()
+                .add(transferencia
+                        .getValor())
+        );
+        transferencia.getContaDestino().setSaldo(transferencia
+                .getContaDestino()
+                .getSaldo()
+                .subtract(transferencia.getValor())
+        );
 
         transferenciaRepository.delete(transferencia);
     }

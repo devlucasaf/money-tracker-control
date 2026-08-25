@@ -7,6 +7,7 @@ import cloudsupport.moneytracker.modules.categoria.repository.CategoriaRepositor
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +20,7 @@ public class CategoriaService {
 
     // --- LISTAR CATEGORIAS DO USUÁRIO ---
     public List<CategoriaDTO> listarPorUsuario(Long usuarioId) {
-        return categoriaRepository.findByUsuarioId(usuarioId).stream()
-                .map(this::toDTO).toList();
+        return categoriaRepository.findByUsuarioId(usuarioId).stream().map(this::toDTO).toList();
     }
 
     // --- CRIAR NOVA CATEGORIA ---

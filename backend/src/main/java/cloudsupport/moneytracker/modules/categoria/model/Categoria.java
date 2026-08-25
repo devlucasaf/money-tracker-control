@@ -2,13 +2,19 @@ package cloudsupport.moneytracker.modules.categoria.model;
 
 import cloudsupport.moneytracker.modules.transacao.model.TipoTransacao;
 import cloudsupport.moneytracker.modules.usuario.model.Usuario;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "categorias")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Categoria {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

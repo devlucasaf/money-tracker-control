@@ -7,6 +7,7 @@ import cloudsupport.moneytracker.modules.usuario.repository.UsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +49,7 @@ public class UsuarioService {
     public PerfilDTO atualizarPerfil(Long usuarioId, AtualizarPerfilDTO dto) {
         var usuario = buscarPorId(usuarioId);
 
-        if (!usuario.getEmail().equalsIgnoreCase(dto.getEmail())
-                && usuarioRepository.existsByEmail(dto.getEmail())) {
+        if (!usuario.getEmail().equalsIgnoreCase(dto.getEmail()) && usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("E-mail já cadastrado");
         }
 

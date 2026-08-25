@@ -2,11 +2,16 @@ package cloudsupport.moneytracker.modules.usuario.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Usuario {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +40,7 @@ public class Usuario {
         if (ativo == null) {
             ativo = true;
         }
+
         if (moeda == null) {
             moeda = "BRL";
         }

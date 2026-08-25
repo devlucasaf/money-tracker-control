@@ -1,6 +1,7 @@
 package cloudsupport.moneytracker.modules.contapagar.repository;
 
 import cloudsupport.moneytracker.modules.contapagar.model.ContaPagar;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

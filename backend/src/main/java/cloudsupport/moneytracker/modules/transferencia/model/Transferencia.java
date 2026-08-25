@@ -12,15 +12,20 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transferencias")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Transferencia {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal valor;
-    private LocalDate data;
-    private String descricao;
+    private BigDecimal  valor;
+    private LocalDate   data;
+    private String      descricao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conta_origem_id")

@@ -1,6 +1,7 @@
 package cloudsupport.moneytracker.modules.categoria.dto;
 
 import cloudsupport.moneytracker.modules.transacao.model.TipoTransacao;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

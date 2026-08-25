@@ -22,23 +22,20 @@ public class MovimentacaoMetaController {
 
     // --- LISTAR MOVIMENTAÇÕES DA META ---
     @GetMapping
-    public ResponseEntity<List<MovimentacaoMetaDTO>> listar(@PathVariable Long metaId,
-                                                            @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<List<MovimentacaoMetaDTO>> listar(@PathVariable Long metaId, @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(movimentacaoService.listar(metaId, usuario.getId()));
     }
 
     // --- REGISTRAR APORTE OU RESGATE ---
     @PostMapping
-    public ResponseEntity<MovimentacaoMetaDTO> registrar(@PathVariable Long metaId,
-                                                         @RequestBody @Valid MovimentacaoMetaDTO dto,
+    public ResponseEntity<MovimentacaoMetaDTO> registrar(@PathVariable Long metaId, @RequestBody @Valid MovimentacaoMetaDTO dto,
                                                          @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(movimentacaoService.registrar(metaId, dto, usuario));
     }
 
     // --- DELETAR MOVIMENTAÇÃO ---
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long metaId, @PathVariable Long id,
-                                        @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Void> deletar(@PathVariable Long metaId, @PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
         movimentacaoService.deletar(metaId, id, usuario);
         return ResponseEntity.noContent().build();
     }

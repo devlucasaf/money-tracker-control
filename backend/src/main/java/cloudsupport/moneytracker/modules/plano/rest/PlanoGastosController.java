@@ -20,14 +20,13 @@ public class PlanoGastosController {
 
     // --- OBTER O PLANO DO USUÁRIO ---
     @GetMapping
-    public ResponseEntity<PlanoGastosDTO> obter(@AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<PlanoGastosDTO> obterPlanoUsuario(@AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(planoService.obter(usuario.getId()));
     }
 
     // --- CRIAR OU ATUALIZAR O PLANO ---
     @PutMapping
-    public ResponseEntity<PlanoGastosDTO> salvar(@RequestBody @Valid PlanoGastosDTO dto,
-                                                 @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<PlanoGastosDTO> salvarPlano(@RequestBody @Valid PlanoGastosDTO dto, @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(planoService.salvar(dto, usuario));
     }
 }

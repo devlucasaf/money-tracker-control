@@ -1,8 +1,10 @@
 package cloudsupport.moneytracker.modules.meta.dto;
 
 import cloudsupport.moneytracker.modules.meta.model.TipoMovimentacaoMeta;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

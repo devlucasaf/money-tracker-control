@@ -21,12 +21,12 @@ public class DashboardController {
 
     // --- RESUMO MENSAL DO USUÁRIO ---
     @GetMapping
-    public ResponseEntity<DashboardDTO> resumo(@AuthenticationPrincipal Usuario usuario,
-                                               @RequestParam(required = false) Integer mes,
+    public ResponseEntity<DashboardDTO> resumo(@AuthenticationPrincipal Usuario usuario, @RequestParam(required = false) Integer mes,
                                                @RequestParam(required = false) Integer ano) {
         var hoje = LocalDate.now();
         var mesFinal = mes != null ? mes : hoje.getMonthValue();
         var anoFinal = ano != null ? ano : hoje.getYear();
+
         return ResponseEntity.ok(dashboardService.resumoMensal(usuario.getId(), mesFinal, anoFinal));
     }
 }

@@ -1,6 +1,7 @@
 package cloudsupport.moneytracker.modules.investimento.model;
 
 import cloudsupport.moneytracker.modules.usuario.model.Usuario;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "investimentos")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Investimento {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +70,7 @@ public class Investimento {
         if (status == null) {
             status = StatusInvestimento.ATIVO;
         }
+
         if (valorAtual == null) {
             valorAtual = valorAplicado;
         }

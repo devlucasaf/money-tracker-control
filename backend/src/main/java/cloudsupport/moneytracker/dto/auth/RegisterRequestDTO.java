@@ -24,6 +24,6 @@ public class RegisterRequestDTO {
     @Size(min = 6)
     private String senha;
 
-    // --- MOEDA PREFERIDA (OPCIONAL, PADRÃO BRL) ---
+    // --- MOEDA PREFERIDA ---
     private String moeda;
 }

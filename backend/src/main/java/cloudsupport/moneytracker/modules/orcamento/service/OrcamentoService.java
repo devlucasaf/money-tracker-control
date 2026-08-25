@@ -9,6 +9,7 @@ import cloudsupport.moneytracker.modules.transacao.repository.TransacaoRepositor
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrcamentoService {
 
-    private final OrcamentoRepository   orcamentoRepository;
-    private final CategoriaService      categoriaService;
-    private final TransacaoRepository   transacaoRepository;
+    private final OrcamentoRepository orcamentoRepository;
+    private final CategoriaService categoriaService;
+    private final TransacaoRepository transacaoRepository;
 
     // --- LISTAR ORÇAMENTOS DO USUÁRIO POR MÊS/ANO ---
     @Transactional(readOnly = true)
@@ -35,16 +36,22 @@ public class OrcamentoService {
     @Transactional(readOnly = true)
     public List<OrcamentoDTO> listarPorUsuario(Long usuarioId) {
         return orcamentoRepository.findByUsuarioId(usuarioId)
-                .stream().map(o -> toDTO(o, usuarioId)).toList();
+                .stream()
+                .map(o -> toDTO(o, usuarioId))
+                .toList();
     }
 
     // --- CRIAR NOVO ORÇAMENTO ---
     public OrcamentoDTO criar(OrcamentoDTO dto, Usuario usuario) {
         var categoria = categoriaService.buscarPorIdEUsuario(dto.getCategoriaId(), usuario.getId());
         var orcamento = Orcamento.builder()
-                .valorLimite(dto.getValorLimite()).mes(dto.getMes()).ano(dto.getAno())
+                .valorLimite(dto.getValorLimite())
+                .mes(dto.getMes())
+                .ano(dto.getAno())
                 .rollover(Boolean.TRUE.equals(dto.getRollover()))
-                .usuario(usuario).categoria(categoria).build();
+                .usuario(usuario)
+                .categoria(categoria)
+                .build();
         return toDTO(orcamentoRepository.save(orcamento), usuario.getId());
     }
 

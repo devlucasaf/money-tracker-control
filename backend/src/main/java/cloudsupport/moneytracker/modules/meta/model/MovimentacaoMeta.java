@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "movimentacoes_meta")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MovimentacaoMeta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

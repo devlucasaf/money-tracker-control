@@ -22,21 +22,21 @@ public class TransferenciaController {
 
     // --- LISTAR TRANSFERÊNCIAS DO USUÁRIO ---
     @GetMapping
-    public ResponseEntity<List<TransferenciaDTO>> listar(@AuthenticationPrincipal Usuario usuario) {
-        return ResponseEntity.ok(transferenciaService.listarPorUsuario(usuario.getId()));
+    public ResponseEntity<List<TransferenciaDTO>> listarTransferencias(@AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(transferenciaService.listarTransferenciPorUsuario(usuario.getId()));
     }
 
     // --- CRIAR NOVA TRANSFERÊNCIA ---
     @PostMapping
-    public ResponseEntity<TransferenciaDTO> criar(@RequestBody @Valid TransferenciaDTO dto,
-                                                  @AuthenticationPrincipal Usuario usuario) {
-        return ResponseEntity.ok(transferenciaService.criar(dto, usuario));
+    public ResponseEntity<TransferenciaDTO> criarNovaTransferencia(@RequestBody @Valid TransferenciaDTO dto,
+                                                                   @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(transferenciaService.criarTransferencia(dto, usuario));
     }
 
     // --- DELETAR TRANSFERÊNCIA ---
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
-        transferenciaService.deletar(id, usuario.getId());
+    public ResponseEntity<Void> deletarTransferencia(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
+        transferenciaService.deletarTransferencia(id, usuario.getId());
         return ResponseEntity.noContent().build();
     }
 }

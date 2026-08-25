@@ -11,6 +11,7 @@ import cloudsupport.moneytracker.modules.usuario.model.Usuario;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

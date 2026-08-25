@@ -28,8 +28,7 @@ public class InvestimentoController {
 
     // --- CRIAR NOVO INVESTIMENTO ---
     @PostMapping
-    public ResponseEntity<InvestimentoDTO> criar(@RequestBody @Valid InvestimentoDTO dto,
-                                                 @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<InvestimentoDTO> criar(@RequestBody @Valid InvestimentoDTO dto, @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(investimentoService.criar(dto, usuario));
     }
 

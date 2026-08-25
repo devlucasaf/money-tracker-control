@@ -28,23 +28,20 @@ public class CategoriaController {
 
     // --- CRIAR NOVA CATEGORIA ---
     @PostMapping
-    public ResponseEntity<CategoriaDTO> criar(@RequestBody @Valid CategoriaDTO dto,
-                                              @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<CategoriaDTO> criar(@RequestBody @Valid CategoriaDTO dto, @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(categoriaService.criar(dto, usuario));
     }
 
     // --- ATUALIZAR CATEGORIA EXISTENTE ---
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> atualizar(@PathVariable Long id,
-                                                  @RequestBody @Valid CategoriaDTO dto,
+    public ResponseEntity<CategoriaDTO> atualizar(@PathVariable Long id, @RequestBody @Valid CategoriaDTO dto,
                                                   @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(categoriaService.atualizar(id, dto, usuario.getId()));
     }
 
     // --- DELETAR CATEGORIA ---
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id,
-                                        @AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
         categoriaService.deletar(id, usuario.getId());
         return ResponseEntity.noContent().build();
     }
