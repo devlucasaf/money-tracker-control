@@ -76,10 +76,10 @@
             <div class="form-group">
                 <label>Valor</label>
                 <input 
-                    type="number" 
-                    step="0.01" 
-                    id="transacao-valor" 
-                    required 
+                        type="number"
+                        step="0.01"
+                        id="transacao-valor"
+                        required
                 />
                 <div class="currency-converter" id="currency-converter">
                     <i class="pi pi-sync converter-icon"></i>
@@ -98,7 +98,11 @@
                             <div class="custom-select-option" data-value="CAD">🇨🇦 Dólar (CAD)</div>
                         </div>
                     </div>
-                    <input type="hidden" id="converter-moeda" value="USD" />
+                    <input
+                            type="hidden"
+                            id="converter-moeda"
+                            value="USD"
+                    />
                     <span class="converter-equal">=</span>
                     <span class="converted-value" id="converted-value">—</span>
                 </div>
@@ -173,13 +177,20 @@
 
             <div class="form-group">
                 <label>Tags (opcional)</label>
-                <input type="text" id="transacao-tags" placeholder="Ex: viagem, trabalho, lazer" />
+                <input
+                        type="text"
+                        id="transacao-tags"
+                        placeholder="Ex: viagem, trabalho, lazer"
+                />
                 <small class="campo-ajuda">Separe as etiquetas por vírgula.</small>
             </div>
 
             <div class="form-group">
                 <label class="checkbox-field">
-                    <input type="checkbox" id="transacao-parcelar" />
+                    <input
+                            type="checkbox"
+                            id="transacao-parcelar"
+                    />
                     <span>Compra parcelada</span>
                 </label>
                 <small class="campo-ajuda">Gera uma transação por mês, dividindo o valor total.</small>
@@ -187,13 +198,23 @@
 
             <div class="form-group hidden" id="grupo-parcelas">
                 <label>Número de parcelas</label>
-                <input type="number" id="transacao-parcelas" min="2" max="60" step="1" value="2" />
+                <input
+                        type="number"
+                        id="transacao-parcelas"
+                        min="2"
+                        max="60"
+                        step="1"
+                        value="2"
+                />
                 <small class="campo-ajuda" id="parcelas-preview"></small>
             </div>
 
             <div class="form-group">
                 <label class="checkbox-field">
-                    <input type="checkbox" id="transacao-recorrente" />
+                    <input
+                            type="checkbox"
+                            id="transacao-recorrente"
+                    />
                     <span>Transação recorrente</span>
                 </label>
                 <small class="campo-ajuda">Gera automaticamente novas transações na frequência escolhida.</small>

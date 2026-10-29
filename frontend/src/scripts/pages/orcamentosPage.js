@@ -35,7 +35,9 @@ const MESES_ABREV = [
 ];
 
 // --- ESTADO DO SELETOR DE MÊS/ANO ---
-let mpAno, mpMesSelecionado, mpAnoSelecionado;
+let mpAno;
+let mpMesSelecionado;
+let mpAnoSelecionado;
 
 // --- INICIALIZAÇÃO DA PÁGINA ---
 const iniciarOrcamentos = () => {

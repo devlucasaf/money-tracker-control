@@ -1,4 +1,5 @@
 import { exibirSucesso, exibirErro, configurarToggleSenha } from "../util.js";
+import { irPara } from "../router.js";
 import { registrar } from "../remotes/auth/registerRemote.js";
 
 const iniciarRegistro = () => {
@@ -31,7 +32,7 @@ const iniciarRegistro = () => {
     const formulario = document.getElementById("register-form");
     formulario.addEventListener("submit", (e) => {
         e.preventDefault();
-        const nome  = document.getElementById("register-nome").value;
+        const nome = document.getElementById("register-nome").value;
         const email = document.getElementById("register-email").value;
         const senha = document.getElementById("register-senha").value;
         const moeda = document.getElementById("register-moeda").value;
@@ -42,7 +43,7 @@ const iniciarRegistro = () => {
                 localStorage.setItem("userEmail", dados.email ?? email);
                 localStorage.setItem("userCurrency", dados.moeda ?? moeda);
                 exibirSucesso("Conta criada com sucesso!");
-                window.location.hash = "#/transacoes";
+                irPara("/transacoes");
             })
             .catch(exibirErro);
     });

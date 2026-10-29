@@ -1,11 +1,32 @@
 const MAPA_MOEDAS = {
-    BRL: { locale: "pt-BR", moeda: "BRL" },
-    USD: { locale: "en-US", moeda: "USD" },
-    EUR: { locale: "de-DE", moeda: "EUR" },
-    GBP: { locale: "en-GB", moeda: "GBP" },
-    ARS: { locale: "es-AR", moeda: "ARS" },
-    JPY: { locale: "ja-JP", moeda: "JPY" },
-    CAD: { locale: "en-CA", moeda: "CAD" },
+    BRL: {
+        locale: "pt-BR",
+        moeda: "BRL"
+    },
+    USD: {
+        locale: "en-US",
+        moeda: "USD"
+    },
+    EUR: {
+        locale: "de-DE",
+        moeda: "EUR"
+    },
+    GBP: {
+        locale: "en-GB",
+        moeda: "GBP"
+    },
+    ARS: {
+        locale: "es-AR",
+        moeda: "ARS"
+    },
+    JPY: {
+        locale: "ja-JP",
+        moeda: "JPY"
+    },
+    CAD: {
+        locale: "en-CA",
+        moeda: "CAD"
+    },
 };
 
 const obterMoedaUsuario = () => localStorage.getItem("userCurrency") || "BRL";
@@ -33,10 +54,46 @@ const exibirNotificacao = (mensagem, tipo = "info") => {
     const notificacao = document.createElement("div");
 
     notificacao.className = `toast toast-${tipo}`;
+    notificacao.setAttribute("role", tipo === "error" ? "alert" : "status");
     notificacao.textContent = mensagem;
     container.appendChild(notificacao);
 
-    setTimeout(() => notificacao.remove(), 4000);
+    // --- SAÍDA ANIMADA ANTES DA REMOÇÃO ---
+    setTimeout(() => {
+        notificacao.classList.add("toast-saindo");
+        notificacao.addEventListener("animationend", () => notificacao.remove(), { once: true });
+        setTimeout(() => notificacao.remove(), 400);
+    }, 3800);
+};
+
+// --- ANIMAÇÃO NUMÉRICA DE VALORES MONETÁRIOS ---
+const animarValorMonetario = (el, valorFinal, duracao = 600) => {
+    const destino = Number(valorFinal) || 0;
+    const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const inicio = Number(el.dataset.valorAtual);
+
+    el.dataset.valorAtual = String(destino);
+    cancelAnimationFrame(Number(el.dataset.animacao) || 0);
+
+    // --- SEM ANIMAÇÃO NA PRIMEIRA EXIBIÇÃO SEM VALOR ANTERIOR OU SEM MUDANÇA ---
+    if (reduzido || Number.isNaN(inicio) || inicio === destino) {
+        el.textContent = formatarMoeda(destino);
+        return;
+    }
+
+    const t0 = performance.now();
+    const passo = (agora) => {
+        const progresso = Math.min((agora - t0) / duracao, 1);
+        const suave = 1 - Math.pow(1 - progresso, 3);
+        el.textContent = formatarMoeda(inicio + (destino - inicio) * suave);
+
+        if (progresso < 1) {
+            el.dataset.animacao = String(requestAnimationFrame(passo));
+        } else {
+            el.textContent = formatarMoeda(destino);
+        }
+    };
+    el.dataset.animacao = String(requestAnimationFrame(passo));
 };
 
 const exibirSucesso = (msg) => exibirNotificacao(msg, "success");
@@ -136,6 +193,7 @@ const confirmar = (opcoes = {}) => {
                 fechar(false);
             }
         };
+
         const aoTeclar = (e) => {
             if (e.key === "Escape") {
                 fechar(false);
@@ -157,4 +215,4 @@ const confirmar = (opcoes = {}) => {
 
 inicializarTema();
 
-export { formatarMoeda, formatarData, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema, configurarToggleSenha, confirmar };
+export { formatarMoeda, formatarData, animarValorMonetario, exibirNotificacao, exibirSucesso, exibirErro, obterMoedaUsuario, MAPA_MOEDAS, inicializarTema, alternarTema, atualizarBotaoTema, configurarToggleSenha, confirmar };

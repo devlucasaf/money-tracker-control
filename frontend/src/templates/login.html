@@ -1,43 +1,67 @@
 <div class="auth-container">
-    <div class="auth-card">
-        <h1>
-            <span class="brand-icon">$</span> Money Tracker
-        </h1>
-        <p class="subtitle">Acesse sua conta</p>
-
-        <form id="login-form">
-            <div class="form-group">
-                <label for="login-email">E-mail</label>
-                <input
-                        type="email"
-                        id="login-email"
-                        required
-                        placeholder="seu@email.com"
-                />
+    <div class="auth-shell">
+        <aside class="auth-hero">
+            <div class="auth-hero-brand">
+                <span class="brand-icon">$</span>
+                <span>Money Tracker</span>
             </div>
+            <div>
+                <h2>Seu dinheiro,<br>sob controle.</h2>
+                <p>Acompanhe receitas, despesas, orçamentos, metas e investimentos em um só lugar.</p>
+                <ul class="auth-hero-list">
+                    <li>
+                        <i class="pi pi-chart-line"></i> Visão geral do mês
+                    </li>
+                    <li>
+                        <i class="pi pi-wallet"></i> Orçamentos e contas a pagar
+                    </li>
+                    <li>
+                        <i class="pi pi-flag"></i> Metas e investimentos
+                    </li>
+                </ul>
+            </div>
+        </aside>
 
-            <div class="form-group">
-                <label for="login-senha">Senha</label>
-                <div class="password-field">
+        <div class="auth-card">
+            <h1>
+                <span class="brand-icon">$</span> Money Tracker
+            </h1>
+            <p class="subtitle">Acesse sua conta</p>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">E-mail</label>
                     <input
-                            type="password"
-                            id="login-senha"
+                            type="email"
+                            id="login-email"
                             required
-                            placeholder="••••••••"
+                            placeholder="seu@email.com"
                     />
-                    <button type="button" class="password-toggle" data-target="login-senha" aria-label="Mostrar senha">
-                        <i class="pi pi-eye"></i>
-                    </button>
                 </div>
-            </div>
 
-            <button type="submit" class="btn btn-primary btn-block">
-                Entrar
-            </button>
-        </form>
+                <div class="form-group">
+                    <label for="login-senha">Senha</label>
+                    <div class="password-field">
+                        <input
+                                type="password"
+                                id="login-senha"
+                                required
+                                placeholder="••••••••"
+                        />
+                        <button type="button" class="password-toggle" data-target="login-senha" aria-label="Mostrar senha">
+                            <i class="pi pi-eye"></i>
+                        </button>
+                    </div>
+                </div>
 
-        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-            <span class="link" data-navigate="#/register">Não tem conta? Cadastre-se</span>
-        </p>
+                <button type="submit" class="btn btn-primary btn-block">
+                    Entrar
+                </button>
+            </form>
+
+            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+                <span class="link" data-navigate="#/register">Não tem conta? Cadastre-se</span>
+            </p>
+        </div>
     </div>
 </div>

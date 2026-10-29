@@ -1,6 +1,6 @@
 import { iniciarLogin }                                                 from "./pages/loginPage.js";
 import { iniciarRegistro }                                              from "./pages/registerPage.js";
-import { iniciarDashboard }                                             from "./pages/dashboardPage.js";
+import { iniciarDashboard }                                             from "./pages/homePage.js";
 import { iniciarTransacoes }                                            from "./pages/transacoesPage.js";
 import { iniciarContas }                                                from "./pages/contasPage.js";
 import { iniciarCategorias }                                            from "./pages/categoriasPage.js";
@@ -14,6 +14,7 @@ import { aprimorarSelects }                                             from "./
 import { atualizarPerfil }                                              from "./remotes/usuario/usuarioRemote.js";
 import { inicializarNotificacoes }                                      from "./notificacoes.js";
 import { inicializarBuscaGlobal }                                       from "./buscaGlobal.js";
+import { rotaAtual, caminhoDaRota, irPara, aoMudarRota }                from "./router.js";
 
 const templates = {};
 
@@ -39,39 +40,101 @@ const estaAutenticado = () => {
 
 // --- MAPA DE ROTAS ---
 const rotas = {
-    "/login":       { template: "login",        init: iniciarLogin,        auth: false },
-    "/register":    { template: "register",     init: iniciarRegistro,     auth: false },
-    "/dashboard":   { template: "dashboard",    init: iniciarDashboard,    auth: true  },
-    "/transacoes":  { template: "transacoes",   init: iniciarTransacoes,   auth: true  },
-    "/contas":      { template: "contas",       init: iniciarContas,       auth: true  },
-    "/categorias":  { template: "categorias",   init: iniciarCategorias,   auth: true  },
-    "/metas":       { template: "metas",        init: iniciarMetas,        auth: true  },
-    "/orcamentos":  { template: "orcamentos",   init: iniciarOrcamentos,   auth: true  },
-    "/investimentos": { template: "investimentos", init: iniciarInvestimentos, auth: true },
-    "/plano":       { template: "plano",        init: iniciarPlano,        auth: true  },
-    "/contas-pagar":{ template: "contasPagar",  init: iniciarContasPagar,  auth: true  },
+    "/login": {
+        template: "login",
+        init: iniciarLogin,
+        auth: false
+    },
+    "/register": {
+        template: "register",
+        init: iniciarRegistro,
+        auth: false
+    },
+    "/home": {
+        template: "home",
+        init: iniciarDashboard,
+        auth: true
+    },
+    "/licenca": {
+        template: "licenca",
+        init: () => {},
+        auth: true
+    },
+    "/transacoes": {
+        template: "transacoes",
+        init: iniciarTransacoes,
+        auth: true
+    },
+    "/contas": {
+        template: "contas",
+        init: iniciarContas,
+        auth: true
+    },
+    "/categorias": {
+        template: "categorias",
+        init: iniciarCategorias,
+        auth: true
+    },
+    "/metas": {
+        template: "metas",
+        init: iniciarMetas,
+        auth: true
+    },
+    "/orcamentos": {
+        template: "orcamentos",
+        init: iniciarOrcamentos,
+        auth: true
+    },
+    "/investimentos": {
+        template: "investimentos",
+        init: iniciarInvestimentos,
+        auth: true
+    },
+    "/plano": {
+        template: "plano",
+        init: iniciarPlano,
+        auth: true
+    },
+    "/contas-pagar": {
+        template: "contasPagar",
+        init: iniciarContasPagar,
+        auth: true
+    },
+};
+
+// --- ROTAS ANTIGAS QUE REDIRECIONAM PARA A NOVA ---
+const aliases = {
+    "/dashboard": "/home",
 };
 
 // --- NAVEGAÇÃO ENTRE ROTAS ---
 const navegar = () => {
-    const hash = window.location.hash.slice(1) || "/login";
+    const atual = rotaAtual();
+    const hash = aliases[atual] ?? (atual || "/login");
+
+    // --- NORMALIZA A URL ---
+    if (window.location.pathname !== caminhoDaRota(hash)) {
+        irPara(hash, { substituir: true });
+        return;
+    }
+
     const rota = rotas[hash];
 
     // --- ROTA INEXISTENTE ---
     if (rota === undefined) {
-        window.location.hash = "#/transacoes";
+        irPara("/transacoes", { substituir: true });
         return;
     }
 
     // --- ROTA PROTEGIDA SEM AUTENTICAÇÃO ---
     if (rota.auth && !estaAutenticado()) {
-        window.location.hash = "#/login";
+        irPara("/login", { substituir: true });
         return;
     }
 
     // --- ROTA PÚBLICA COM USUÁRIO JÁ AUTENTICADO ---
     if (!rota.auth && estaAutenticado() && (hash === "/login" || hash === "/register")) {
-        window.location.hash = "#/transacoes";
+        irPara("/transacoes", { substituir: true });
         return;
     }
 
@@ -156,7 +219,12 @@ const navegar = () => {
                 const moeda = document.getElementById("alterar-moeda").value;
                 const senha = document.getElementById("alterar-senha").value;
 
-                const payload = { nome, email, moeda };
+                const payload = {
+                    nome,
+                    email,
+                    moeda
+                };
+
                 if (senha && senha.trim() !== "") {
                     payload.senha = senha;
                 }
@@ -183,7 +251,7 @@ const navegar = () => {
                 localStorage.removeItem("userName");
                 localStorage.removeItem("userEmail");
                 localStorage.removeItem("userCurrency");
-                window.location.hash = "#/login";
+                irPara("/login");
             });
 
             document.getElementById("btn-theme-toggle").addEventListener("click", alternarTema);
@@ -224,10 +292,10 @@ document.addEventListener("click", (e) => {
     const nav = e.target.closest("[data-navigate]");
     if (nav !== null) {
         e.preventDefault();
-        window.location.hash = nav.getAttribute("data-navigate");
+        irPara(nav.getAttribute("data-navigate"));
     }
 });
 
 // --- EVENTOS DE INICIALIZAÇÃO ---
-window.addEventListener("hashchange", navegar);
+aoMudarRota(navegar);
 navegar();

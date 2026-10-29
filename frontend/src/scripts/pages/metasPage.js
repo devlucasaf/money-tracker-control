@@ -6,7 +6,9 @@ import {
 import { pesquisarContas } from "../remotes/contas/contasRemote.js";
 import { criarDatepicker } from "../datepicker.js";
 
-let dpMes, dpAno, dpDataSelecionada;
+let dpMes;
+let dpAno;
+let dpDataSelecionada;
 let dpMovimentacao;
 let contasCache = [];
 let historicoMetaId = null;
@@ -353,7 +355,6 @@ const renderizarTabela = (metas) => {
         tdAcoes.appendChild(btnHistorico);
 
         const btnEditar = document.createElement("button");
-
         btnEditar.className = "btn btn-outline btn-editar-meta";
         btnEditar.style.marginRight = "0.5rem";
         btnEditar.dataset.id = m.id;
@@ -371,6 +372,7 @@ const renderizarTabela = (metas) => {
         const btnExcluir = document.createElement("button");
         btnExcluir.className = "btn btn-danger btn-excluir-meta";
         btnExcluir.dataset.id = m.id;
+
         const iconeExcluir = document.createElement("i");
         iconeExcluir.className = "pi pi-trash";
         btnExcluir.appendChild(iconeExcluir);
@@ -592,8 +594,11 @@ const renderizarGraficoHistorico = (movs) => {
     }
 
     const valores = movs.map(m => Number(m.acumulado));
-    const largura = 640, altura = 200;
-    const padTopo = 16, padBase = 20, padLat = 12;
+    const largura = 640;
+    const altura = 200;
+    const padTopo = 16;
+    const padBase = 20;
+    const padLat = 12;
     const areaAltura = altura - padTopo - padBase;
     const maximo = Math.max(...valores, 0);
     const minimo = Math.min(...valores, 0);

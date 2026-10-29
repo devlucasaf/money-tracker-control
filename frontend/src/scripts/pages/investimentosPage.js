@@ -1,6 +1,6 @@
 
-import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar } from "../util.js";
-import { pesquisarInvestimentos, criarInvestimento, atualizarInvestimento, excluirInvestimento } from "../remotes/investimentos/investimentosRemote.js";
+import { formatarMoeda, formatarData, exibirSucesso, exibirErro, confirmar }                        from "../util.js";
+import { pesquisarInvestimentos, criarInvestimento, atualizarInvestimento, excluirInvestimento }    from "../remotes/investimentos/investimentosRemote.js";
 
 // --- RÓTULOS ---
 const MESES = [
@@ -100,7 +100,8 @@ const criarDatepicker = (p) => {
                 el.classList.add("today");
             }
 
-            if (selecionada && d === selecionada.getDate() && mes === selecionada.getMonth() && ano === selecionada.getFullYear()) {
+            if (selecionada && d === selecionada.getDate()
+                    && mes === selecionada.getMonth() && ano === selecionada.getFullYear()) {
                 el.classList.add("selected");
             }
 
@@ -289,6 +290,7 @@ const renderizarTabela = (investimentos) => {
         btnEditar.className = "btn btn-outline btn-editar-investimento";
         btnEditar.style.marginRight = "0.5rem";
         btnEditar.dataset.investimento = JSON.stringify(inv);
+
         const iconeEditar = document.createElement("i");
         iconeEditar.className = "pi pi-pencil";
         btnEditar.appendChild(iconeEditar);
@@ -297,6 +299,7 @@ const renderizarTabela = (investimentos) => {
         const btnExcluir = document.createElement("button");
         btnExcluir.className = "btn btn-danger btn-excluir-investimento";
         btnExcluir.dataset.id = inv.id;
+
         const iconeExcluir = document.createElement("i");
         iconeExcluir.className = "pi pi-trash";
         btnExcluir.appendChild(iconeExcluir);

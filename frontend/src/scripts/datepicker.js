@@ -1,9 +1,27 @@
 const MESES = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
 ];
 
-const DIAS_SEMANA = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const DIAS_SEMANA = [
+    "Dom",
+    "Seg",
+    "Ter",
+    "Qua",
+    "Qui",
+    "Sex",
+    "Sáb"
+];
 
 // --- CRIA UMA INSTÂNCIA DE DATEPICKER E RETORNA O CONTROLADOR ---
 const criarDatepicker = ({ placeholder = "Selecione a data", classeInput = "", aoSelecionar } = {}) => {
@@ -129,6 +147,7 @@ const criarDatepicker = ({ placeholder = "Selecione a data", classeInput = "", a
             if (ano === anoRef) {
                 el.classList.add("today");
             }
+
             if (ano === anoAtual) {
                 el.classList.add("selected");
             }

@@ -1,8 +1,9 @@
-import { formatarMoeda }              from "./util.js";
-import { pesquisarTransacoes }        from "./remotes/transacoes/transacoesRemote.js";
-import { pesquisarContas }            from "./remotes/contas/contasRemote.js";
-import { pesquisarMetas }             from "./remotes/metas/metasRemote.js";
-import { pesquisarCategorias }        from "./remotes/categorias/categoriasRemote.js";
+import { formatarMoeda }                from "./util.js";
+import { irPara }                       from "./router.js";
+import { pesquisarTransacoes }          from "./remotes/transacoes/transacoesRemote.js";
+import { pesquisarContas }              from "./remotes/contas/contasRemote.js";
+import { pesquisarMetas }               from "./remotes/metas/metasRemote.js";
+import { pesquisarCategorias }          from "./remotes/categorias/categoriasRemote.js";
 
 let cacheContas = [];
 let cacheMetas = [];
@@ -92,7 +93,13 @@ const executarBusca = (termo) => {
         .then(pagina => (pagina && pagina.content) ? pagina.content : [])
         .catch(() => [])
         .then(transacoes => {
-            renderizar(resultados, { transacoes, contas, metas, categorias });
+            renderizar(resultados, {
+                transacoes,
+
+                contas,
+                metas,
+                categorias
+            });
         });
 };
 
@@ -179,7 +186,7 @@ const adicionarGrupo = (container, titulo, itens, mapear) => {
 
         el.addEventListener("click", () => {
             document.getElementById("busca-dropdown").classList.remove("open");
-            window.location.hash = dados.rota;
+            irPara(dados.rota);
         });
 
         container.appendChild(el);

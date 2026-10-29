@@ -1,7 +1,8 @@
-import { formatarMoeda }              from "./util.js";
-import { pesquisarContasPagar }       from "./remotes/contaspagar/contasPagarRemote.js";
-import { pesquisarOrcamentos }        from "./remotes/orcamentos/orcamentosRemote.js";
-import { pesquisarMetas }             from "./remotes/metas/metasRemote.js";
+import { formatarMoeda }                from "./util.js";
+import { irPara }                       from "./router.js";
+import { pesquisarContasPagar }         from "./remotes/contaspagar/contasPagarRemote.js";
+import { pesquisarOrcamentos }          from "./remotes/orcamentos/orcamentosRemote.js";
+import { pesquisarMetas }               from "./remotes/metas/metasRemote.js";
 
 const DIAS_ALERTA = 5;
 
@@ -239,7 +240,7 @@ const renderizar = (itens) => {
 
         el.addEventListener("click", () => {
             document.getElementById("notif-dropdown").classList.remove("open");
-            window.location.hash = item.rota;
+            irPara(item.rota);
         });
 
         lista.appendChild(el);

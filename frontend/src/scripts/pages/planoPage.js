@@ -1,5 +1,5 @@
 import { formatarMoeda, exibirSucesso, exibirErro } from "../util.js";
-import { obterPlano, salvarPlano } from "../remotes/plano/planoRemote.js";
+import { obterPlano, salvarPlano }                  from "../remotes/plano/planoRemote.js";
 
 // --- INICIALIZAÇÃO DA PÁGINA ---
 const iniciarPlano = () => {
@@ -116,6 +116,7 @@ const atualizarAlertaSoma = () => {
     let nivel;
     let icone;
     let texto;
+
     if (Math.abs(diferenca) < 0.005) {
         nivel = "alerta-ok";
         icone = "pi pi-check-circle";

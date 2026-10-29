@@ -1,27 +1,54 @@
-import { formatarMoeda, exibirErro }    from "../util.js";
-import { obterDashboard }               from "../remotes/dashboard/getDashboardRemote.js";
+import { formatarMoeda, animarValorMonetario, exibirErro }  from "../util.js";
+import { obterDashboard }                                   from "../remotes/dashboard/getDashboardRemote.js";
 
 const CORES_GRAFICO = [
-    "#7c3aed", 
-    "#ec4899", 
-    "#6366f1", 
-    "#f59e0b", 
+    "#7c3aed",
+    "#ec4899",
+    "#6366f1",
+    "#f59e0b",
     "#10b981",
-    "#3b82f6", 
-    "#f472b6", 
-    "#8b5cf6", 
-    "#ef4444", 
+    "#3b82f6",
+    "#f472b6",
+    "#8b5cf6",
+    "#ef4444",
     "#14b8a6"
 ];
 
 // --- MESES ABREVIADOS ---
-const MESES_ABREV = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+const MESES_ABREV = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez"
+];
 
 // --- MESES POR EXTENSO ---
-const MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+const MESES = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
+];
 
 // --- ESTADO DO MÊS EXIBIDO ---
-let dashMes, dashAno;
+let dashMes;
+let dashAno;
 
 // --- INICIALIZAÇÃO DA PÁGINA ---
 const iniciarDashboard = () => {
@@ -80,7 +107,7 @@ const definirValor = (id, valor, colorir) => {
         return;
     }
 
-    el.textContent = formatarMoeda(valor);
+    animarValorMonetario(el, valor);
     if (colorir) {
         el.style.color = valor >= 0 ? "var(--color-green)" : "var(--color-red)";
     }
@@ -168,7 +195,10 @@ const renderizarPizza = (despesas) => {
         return;
     }
 
-    const cx = 100, cy = 100, raio = 80, raioInterno = 50;
+    const cx = 100;
+    const cy = 100;
+    const raio = 80;
+    const raioInterno = 50;
     let svg = `<svg viewBox="0 0 200 200" class="chart-svg-pizza">`;
 
     if (despesas.length === 1) {
@@ -217,8 +247,11 @@ const renderizarBarras = (evolucao) => {
     }
 
     // --- GEOMETRIA DO SVG ---
-    const largura = 340, altura = 200;
-    const padTopo = 12, padBase = 26, padLat = 6;
+    const largura = 340;
+    const altura = 200;
+    const padTopo = 12;
+    const padBase = 26;
+    const padLat = 6;
     const areaAltura = altura - padTopo - padBase;
     const grupos = evolucao.length;
     const larguraGrupo = (largura - padLat * 2) / grupos;
@@ -277,8 +310,11 @@ const renderizarLinha = (evolucao) => {
     });
 
     // --- GEOMETRIA ---
-    const largura = 680, altura = 220;
-    const padTopo = 20, padBase = 28, padLat = 12;
+    const largura = 680;
+    const altura = 220;
+    const padTopo = 20;
+    const padBase = 28;
+    const padLat = 12;
     const areaAltura = altura - padTopo - padBase;
     const valores = pontos.map(p => p.valor);
     const maximo = Math.max(...valores, 0);
@@ -303,7 +339,7 @@ const renderizarLinha = (evolucao) => {
     svg += `<polygon points="${coordX(0)},${baseY} ${pontosLinha} ${coordX(pontos.length - 1)},${baseY}" class="chart-linha-area" />`;
 
     // --- LINHA PRINCIPAL ---
-    svg += `<polyline points="${pontosLinha}" class="chart-linha-traco" />`;
+    svg += `<polyline points="${pontosLinha}" pathLength="1" class="chart-linha-traco" />`;
 
     // --- PONTOS E RÓTULOS ---
     pontos.forEach((p, i) => {

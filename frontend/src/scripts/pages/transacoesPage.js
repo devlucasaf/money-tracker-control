@@ -1,13 +1,16 @@
 import { formatarMoeda, formatarData, exibirSucesso, exibirErro, obterMoedaUsuario, confirmar } from "../util.js";
-import { pesquisarTransacoes, criarTransacao, excluirTransacao } from "../remotes/transacoes/transacoesRemote.js";
-import { pesquisarCategorias } from "../remotes/categorias/categoriasRemote.js";
-import { pesquisarContas } from "../remotes/contas/contasRemote.js";
-import { criarDatepicker } from "../datepicker.js";
+import { pesquisarTransacoes, criarTransacao, excluirTransacao }                                from "../remotes/transacoes/transacoesRemote.js";
+import { pesquisarCategorias }                                                                  from "../remotes/categorias/categoriasRemote.js";
+import { pesquisarContas }                                                                      from "../remotes/contas/contasRemote.js";
+import { criarDatepicker }                                                                      from "../datepicker.js";
 
 let paginaAtual = 0;
-let dpMes, dpAno, dpDataSelecionada;
+let dpMes;
+let dpAno;
+let dpDataSelecionada;
 let debounceBusca;
-let dpFiltroInicio, dpFiltroFim;
+let dpFiltroInicio;
+let dpFiltroFim;
 
 // --- TAXAS DE CÂMBIO ---
 const TAXAS_FALLBACK = {
@@ -155,6 +158,7 @@ const atualizarPreviewParcelas = () => {
     if (!preview) {
         return;
     }
+
     const total = parseFloat(document.getElementById("transacao-valor").value);
     const parcelas = parseInt(document.getElementById("transacao-parcelas").value);
     if (!total || !parcelas || parcelas < 2) {
@@ -238,7 +242,8 @@ const inicializarCalendario = () => {
     document.getElementById("dp-prev").addEventListener("click", () => {
         dpMes--;
         if (dpMes < 0) {
-            dpMes = 11; dpAno--;
+            dpMes = 11;
+            dpAno--;
         }
         renderizarCalendario();
     });
@@ -246,7 +251,8 @@ const inicializarCalendario = () => {
     document.getElementById("dp-next").addEventListener("click", () => {
         dpMes++;
         if (dpMes > 11) {
-            dpMes = 0; dpAno++;
+            dpMes = 0;
+            dpAno++;
         }
         renderizarCalendario();
     });
@@ -353,7 +359,8 @@ const renderizarCalendario = () => {
             el.classList.add("today");
         }
 
-        if (dpDataSelecionada && d === dpDataSelecionada.getDate() && dpMes === dpDataSelecionada.getMonth() && dpAno === dpDataSelecionada.getFullYear()) {
+        if (dpDataSelecionada && d === dpDataSelecionada.getDate()
+                && dpMes === dpDataSelecionada.getMonth() && dpAno === dpDataSelecionada.getFullYear()) {
             el.classList.add("selected");
         }
 

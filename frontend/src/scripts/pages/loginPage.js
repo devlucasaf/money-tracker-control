@@ -1,5 +1,6 @@
 import { exibirSucesso, exibirErro, configurarToggleSenha } from "../util.js";
-import { logar } from "../remotes/auth/loginRemote.js";
+import { irPara }                                           from "../router.js";
+import { logar }                                            from "../remotes/auth/loginRemote.js";
 
 const iniciarLogin = () => {
     configurarToggleSenha();
@@ -16,7 +17,7 @@ const iniciarLogin = () => {
                 localStorage.setItem("userEmail", dados.email ?? email);
                 localStorage.setItem("userCurrency", dados.moeda ?? "BRL");
                 exibirSucesso("Login realizado com sucesso!");
-                window.location.hash = "#/transacoes";
+                irPara("/transacoes");
             })
             .catch(exibirErro);
     });

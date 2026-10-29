@@ -1,4 +1,5 @@
 const URL_BASE_API = "/api";
+import { irPara } from "../router.js";
 
 const obterToken = () => localStorage.getItem("token");
 
@@ -15,7 +16,7 @@ const validarResposta = (resposta) => {
     if (resposta.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("userName");
-        window.location.hash = "#/login";
+        irPara("/login", { substituir: true });
         throw Error("Sessão expirada. Faça login novamente.");
     }
 
