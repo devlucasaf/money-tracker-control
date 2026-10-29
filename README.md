@@ -58,7 +58,7 @@ O projeto segue uma arquitetura **cliente-servidor (Client-Server)**, com separa
 ```
 📂 money-tracker-control
 ├── 📂 backend
-│   ├── 📂 src/main/java/cloudsupport/moneytracker
+│   ├── 📂 src/main/java/moneytracker
 │   │   ├── 📂 dto/auth                  # DTOs de autenticação (login/registro)
 │   │   ├── 📂 exception                 # Tratamento global de erros
 │   │   ├── 📂 infra                     # Camada de infraestrutura
